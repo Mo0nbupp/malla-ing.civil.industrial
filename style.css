@@ -5,10 +5,11 @@ body {
 }
 
 #malla {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
+
 
 .ramo {
   padding: 12px;
