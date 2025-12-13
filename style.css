@@ -68,3 +68,27 @@ body {
   transform: scale(1.05);
 }
 
+.ramo {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+}
+
+.ramo.bloqueado {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.ramo.disponible {
+  background: #bcdcff;
+}
+
+.ramo.aprobado {
+  background: #4caf50;
+  color: white;
+  text-decoration: line-through;
+}
