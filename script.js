@@ -31,8 +31,13 @@ function renderMalla() {
 
       sem.ramos.forEach(ramo => {
         const divRamo = document.createElement("div");
-        divRamo.className = "ramo";
-        divRamo.innerText = ramo;
+       divRamo.className = "ramo disponible";
+divRamo.innerText = ramo;
+
+divRamo.onclick = () => {
+  divRamo.classList.toggle("aprobado");
+};
+
         divSem.appendChild(divRamo);
       });
 
