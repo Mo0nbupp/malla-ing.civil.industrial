@@ -30,15 +30,17 @@ function renderMalla() {
       divSem.appendChild(h3);
 
       sem.ramos.forEach(ramo => {
-        const divRamo = document.createElement("div");
-       divRamo.className = "ramo disponible";
-divRamo.innerText = ramo;
+      const divRamo = document.createElement("div");
+divRamo.classList.add("ramo");
 
-divRamo.onclick = () => {
+divRamo.textContent = ramo;
+
+divRamo.addEventListener("click", () => {
   divRamo.classList.toggle("aprobado");
-};
+});
 
-        divSem.appendChild(divRamo);
+divSem.appendChild(divRamo);
+
       });
 
       contSemestres.appendChild(divSem);
