@@ -161,3 +161,25 @@ h1 {
   background: #d9c9ff;
   transform: scale(1.04);
 }
+/* 🌸 LILA PASTEL - FUERZA FINAL */
+
+.ramo.disponible {
+  background-color: #e6d9ff !important;
+  color: #4b2c83 !important;
+}
+
+.ramo.aprobado {
+  background-color: #cbb6ff !important;
+  color: #2e1a47 !important;
+  text-decoration: line-through;
+}
+
+.ramo.bloqueado {
+  background-color: #f2eefb !important;
+  color: #9a8fb3 !important;
+}
+
+h1,
+.semestre h3 {
+  color: #6a4fa3 !important;
+}
