@@ -52,4 +52,19 @@ body {
   background: #b6e7b6;
   text-decoration: line-through;
 }
+.ramo {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ramo.aprobado {
+  background-color: #4caf50; /* VERDE FUERTE */
+  color: white;
+  font-weight: bold;
+  transform: scale(1.05);
+}
 
