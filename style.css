@@ -35,4 +35,21 @@ body {
 .semestre h3 {
   margin-top: 0;
 }
+.ramo {
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  background: #e0e0e0;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ramo:hover {
+  transform: scale(1.03);
+}
+
+.ramo.aprobado {
+  background: #b6e7b6;
+  text-decoration: line-through;
+}
 
