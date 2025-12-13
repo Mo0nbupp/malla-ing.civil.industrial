@@ -36,8 +36,10 @@ divRamo.classList.add("ramo");
 divRamo.textContent = ramo;
 
 divRamo.addEventListener("click", () => {
+  console.log("click en", ramo);
   divRamo.classList.toggle("aprobado");
 });
+
 
 divSem.appendChild(divRamo);
 
