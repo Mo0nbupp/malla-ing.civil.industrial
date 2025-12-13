@@ -16,4 +16,23 @@ body {
   text-align: center;
   font-weight: bold;
 }
+.año {
+  margin-bottom: 30px;
+}
+
+.semestres {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.semestre {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.semestre h3 {
+  margin-top: 0;
+}
 
