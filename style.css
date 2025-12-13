@@ -11,14 +11,6 @@ body {
   padding-bottom: 20px;
 }
 
-
-
-.ramo {
-  padding: 12px;
-  border-radius: 10px;
-  text-align: center;
-  font-weight: bold;
-}
 .año {
   margin-bottom: 30px;
 }
@@ -38,63 +30,11 @@ body {
 .semestre h3 {
   margin-top: 0;
 }
-.ramo {
-  margin-top: 8px;
-  padding: 8px;
-  border-radius: 8px;
-  background: #e0e0e0;
-  cursor: pointer;
-  transition: 0.2s;
-}
 
 .ramo:hover {
   transform: scale(1.03);
 }
 
-.ramo.aprobado {
-  background: #b6e7b6;
-  text-decoration: line-through;
-}
-.ramo {
-  margin-top: 8px;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: #e0e0e0;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.ramo.aprobado {
-  background-color: #4caf50; /* VERDE FUERTE */
-  color: white;
-  font-weight: bold;
-  transform: scale(1.05);
-}
-
-.ramo {
-  margin-top: 8px;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-  text-align: center;
-}
-
-.ramo.bloqueado {
-  background: #ccc;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.ramo.disponible {
-  background: #bcdcff;
-}
-
-.ramo.aprobado {
-  background: #4caf50;
-  color: white;
-  text-decoration: line-through;
-}
 .año {
   min-width: 300px;
 }
@@ -117,32 +57,9 @@ body {
   color: #444;
 }
 
-.ramo {
-  border-radius: 12px;
-  padding: 10px;
-  margin-top: 8px;
-  font-size: 14px;
-}
-/* 🌸 Paleta lila pastel */
 
-/* Ramos disponibles */
-.ramo.disponible {
-  background: #e6d9ff;   /* lila pastel */
-  color: #4b2c83;
-}
 
-/* Ramos aprobados */
-.ramo.aprobado {
-  background: #cbb6ff;   /* lila más fuerte */
-  color: #2e1a47;
-  text-decoration: line-through;
-}
 
-/* Ramos bloqueados */
-.ramo.bloqueado {
-  background: #f2eefb;   /* gris-lila */
-  color: #9a8fb3;
-}
 
 /* Títulos */
 h1 {
@@ -157,29 +74,52 @@ h1 {
 .semestre {
   border: 1px solid #e3dbf8;
 }
-.ramo.disponible:hover {
-  background: #d9c9ff;
-  transform: scale(1.04);
-}
-/* 🌸 LILA PASTEL - FUERZA FINAL */
 
-.ramo.disponible {
-  background-color: #e6d9ff !important;
-  color: #4b2c83 !important;
-}
 
-.ramo.aprobado {
-  background-color: #cbb6ff !important;
-  color: #2e1a47 !important;
-  text-decoration: line-through;
-}
 
-.ramo.bloqueado {
-  background-color: #f2eefb !important;
-  color: #9a8fb3 !important;
-}
+
 
 h1,
 .semestre h3 {
   color: #6a4fa3 !important;
+}
+
+/* 💜 RAMOS – LILA PASTEL LIMPIO */
+
+.ramo {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Disponible */
+.ramo.disponible {
+  background-color: #e6d9ff;
+  color: #4b2c83;
+}
+
+/* Aprobado */
+.ramo.aprobado {
+  background-color: #cbb6ff;
+  color: #2e1a47;
+  text-decoration: line-through;
+  transform: scale(1.05);
+}
+
+/* Bloqueado */
+.ramo.bloqueado {
+  background-color: #f2eefb;
+  color: #9a8fb3;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Hover */
+.ramo.disponible:hover {
+  background-color: #d9c9ff;
+  transform: scale(1.04);
 }
