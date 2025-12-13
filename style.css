@@ -6,9 +6,11 @@ body {
 
 #malla {
   display: flex;
-  flex-direction: column;
-  gap: 30px;
+  gap: 40px;
+  overflow-x: auto;
+  padding-bottom: 20px;
 }
+
 
 
 .ramo {
@@ -92,4 +94,32 @@ body {
   background: #4caf50;
   color: white;
   text-decoration: line-through;
+}
+.año {
+  min-width: 300px;
+}
+
+.semestres {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.semestre {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.semestre h3 {
+  text-align: center;
+  color: #444;
+}
+
+.ramo {
+  border-radius: 12px;
+  padding: 10px;
+  margin-top: 8px;
+  font-size: 14px;
 }
