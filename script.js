@@ -15,10 +15,10 @@ const semestres = [
     numero: 2,
     ramos: [
       { id: "r6", nombre: "Álgebra I", prereq: ["r1"], estado: "bloqueado" },
-      { id: "r7", nombre: "Cálculo I", prereq: [], estado: "disponible" },
+      { id: "r7", nombre: "Cálculo I", prereq: ["r1"], estado: "bloqueado" },
       { id: "r8", nombre: "Curso sello institucional II: Inglés II", prereq: ["r4"], estado: "bloqueado" },
-      { id: "r9", nombre: "Formación básica para la vida académica II", prereq: [], estado: "disponible" },
-      { id: "r10", nombre: "Mecánica", prereq: [], estado: "disponible" }
+      { id: "r9", nombre: "Formación básica para la vida académica II", prereq: ["r5"], estado: "bloqueado" },
+      { id: "r10", nombre: "Mecánica", prereq: ["r2"], estado: "bloqueado" }
     ]
   },
   {
@@ -26,62 +26,62 @@ const semestres = [
     ramos: [
       { id: "r11", nombre: "Álgebra II", prereq: ["r6"], estado: "bloqueado" },
       { id: "r12", nombre: "Cálculo II", prereq: ["r7"], estado: "bloqueado" },
-      { id: "r13", nombre: "Química general", prereq: [], estado: "disponible" },
-      { id: "r14", nombre: "Curso sello institucional III", prereq: [], estado: "disponible" },
-      { id: "r15", nombre: "Programación computacional", prereq: [], estado: "disponible" },
-      { id: "r16", nombre: "Administración", prereq: [], estado: "disponible" }
+      { id: "r13", nombre: "Química general", prereq: [], estado: "bloqueado" },
+      { id: "r14", nombre: "Curso sello institucional III", prereq: [], estado: "bloqueado" },
+      { id: "r15", nombre: "Programación computacional", prereq: [], estado: "bloqueado" },
+      { id: "r16", nombre: "Administración", prereq: [], estado: "bloqueado" }
     ]
   },
   {
     numero: 4,
     ramos: [
-      { id: "r17", nombre: "Ecuaciones diferenciales", prereq: [], estado: "disponible" },
+      { id: "r17", nombre: "Ecuaciones diferenciales", prereq: [], estado: "bloqueado" },
       { id: "r18", nombre: "Cálculo III", prereq: ["r12"], estado: "bloqueado" },
       { id: "r19", nombre: "Electricidad y magnetismo", prereq: ["r10"], estado: "bloqueado" },
-      { id: "r20", nombre: "Curso sello institucional IV", prereq: [], estado: "disponible" },
+      { id: "r20", nombre: "Curso sello institucional IV", prereq: [], estado: "bloqueado" },
       { id: "r21", nombre: "Taller integrador de competencias básicas", prereq: ["r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15","r16"], estado: "bloqueado" },
-      { id: "r22", nombre: "Ciclo de la vida y tecnología de los materiales", prereq: [], estado: "disponible" }
+      { id: "r22", nombre: "Ciclo de la vida y tecnología de los materiales", prereq: [], estado: "bloqueado" }
     ]
   },
   {
     numero: 5,
     ramos: [
-      { id: "r23", nombre: "Termodinámica", prereq: [], estado: "disponible" },
+      { id: "r23", nombre: "Termodinámica", prereq: [], estado: "bloqueado" },
       { id: "r24", nombre: "Probabilidad y estadística", prereq: ["r12"], estado: "bloqueado" },
       { id: "r25", nombre: "Ondas, óptica y calor", prereq: ["r10"], estado: "bloqueado" },
       { id: "r26", nombre: "Contabilidad y costos", prereq: ["r6"], estado: "bloqueado" },
-      { id: "r27", nombre: "Dibujo e interpretación de planos", prereq: [], estado: "disponible" },
-      { id: "r28", nombre: "Interdisciplinar", prereq: [], estado: "disponible" }
+      { id: "r27", nombre: "Dibujo e interpretación de planos", prereq: [], estado: "bloqueado" },
+      { id: "r28", nombre: "Interdisciplinar", prereq: [], estado: "bloqueado" }
     ]
   },
   {
     numero: 6,
     ramos: [
-      { id: "r29", nombre: "Gestión de recursos humanos y liderazgo", prereq: [], estado: "disponible" },
+      { id: "r29", nombre: "Gestión de recursos humanos y liderazgo", prereq: [], estado: "bloqueado" },
       { id: "r30", nombre: "Métodos estadísticos", prereq: ["r24"], estado: "bloqueado" },
-      { id: "r31", nombre: "Investigación operativa I", prereq: [], estado: "disponible" },
+      { id: "r31", nombre: "Investigación operativa I", prereq: [], estado: "bloqueado" },
       { id: "r32", nombre: "Sistemas de información", prereq: ["r15"], estado: "bloqueado" },
-      { id: "r33", nombre: "Interdisciplinar A+S", prereq: [], estado: "disponible" },
+      { id: "r33", nombre: "Interdisciplinar A+S", prereq: [], estado: "bloqueado" },
       { id: "r34", nombre: "Mecánica de fluidos", prereq: ["r18"], estado: "bloqueado" }
     ]
   },
   {
     numero: 7,
     ramos: [
-      { id: "r35", nombre: "Marketing", prereq: [], estado: "disponible" },
+      { id: "r35", nombre: "Marketing", prereq: [], estado: "bloqueado" },
       { id: "r36", nombre: "Investigación operativa II", prereq: ["r31"], estado: "bloqueado" },
-      { id: "r37", nombre: "Gestión de operaciones y logística I", prereq: [], estado: "disponible" },
-      { id: "r38", nombre: "Microeconomía", prereq: [], estado: "disponible" },
+      { id: "r37", nombre: "Gestión de operaciones y logística I", prereq: [], estado: "bloqueado" },
+      { id: "r38", nombre: "Microeconomía", prereq: [], estado: "bloqueado" },
       { id: "r39", nombre: "Ciencia de datos", prereq: ["r30"], estado: "bloqueado" },
       { id: "r40", nombre: "Procesos industriales", prereq: ["r34"], estado: "bloqueado" },
-      { id: "r41", nombre: "Práctica operacional", prereq: ["r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15","r16","r17","r18","r19","r20","r21","r22","r23","r24","r25","r26","r27","r28","r29","r30","r31","r32","r33","r34","r35","r36","r37","r38","r39","r40"], estado: "bloqueado" }
+      { id: "r41", nombre: "Práctica operacional", prereq: ["r29","r30","r31","r32","r33","r34"], estado: "bloqueado" }
     ]
   },
   {
     numero: 8,
     ramos: [
-      { id: "r42", nombre: "Inteligencia artificial para la gestión", prereq: [], estado: "disponible" },
-      { id: "r43", nombre: "Simulación", prereq: [], estado: "disponible" },
+      { id: "r42", nombre: "Inteligencia artificial para la gestión", prereq: [], estado: "bloqueado" },
+      { id: "r43", nombre: "Simulación", prereq: [], estado: "bloqueado" },
       { id: "r44", nombre: "Gestión de operaciones y logística II", prereq: ["r37"], estado: "bloqueado" },
       { id: "r45", nombre: "Macroeconomía", prereq: ["r38"], estado: "bloqueado" },
       { id: "r46", nombre: "Gestión de sustentabilidad y sostenibilidad", prereq: ["r40"], estado: "bloqueado" },
@@ -92,32 +92,33 @@ const semestres = [
     numero: 9,
     ramos: [
       { id: "r48", nombre: "Inteligencia de negocios", prereq: ["r39"], estado: "bloqueado" },
-      { id: "r49", nombre: "Evaluación de proyectos", prereq: [], estado: "disponible" },
+      { id: "r49", nombre: "Evaluación de proyectos", prereq: [], estado: "bloqueado" },
       { id: "r50", nombre: "Gestión de la innovación", prereq: ["r35"], estado: "bloqueado" },
-      { id: "r51", nombre: "Finanzas corporativas", prereq: [], estado: "disponible" },
+      { id: "r51", nombre: "Finanzas corporativas", prereq: [], estado: "bloqueado" },
       { id: "r52", nombre: "Econometría", prereq: ["r30"], estado: "bloqueado" }
     ]
   },
   {
     numero: 10,
     ramos: [
-      { id: "r53", nombre: "Planificación estratégica", prereq: [], estado: "disponible" },
+      { id: "r53", nombre: "Planificación estratégica", prereq: [], estado: "bloqueado" },
       { id: "r54", nombre: "Emprendimiento y liderazgo en negocios", prereq: ["r50"], estado: "bloqueado" },
       { id: "r55", nombre: "Eficiencia energética y energías renovables", prereq: ["r44"], estado: "bloqueado" },
-      { id: "r56", nombre: "Proyecto título I", prereq: ["r48"], estado: "bloqueado" }
+      { id: "r56", nombre: "Proyecto título I", prereq: ["r48","r49","r50","r51","r52"], estado: "bloqueado" }
     ]
   },
   {
     numero: 11,
     ramos: [
-      { id: "r57", nombre: "Ética y responsabilidad social y empresarial", prereq: [], estado: "disponible" },
-      { id: "r58", nombre: "Legislación comercial y laboral", prereq: [], estado: "disponible" },
+      { id: "r57", nombre: "Ética y responsabilidad social y empresarial", prereq: [], estado: "bloqueado" },
+      { id: "r58", nombre: "Legislación comercial y laboral", prereq: [], estado: "bloqueado" },
       { id: "r59", nombre: "Proyecto título II", prereq: ["r56"], estado: "bloqueado" },
       { id: "r60", nombre: "Práctica profesional", prereq: ["r47"], estado: "bloqueado" }
     ]
   }
 ];
 
+// RENDER
 function renderMalla() {
   malla.innerHTML = "";
 
@@ -145,7 +146,7 @@ function renderMalla() {
         divRamo.className = `ramo ${ramo.estado}`;
         divRamo.textContent = ramo.nombre;
 
-        if (ramo.estado === "disponible") {
+        if (ramo.estado !== "bloqueado") {
           divRamo.addEventListener("click", () => aprobarRamo(ramo.id));
         }
 
@@ -160,29 +161,26 @@ function renderMalla() {
   }
 }
 
+// FUNCION APROBAR/DESMARCAR
 function aprobarRamo(id) {
-  let aprobado = false;
-
   semestres.forEach(sem => {
     sem.ramos.forEach(r => {
-      if (r.id === id && r.estado === "disponible") {
-        r.estado = "aprobado";
-        aprobado = true;
+      if (r.id === id) {
+        if (r.estado === "disponible") r.estado = "aprobado";
+        else if (r.estado === "aprobado") r.estado = "disponible";
       }
     });
   });
 
-  if (!aprobado) return;
-
   semestres.forEach(sem => {
     sem.ramos.forEach(r => {
-      if (r.estado === "bloqueado") {
+      if (r.estado !== "aprobado") {
         const cumple = r.prereq.every(req =>
           semestres.some(s =>
             s.ramos.some(x => x.id === req && x.estado === "aprobado")
           )
         );
-        if (cumple) r.estado = "disponible";
+        r.estado = cumple ? "disponible" : "bloqueado";
       }
     });
   });
@@ -191,3 +189,4 @@ function aprobarRamo(id) {
 }
 
 renderMalla();
+
