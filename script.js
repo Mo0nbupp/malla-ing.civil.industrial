@@ -22,7 +22,7 @@ const semestres = [
       { id: "r6", nombre: "Algebra I", prereq: ["r1"], estado: "bloqueado" },
       { id: "r7", nombre: "Calculo I", prereq: [], estado: "disponible" },
       { id: "r8", nombre: "Curso sello institucional II: Inglés II", prereq: ["r4"], estado: "bloqueado" },
-      { id: "r9", nombre: "Formación básica para la vida académica II", prereq: ["r5"], estado: "bloqueado" },
+      { id: "r9", nombre: "Formación básica para la vida académica II", prereq: [], estado: "disponible" },
       { id: "r10", nombre: "Mecánica", prereq: [], estado: "disponible" }
     ]
   },
