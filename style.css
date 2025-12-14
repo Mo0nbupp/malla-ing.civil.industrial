@@ -6,122 +6,94 @@ body {
 
 #malla {
   display: flex;
-  gap: 40px;
+  gap: 30px;
   overflow-x: auto;
   padding-bottom: 20px;
+  scroll-behavior: smooth;
 }
 
+/* Tarjeta del año */
 .año {
-  margin-bottom: 30px;
+  min-width: 320px;
+  background: #f0e6ff; /* lila pastel suave */
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.semestres {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.semestre {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-}
-
-.semestre h3 {
+/* Título del año centrado */
+.año h2 {
   margin-top: 0;
+  margin-bottom: 15px;
+  color: #6a4fa3;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.ramo:hover {
-  transform: scale(1.03);
-}
-
-.año {
-  min-width: 300px;
-}
-
+/* Contenedor de semestres dentro de la tarjeta */
 .semestres {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
 }
 
+/* Cada semestre */
 .semestre {
   background: #ffffff;
   padding: 15px;
-  border-radius: 18px;
+  border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  width: 100%;
 }
 
 .semestre h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
   text-align: center;
-  color: #444;
-}
-
-
-
-
-
-/* Títulos */
-h1 {
   color: #6a4fa3;
 }
 
-.semestre h3 {
-  color: #6a4fa3;
-}
-
-/* Detalles visuales */
-.semestre {
-  border: 1px solid #e3dbf8;
-}
-
-
-
-
-
-h1,
-.semestre h3 {
-  color: #6a4fa3 !important;
-}
-
-/* 💜 RAMOS – LILA PASTEL LIMPIO */
-
+/* Ramos */
 .ramo {
-  margin-top: 8px;
-  padding: 10px;
   border-radius: 12px;
-  text-align: center;
+  padding: 10px;
+  margin-top: 8px;
   font-size: 14px;
+  text-align: center;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
 }
 
-/* Disponible */
+/* Estado de los ramos */
 .ramo.disponible {
   background-color: #e6d9ff;
   color: #4b2c83;
 }
 
-/* Aprobado */
+.ramo.disponible:hover {
+  background-color: #d9c9ff;
+  transform: scale(1.04);
+}
+
 .ramo.aprobado {
   background-color: #cbb6ff;
   color: #2e1a47;
   text-decoration: line-through;
+  font-weight: bold;
   transform: scale(1.05);
 }
 
-/* Bloqueado */
 .ramo.bloqueado {
   background-color: #f2eefb;
   color: #9a8fb3;
   cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* Hover */
-.ramo.disponible:hover {
-  background-color: #d9c9ff;
-  transform: scale(1.04);
+  opacity: 0.6;
 }
 
 /* ESTADO ESTABLE – TODO SE VE BIEN 💜 */
