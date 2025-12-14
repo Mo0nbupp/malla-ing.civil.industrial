@@ -1,3 +1,5 @@
+const malla = document.getElementById("malla");
+
 const semestres = [
   {
     numero: 1,
@@ -37,7 +39,7 @@ const semestres = [
       { id: "r18", nombre: "Cálculo III", prereq: ["r12"], estado: "bloqueado" },
       { id: "r19", nombre: "Electricidad y magnetismo", prereq: ["r10"], estado: "bloqueado" },
       { id: "r20", nombre: "Curso sello institucional IV", prereq: [], estado: "disponible" },
-      { id: "r21", nombre: "Taller integrador de competencias básicas", prereq: ["r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15","r16"], estado: "bloqueado" },
+      { id: "r21", nombre: "Taller integrador de competencias básicas", prereq: semestres.slice(0,3).flatMap(s=>s.ramos.map(r=>r.id)), estado: "bloqueado" },
       { id: "r22", nombre: "Ciclo de la vida y tecnología de los materiales", prereq: [], estado: "disponible" }
     ]
   },
@@ -72,7 +74,7 @@ const semestres = [
       { id: "r38", nombre: "Microeconomía", prereq: [], estado: "disponible" },
       { id: "r39", nombre: "Ciencia de datos", prereq: ["r30"], estado: "bloqueado" },
       { id: "r40", nombre: "Procesos industriales", prereq: ["r34"], estado: "bloqueado" },
-      { id: "r41", nombre: "Práctica operacional", prereq: ["r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15","r16","r17","r18","r19","r20","r21","r22","r23","r24","r25","r26","r27","r28","r29","r30","r31","r32","r33","r34","r35","r36","r37","r38","r39","r40"], estado: "bloqueado" }
+      { id: "r41", nombre: "Práctica operacional", prereq: semestres.slice(0,6).flatMap(s=>s.ramos.map(r=>r.id)), estado: "bloqueado" }
     ]
   },
   {
@@ -116,3 +118,112 @@ const semestres = [
   }
 ];
 
+// ========================
+// FUNCIONES DE GUARDADO
+// ========================
+function guardarEstado() {
+  const estadoActual = semestres.map(sem => sem.ramos.map(r => r.estado));
+  localStorage.setItem("mallaEstado", JSON.stringify(estadoActual));
+}
+
+function cargarEstado() {
+  const estadoGuardado = JSON.parse(localStorage.getItem("mallaEstado"));
+  if (!estadoGuardado) return;
+
+  semestres.forEach((sem, i) => {
+    sem.ramos.forEach((r, j) => {
+      r.estado = estadoGuardado[i][j];
+    });
+  });
+}
+
+// ========================
+// RENDERIZADO DE MALLA
+// ========================
+function renderMalla() {
+  malla.innerHTML = "";
+
+  for (let i = 0; i < semestres.length; i += 2) {
+    const año = document.createElement("div");
+    año.className = "año";
+
+    const titulo = document.createElement("h2");
+    titulo.textContent = `Año ${Math.floor(i / 2) + 1}`;
+    año.appendChild(titulo);
+
+    const contSemestres = document.createElement("div");
+    contSemestres.className = "semestres";
+
+    semestres.slice(i, i + 2).forEach(sem => {
+      const divSem = document.createElement("div");
+      divSem.className = "semestre";
+
+      const h3 = document.createElement("h3");
+      h3.textContent = `Semestre ${sem.numero}`;
+      divSem.appendChild(h3);
+
+      sem.ramos.forEach(ramo => {
+        const divRamo = document.createElement("div");
+        divRamo.className = `ramo ${ramo.estado}`;
+        divRamo.textContent = ramo.nombre;
+
+        if (ramo.estado !== "bloqueado") {
+          divRamo.addEventListener("click", () => toggleRamo(ramo.id));
+        }
+
+        divSem.appendChild(divRamo);
+      });
+
+      contSemestres.appendChild(divSem);
+    });
+
+    año.appendChild(contSemestres);
+    malla.appendChild(año);
+  }
+}
+
+// ========================
+// FUNCION TOGGLE RAMO
+// ========================
+function toggleRamo(id) {
+  let aprobado = false;
+
+  semestres.forEach(sem => {
+    sem.ramos.forEach(r => {
+      if (r.id === id) {
+        if (r.estado === "disponible") {
+          r.estado = "aprobado";
+          aprobado = true;
+        } else if (r.estado === "aprobado") {
+          r.estado = "disponible";
+          aprobado = true;
+        }
+      }
+    });
+  });
+
+  if (!aprobado) return;
+
+  // desbloquear ramos que cumplen prereqs
+  semestres.forEach(sem => {
+    sem.ramos.forEach(r => {
+      if (r.estado === "bloqueado") {
+        const cumple = r.prereq.every(req =>
+          semestres.some(s =>
+            s.ramos.some(x => x.id === req && x.estado === "aprobado")
+          )
+        );
+        if (cumple) r.estado = "disponible";
+      }
+    });
+  });
+
+  guardarEstado();
+  renderMalla();
+}
+
+// ========================
+// INICIO
+// ========================
+cargarEstado();
+renderMalla();
