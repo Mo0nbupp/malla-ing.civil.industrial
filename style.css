@@ -1,77 +1,88 @@
 /* =========================
-   ESTILOS GENERALES
+   TÍTULO Y SUBTÍTULO
+========================= */
+h1 {
+  text-align: center;
+  font-size: 36px;
+  color: #6a4fa3;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+p {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* =========================
+   BODY Y CONTENEDOR DE MALLA
 ========================= */
 body {
   font-family: Arial, sans-serif;
   background: #f5f5f5;
   padding: 20px;
-  margin: 0;
 }
 
-/* =========================
-   TITULOS PRINCIPALES
-========================= */
-h1 {
-  text-align: center;
-  color: #6a4fa3;
-  margin-bottom: 5px;
-}
-
-h2.subtitle {
-  text-align: center;
-  color: #8b6fc4;
-  font-weight: normal;
-  margin-bottom: 25px;
-}
-
-/* =========================
-   CONTENEDOR MALLA
-========================= */
 #malla {
   display: flex;
   gap: 30px;
   overflow-x: auto;
   padding-bottom: 20px;
+  scroll-behavior: smooth;
 }
 
 /* =========================
-   TARJETA AÑO
+   AÑOS (TARJETAS GRANDES)
 ========================= */
 .año {
-  min-width: 320px;
-  background-color: #f3e6ff; /* lila pastel */
+  background-color: #f0e8ff;
+  min-width: 300px;
   padding: 20px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* centra contenido */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  margin-right: 20px;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+
+.año > h2 {
+  margin: 0 0 15px 0;
+  color: #6a4fa3;
+  font-size: 20px;
+  text-align: center;
 }
 
 /* =========================
-   SEMESTRES
+   SEMESTRES (TARJETAS INTERNAS)
 ========================= */
 .semestres {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 100%; /* respeta ancho del año */
-  align-items: center; /* centra semestres dentro del año */
+  width: 100%;
 }
 
 .semestre {
   background: #ffffff;
   padding: 15px;
   border-radius: 18px;
-  width: 90%; /* semestres no sobresalen del año */
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .semestre h3 {
   text-align: center;
   color: #6a4fa3;
   margin-top: 0;
+  margin-bottom: 10px;
 }
 
 /* =========================
@@ -85,9 +96,13 @@ h2.subtitle {
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  width: 90%;
 }
 
-/* 🌸 Paleta lila pastel */
+.ramo:hover {
+  transform: scale(1.04);
+}
+
 .ramo.disponible {
   background-color: #e6d9ff;
   color: #4b2c83;
@@ -97,7 +112,7 @@ h2.subtitle {
   background-color: #cbb6ff;
   color: #2e1a47;
   text-decoration: line-through;
-  transform: scale(1.03);
+  font-weight: bold;
 }
 
 .ramo.bloqueado {
@@ -107,22 +122,28 @@ h2.subtitle {
   opacity: 0.6;
 }
 
-/* Hover */
-.ramo.disponible:hover {
-  background-color: #d9c9ff;
-  transform: scale(1.05);
+/* Detalles visuales */
+.semestre {
+  border: 1px solid #e3dbf8;
 }
 
-/* Pulse animation al aprobar */
+.ramo.disponible:hover {
+  background: #d9c9ff;
+}
+
+/* =========================
+   ANIMACIÓN PULSE
+========================= */
 @keyframes pulse {
   0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  50% { transform: scale(1.08); }
   100% { transform: scale(1); }
 }
 
 .ramo.pulse {
-  animation: pulse 0.4s;
+  animation: pulse 0.4s ease;
 }
+
 
 
 /* ESTADO ESTABLE – TODO SE VE BIEN 💜 */
