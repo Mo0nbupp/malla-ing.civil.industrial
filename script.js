@@ -20,10 +20,10 @@ const semestres = [
     numero: 2,
     ramos: [
       { id: "r6", nombre: "Algebra I", prereq: ["r1"], estado: "bloqueado" },
-      { id: "r7", nombre: "Calculo I", prereq: ["r1","r2","r3"], estado: "bloqueado" },
+      { id: "r7", nombre: "Calculo I", prereq: [], estado: "disponible" },
       { id: "r8", nombre: "Curso sello institucional II: Inglés II", prereq: ["r4"], estado: "bloqueado" },
       { id: "r9", nombre: "Formación básica para la vida académica II", prereq: ["r5"], estado: "bloqueado" },
-      { id: "r10", nombre: "Mecánica", prereq: ["r2"], estado: "bloqueado" }
+      { id: "r10", nombre: "Mecánica", prereq: [], estado: "disponible" }
     ]
   },
   // --- Semestre 3 ---
