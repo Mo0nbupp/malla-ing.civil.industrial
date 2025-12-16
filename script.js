@@ -19,8 +19,8 @@ const semestres = [
   {
     numero: 2,
     ramos: [
-      { id: "r6", nombre: "Algebra I", prereq: ["r1"], estado: "bloqueado" },
-      { id: "r7", nombre: "Calculo I", prereq: [], estado: "disponible" },
+      { id: "r6", nombre: "Álgebra I", prereq: ["r1"], estado: "bloqueado" },
+      { id: "r7", nombre: "Cálculo I", prereq: [], estado: "disponible" },
       { id: "r8", nombre: "Curso sello institucional II: Inglés II", prereq: ["r4"], estado: "bloqueado" },
       { id: "r9", nombre: "Formación básica para la vida académica II", prereq: ["r5"], estado: "bloqueado" },
       { id: "r10", nombre: "Mecánica", prereq: [], estado: "disponible" }
@@ -30,8 +30,8 @@ const semestres = [
   {
     numero: 3,
     ramos: [
-      { id: "r11", nombre: "Algebra II", prereq: ["r6"], estado: "bloqueado" },
-      { id: "r12", nombre: "Calculo II", prereq: ["r7"], estado: "bloqueado" },
+      { id: "r11", nombre: "Álgebra II", prereq: ["r6"], estado: "bloqueado" },
+      { id: "r12", nombre: "Cálculo II", prereq: ["r7"], estado: "bloqueado" },
       { id: "r13", nombre: "Química general", prereq: [], estado: "bloqueado" },
       { id: "r14", nombre: "Curso sello institucional III", prereq: [], estado: "bloqueado" },
       { id: "r15", nombre: "Programación computacional", prereq: [], estado: "bloqueado" },
@@ -43,7 +43,7 @@ const semestres = [
     numero: 4,
     ramos: [
       { id: "r17", nombre: "Ecuaciones diferenciales", prereq: [], estado: "bloqueado" },
-      { id: "r18", nombre: "Calculo III", prereq: ["r12"], estado: "bloqueado" },
+      { id: "r18", nombre: "Cálculo III", prereq: ["r12"], estado: "bloqueado" },
       { id: "r19", nombre: "Electricidad y magnetismo", prereq: ["r10"], estado: "bloqueado" },
       { id: "r20", nombre: "Curso sello institucional IV", prereq: [], estado: "bloqueado" },
       { id: "r21", nombre: "Taller integrador de competencias básicas", prereq: ["r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15","r16"], estado: "bloqueado" },
@@ -133,6 +133,25 @@ const semestres = [
 ];
 
 // =========================
+// GUARDAR Y CARGAR ESTADO
+// =========================
+function guardarEstado() {
+  localStorage.setItem("estadoMalla", JSON.stringify(semestres));
+}
+
+function cargarEstado() {
+  const guardado = localStorage.getItem("estadoMalla");
+  if (!guardado) return;
+
+  const datos = JSON.parse(guardado);
+  datos.forEach((sem, i) => {
+    semestres[i].ramos.forEach((ramo, j) => {
+      ramo.estado = sem.ramos[j].estado;
+    });
+  });
+}
+
+// =========================
 // RENDER MALLA
 // =========================
 function renderMalla() {
@@ -212,9 +231,13 @@ function aprobarRamo(id) {
     ramoDiv.classList.add("pulse");
     setTimeout(() => ramoDiv.classList.remove("pulse"), 400);
   }
+
+  // Guardar el estado
+  guardarEstado();
 }
 
 // =========================
-// RENDER INICIAL
+// INICIO
 // =========================
+cargarEstado();
 renderMalla();
