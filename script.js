@@ -1,10 +1,18 @@
 const malla = document.getElementById("malla");
 
-// =========================
+// =====================================================
+// INFORMACIÓN DE LA MALLA
+// =====================================================
+
+const VERSION_MALLA = "v1.0";
+
+
+// =====================================================
 // SEMESTRES Y RAMOS
-// =========================
+// =====================================================
 
 const semestres = [
+
   // --- Semestre 1 ---
   {
     numero: 1,
@@ -137,7 +145,7 @@ const semestres = [
       { id: "r53", nombre: "Planificación estratégica", prereq: [], estado: "bloqueado" },
       { id: "r54", nombre: "Emprendimiento y liderazgo en negocios", prereq: ["r50"], estado: "bloqueado" },
       { id: "r55", nombre: "Eficiencia energética y energías renovables", prereq: ["r44"], estado: "bloqueado" },
-      { id: "r56", nombre: "Proyecto título I", prereq: ["r48","r49","r50","r51","r52"], estado: "bloqueado" }
+      { id:  "r56", nombre: "Proyecto título I", prereq: ["r48","r49","r50","r51","r52"], estado: "bloqueado" }
     ]
   },
 
@@ -154,18 +162,14 @@ const semestres = [
 ];
 
 
-// =========================
-// GUARDAR ESTADO
-// =========================
+// =====================================================
+// GUARDAR / CARGAR
+// =====================================================
 
 function guardarEstado() {
   localStorage.setItem("estadoMalla", JSON.stringify(semestres));
 }
 
-
-// =========================
-// CARGAR ESTADO
-// =========================
 
 function cargarEstado() {
 
@@ -181,22 +185,20 @@ function cargarEstado() {
 
       if (!semestres[i]) return;
 
-      semestres[i].ramos.forEach((ramo, j) => {
+      sem.ramos.forEach((ramoGuardado, j) => {
 
-        if (!sem.ramos[j]) return;
+        if (!semestres[i].ramos[j]) return;
 
-        ramo.estado = sem.ramos[j].estado;
+        const ramo = semestres[i].ramos[j];
 
-        ramo.promedio =
-          sem.ramos[j].promedio ?? null;
+        ramo.estado = ramoGuardado.estado ?? ramo.estado;
+        ramo.promedio = ramoGuardado.promedio ?? null;
 
-        // Historial del promedio anterior
-        ramo.promedioAnterior =
-          sem.ramos[j].promedioAnterior ?? null;
+        // Historial de intentos anteriores
+        ramo.historial = ramoGuardado.historial ?? [];
 
-        // Indica si fue repetido
-        ramo.repetido =
-          sem.ramos[j].repetido ?? false;
+        // Marcado como repetido
+        ramo.repetido = ramoGuardado.repetido ?? false;
 
       });
 
@@ -204,26 +206,21 @@ function cargarEstado() {
 
   } catch (error) {
 
-    console.error(
-      "No se pudo cargar el estado guardado:",
-      error
-    );
+    console.error("No se pudo cargar la malla:", error);
 
   }
 }
 
 
-// =========================
+// =====================================================
 // BUSCAR RAMO
-// =========================
+// =====================================================
 
 function buscarRamo(id) {
 
   for (const sem of semestres) {
 
-    const ramo = sem.ramos.find(
-      r => r.id === id
-    );
+    const ramo = sem.ramos.find(r => r.id === id);
 
     if (ramo) return ramo;
 
@@ -233,9 +230,9 @@ function buscarRamo(id) {
 }
 
 
-// =========================
+// =====================================================
 // PROMEDIO SEMESTRE
-// =========================
+// =====================================================
 
 function calcularPromedioSemestre(semestre) {
 
@@ -247,22 +244,21 @@ function calcularPromedioSemestre(semestre) {
         !isNaN(nota)
     );
 
-  if (notas.length === 0) {
-    return null;
-  }
+  if (notas.length === 0) return null;
 
-  const suma = notas.reduce(
-    (total, nota) => total + nota,
-    0
-  );
+  const suma =
+    notas.reduce(
+      (total, nota) => total + nota,
+      0
+    );
 
   return suma / notas.length;
 }
 
 
-// =========================
+// =====================================================
 // PROMEDIO AÑO
-// =========================
+// =====================================================
 
 function calcularPromedioAño(indiceAño) {
 
@@ -300,19 +296,20 @@ function calcularPromedioAño(indiceAño) {
     return null;
   }
 
-  const suma = promedios.reduce(
-    (total, promedio) =>
-      total + promedio,
-    0
-  );
+  const suma =
+    promedios.reduce(
+      (total, promedio) =>
+        total + promedio,
+      0
+    );
 
   return suma / promedios.length;
 }
 
 
-// =========================
+// =====================================================
 // FORMATO PROMEDIO
-// =========================
+// =====================================================
 
 function mostrarPromedio(promedio) {
 
@@ -326,9 +323,9 @@ function mostrarPromedio(promedio) {
 }
 
 
-// =========================
+// =====================================================
 // RENDERIZAR MALLA
-// =========================
+// =====================================================
 
 function renderMalla() {
 
@@ -346,9 +343,9 @@ function renderMalla() {
     año.className = "año";
 
 
-    // =========================
+    // ---------------------------------
     // TÍTULO AÑO
-    // =========================
+    // ---------------------------------
 
     const titulo =
       document.createElement("h2");
@@ -359,9 +356,9 @@ function renderMalla() {
     año.appendChild(titulo);
 
 
-    // =========================
+    // ---------------------------------
     // PROMEDIO AÑO
-    // =========================
+    // ---------------------------------
 
     const promedioAño =
       document.createElement("div");
@@ -383,9 +380,9 @@ function renderMalla() {
     año.appendChild(promedioAño);
 
 
-    // =========================
-    // CONTENEDOR SEMESTRES
-    // =========================
+    // ---------------------------------
+    // SEMESTRES
+    // ---------------------------------
 
     const contSemestres =
       document.createElement("div");
@@ -405,9 +402,9 @@ function renderMalla() {
           "semestre";
 
 
-        // =========================
+        // ---------------------------------
         // TÍTULO SEMESTRE
-        // =========================
+        // ---------------------------------
 
         const h3 =
           document.createElement("h3");
@@ -418,9 +415,9 @@ function renderMalla() {
         divSem.appendChild(h3);
 
 
-        // =========================
+        // ---------------------------------
         // PROMEDIO SEMESTRE
-        // =========================
+        // ---------------------------------
 
         const promedioSemestre =
           document.createElement("div");
@@ -442,275 +439,311 @@ function renderMalla() {
         );
 
 
-        // =========================
+        // ---------------------------------
         // RAMOS
-        // =========================
+        // ---------------------------------
 
         sem.ramos.forEach(ramo => {
 
-          const divRamo =
-            document.createElement("div");
-
-          divRamo.className =
-            `ramo ${ramo.estado}`;
-
-          if (ramo.repetido) {
-            divRamo.classList.add(
-              "ramo-repetido"
-            );
-          }
-
-          divRamo.id = ramo.id;
-
-
-          // =========================
-          // NOMBRE
-          // =========================
-
-          const nombreRamo =
-            document.createElement("div");
-
-          nombreRamo.className =
-            "nombre-ramo";
-
-          nombreRamo.textContent =
-            ramo.nombre;
-
-          divRamo.appendChild(
-            nombreRamo
-          );
-
-
-          // =========================
-          // SÍMBOLO REPETIDO
-          // =========================
-
-          if (ramo.repetido) {
-
-            const simbolo =
-              document.createElement("span");
-
-            simbolo.className =
-              "simbolo-repetido";
-
-            simbolo.textContent = "↻";
-
-            simbolo.title =
-              "Ramo repetido";
-
-            divRamo.appendChild(
-              simbolo
-            );
-
-          }
-
-
-          // =========================
-          // PROMEDIO ACTUAL
-          // =========================
-
-          if (
-            ramo.promedio !== null &&
-            ramo.promedio !== undefined
-          ) {
-
-            const nota =
-              document.createElement("div");
-
-            nota.className =
-              "nota-ramo";
-
-            nota.textContent =
-              `Promedio: ${
-                ramo.promedio
-                  .toFixed(2)
-                  .replace(".", ",")
-              }`;
-
-            divRamo.appendChild(
-              nota
-            );
-
-          }
-
-
-          // =========================
-          // MINI MENÚ
-          // =========================
-
-          const menu =
-            crearMenuRamo(ramo);
-
-          divRamo.appendChild(menu);
-
-
-          // =========================
-          // CLIC NORMAL
-          // =========================
-
-          divRamo.addEventListener(
-            "click",
-            evento => {
-
-              // No hacer nada si se
-              // está interactuando con
-              // el menú o sus botones.
-
-              if (
-                evento.target.closest(
-                  ".menu-ramo"
-                )
-              ) {
-                return;
-              }
-
-              // Si acabamos de abrir
-              // el menú con pulsación larga,
-              // no aprobar automáticamente.
-
-              if (
-                divRamo.dataset.presionLarga ===
-                "true"
-              ) {
-
-                divRamo.dataset.presionLarga =
-                  "false";
-
-                return;
-
-              }
-
-              // Si está bloqueado,
-              // no hacer nada.
-
-              if (
-                ramo.estado ===
-                "bloqueado"
-              ) {
-                return;
-              }
-
-              aprobarRamo(ramo.id);
-
-            }
-          );
-
-
-          // =========================
-          // PULSACIÓN LARGA
-          // =========================
-
-          let temporizador = null;
-
-          function iniciarPresion(evento) {
-
-            // Si se pulsa sobre el menú,
-            // no iniciar temporizador.
-
-            if (
-              evento.target.closest(
-                ".menu-ramo"
-              )
-            ) {
-              return;
-            }
-
-            divRamo.dataset.presionLarga =
-              "false";
-
-            temporizador =
-              setTimeout(() => {
-
-                divRamo.dataset.presionLarga =
-                  "true";
-
-                abrirMenuRamo(ramo.id);
-
-              }, 600);
-
-          }
-
-
-          function cancelarPresion() {
-
-            if (temporizador !== null) {
-
-              clearTimeout(temporizador);
-
-              temporizador = null;
-
-            }
-
-          }
-
-
-          // PC
-
-          divRamo.addEventListener(
-            "mousedown",
-            iniciarPresion
-          );
-
-          divRamo.addEventListener(
-            "mouseup",
-            cancelarPresion
-          );
-
-          divRamo.addEventListener(
-            "mouseleave",
-            cancelarPresion
-          );
-
-
-          // Celular / tablet
-
-          divRamo.addEventListener(
-            "touchstart",
-            iniciarPresion,
-            { passive: true }
-          );
-
-          divRamo.addEventListener(
-            "touchend",
-            cancelarPresion
-          );
-
-          divRamo.addEventListener(
-            "touchcancel",
-            cancelarPresion
-          );
-
-
-          divSem.appendChild(
-            divRamo
-          );
+          crearRamo(ramo, divSem);
 
         });
 
 
-        contSemestres.appendChild(
-          divSem
-        );
+        contSemestres.appendChild(divSem);
 
       });
 
 
-    año.appendChild(
-      contSemestres
-    );
+    año.appendChild(contSemestres);
 
     malla.appendChild(año);
 
   }
+}
+
+
+// =====================================================
+// CREAR RAMO
+// =====================================================
+
+function crearRamo(ramo, contenedor) {
+
+  const divRamo =
+    document.createElement("div");
+
+  divRamo.className =
+    `ramo ${ramo.estado}`;
+
+  divRamo.id = ramo.id;
+
+
+  // ---------------------------------
+  // CONTENIDO PRINCIPAL
+  // ---------------------------------
+
+  const contenido =
+    document.createElement("div");
+
+  contenido.className =
+    "contenido-ramo";
+
+
+  // ---------------------------------
+  // NOMBRE
+  // ---------------------------------
+
+  const nombre =
+    document.createElement("div");
+
+  nombre.className =
+    "nombre-ramo";
+
+  nombre.textContent =
+    ramo.nombre;
+
+  contenido.appendChild(nombre);
+
+
+  // ---------------------------------
+  // SIMBOLO REPETIDO
+  // ---------------------------------
+
+  if (ramo.repetido) {
+
+    const simbolo =
+      document.createElement("span");
+
+    simbolo.className =
+      "simbolo-repetido";
+
+    simbolo.textContent = "↻";
+
+    simbolo.title =
+      "Ramo repetido";
+
+    contenido.appendChild(simbolo);
+
+  }
+
+
+  // ---------------------------------
+  // PROMEDIO ACTUAL
+  // ---------------------------------
+
+  if (
+    ramo.promedio !== null &&
+    ramo.promedio !== undefined
+  ) {
+
+    const nota =
+      document.createElement("div");
+
+    nota.className =
+      "nota-ramo";
+
+    nota.textContent =
+      `Promedio: ${
+        ramo.promedio
+          .toFixed(2)
+          .replace(".", ",")
+      }`;
+
+    contenido.appendChild(nota);
+
+  }
+
+
+  // ---------------------------------
+  // HISTORIAL
+  // ---------------------------------
+
+  if (
+    ramo.historial &&
+    ramo.historial.length > 0
+  ) {
+
+    const historial =
+      document.createElement("div");
+
+    historial.className =
+      "historial-ramo";
+
+    historial.textContent =
+      `Anterior: ${
+        ramo.historial[
+          ramo.historial.length - 1
+        ].toFixed(2).replace(".", ",")
+      }`;
+
+    contenido.appendChild(historial);
+
+  }
+
+
+  divRamo.appendChild(contenido);
+
+
+  // ---------------------------------
+  // CLIC NORMAL
+  // ---------------------------------
+
+  if (ramo.estado !== "bloqueado") {
+
+    divRamo.addEventListener(
+      "click",
+      evento => {
+
+        if (
+          evento.target.closest(
+            ".menu-ramo"
+          )
+        ) {
+          return;
+        }
+
+        if (
+          divRamo.dataset.presionLarga ===
+          "true"
+        ) {
+
+          divRamo.dataset.presionLarga =
+            "false";
+
+          return;
+
+        }
+
+        aprobarRamo(ramo.id);
+
+      }
+    );
+
+  }
+
+
+  // ---------------------------------
+  // MENÚ DE MANTENER PRESIONADO
+  // ---------------------------------
+
+  configurarPresionLarga(
+    divRamo,
+    ramo
+  );
+
+
+  contenedor.appendChild(divRamo);
 
 }
 
 
-// =========================
-// CREAR MINI MENÚ
-// =========================
+// =====================================================
+// PRESIÓN LARGA
+// =====================================================
 
-function crearMenuRamo(ramo) {
+function configurarPresionLarga(
+  divRamo,
+  ramo
+) {
+
+  let temporizador = null;
+
+  let menuAbierto = false;
+
+
+  function iniciar(evento) {
+
+    if (
+      evento.target.closest(
+        ".menu-ramo"
+      )
+    ) {
+      return;
+    }
+
+    if (evento.cancelable) {
+      evento.preventDefault();
+    }
+
+    cancelar();
+
+    temporizador =
+      setTimeout(() => {
+
+        divRamo.dataset.presionLarga =
+          "true";
+
+        abrirMenuRamo(
+          divRamo,
+          ramo
+        );
+
+        menuAbierto = true;
+
+      }, 650);
+
+  }
+
+
+  function cancelar() {
+
+    if (temporizador !== null) {
+
+      clearTimeout(temporizador);
+
+      temporizador = null;
+
+    }
+
+  }
+
+
+  divRamo.addEventListener(
+    "mousedown",
+    iniciar
+  );
+
+  divRamo.addEventListener(
+    "mouseup",
+    cancelar
+  );
+
+  divRamo.addEventListener(
+    "mouseleave",
+    cancelar
+  );
+
+
+  divRamo.addEventListener(
+    "touchstart",
+    iniciar,
+    { passive: false }
+  );
+
+  divRamo.addEventListener(
+    "touchend",
+    cancelar
+  );
+
+  divRamo.addEventListener(
+    "touchcancel",
+    cancelar
+  );
+
+}
+
+
+// =====================================================
+// ABRIR MENÚ DEL RAMO
+// =====================================================
+
+function abrirMenuRamo(
+  divRamo,
+  ramo
+) {
+
+  cerrarMenusRamos();
+
 
   const menu =
     document.createElement("div");
@@ -719,249 +752,161 @@ function crearMenuRamo(ramo) {
     "menu-ramo";
 
 
-  // =========================
-  // BOTÓN EDITAR PROMEDIO
-  // =========================
+  // ---------------------------------
+  // TÍTULO
+  // ---------------------------------
 
-  const editar =
+  const titulo =
+    document.createElement("div");
+
+  titulo.className =
+    "menu-ramo-titulo";
+
+  titulo.textContent =
+    ramo.nombre;
+
+  menu.appendChild(titulo);
+
+
+  // ---------------------------------
+  // PONER / EDITAR PROMEDIO
+  // ---------------------------------
+
+  const botonPromedio =
     document.createElement("button");
 
-  editar.type = "button";
+  botonPromedio.textContent =
+    "📝 Promedio";
 
-  editar.textContent =
-    "Editar promedio";
-
-  editar.addEventListener(
+  botonPromedio.addEventListener(
     "click",
     evento => {
 
       evento.stopPropagation();
 
-      editarPromedio(ramo.id);
+      cerrarMenusRamos();
+
+      editarPromedio(
+        ramo.id
+      );
 
     }
   );
 
+  menu.appendChild(
+    botonPromedio
+  );
 
-  // =========================
-  // BOTÓN REPETIR
-  // =========================
 
-  const repetir =
+  // ---------------------------------
+  // REPETIR RAMO
+  // ---------------------------------
+
+  const botonRepetir =
     document.createElement("button");
 
-  repetir.type = "button";
-
-  repetir.textContent =
+  botonRepetir.textContent =
     ramo.repetido
-      ? "Ver promedio anterior"
-      : "Marcar como repetido";
+      ? "↻ Editar repetición"
+      : "↻ Repetir ramo";
 
-
-  repetir.addEventListener(
+  botonRepetir.addEventListener(
     "click",
     evento => {
 
       evento.stopPropagation();
 
-      if (ramo.repetido) {
+      repetirRamo(
+        ramo.id
+      );
 
-        mostrarPromedioAnterior(
-          ramo.id
-        );
+      cerrarMenusRamos();
 
-      } else {
+    }
+  );
 
-        repetirRamo(ramo.id);
+  menu.appendChild(
+    botonRepetir
+  );
+
+
+  // ---------------------------------
+  // VER HISTORIAL
+  // ---------------------------------
+
+  if (
+    ramo.historial &&
+    ramo.historial.length > 0
+  ) {
+
+    const botonHistorial =
+      document.createElement("button");
+
+    botonHistorial.textContent =
+      "📋 Ver historial";
+
+    botonHistorial.addEventListener(
+      "click",
+      evento => {
+
+        evento.stopPropagation();
+
+        mostrarHistorial(ramo);
 
       }
-
-    }
-  );
-
-
-  // =========================
-  // CERRAR
-  // =========================
-
-  const cerrar =
-    document.createElement("button");
-
-  cerrar.type = "button";
-
-  cerrar.textContent =
-    "Cerrar";
-
-  cerrar.addEventListener(
-    "click",
-    evento => {
-
-      evento.stopPropagation();
-
-      cerrarMenus();
-
-    }
-  );
-
-
-  menu.appendChild(editar);
-  menu.appendChild(repetir);
-  menu.appendChild(cerrar);
-
-  return menu;
-
-}
-
-
-// =========================
-// ABRIR MENÚ
-// =========================
-
-function abrirMenuRamo(id) {
-
-  cerrarMenus();
-
-  const divRamo =
-    document.getElementById(id);
-
-  if (!divRamo) return;
-
-  const menu =
-    divRamo.querySelector(
-      ".menu-ramo"
     );
 
-  if (!menu) return;
+    menu.appendChild(
+      botonHistorial
+    );
 
-  menu.classList.add(
-    "menu-visible"
-  );
+  }
+
+
+  divRamo.appendChild(menu);
 
 }
 
 
-// =========================
+// =====================================================
 // CERRAR MENÚS
-// =========================
+// =====================================================
 
-function cerrarMenus() {
+function cerrarMenusRamos() {
 
   document
     .querySelectorAll(
-      ".menu-ramo.menu-visible"
+      ".menu-ramo"
     )
     .forEach(menu => {
-
-      menu.classList.remove(
-        "menu-visible"
-      );
-
+      menu.remove();
     });
 
 }
 
 
-// =========================
-// REPETIR RAMO
-// =========================
+// Cerrar si se hace clic fuera
+document.addEventListener(
+  "click",
+  evento => {
 
-function repetirRamo(id) {
+    if (
+      !evento.target.closest(
+        ".menu-ramo"
+      )
+    ) {
 
-  const ramo =
-    buscarRamo(id);
+      cerrarMenusRamos();
 
-  if (!ramo) return;
-
-
-  // =========================
-  // GUARDAR PROMEDIO ANTERIOR
-  // =========================
-
-  if (
-    ramo.promedio !== null &&
-    ramo.promedio !== undefined
-  ) {
-
-    ramo.promedioAnterior =
-      ramo.promedio;
-
-  } else {
-
-    ramo.promedioAnterior =
-      null;
+    }
 
   }
+);
 
 
-  // Marcar como repetido
-
-  ramo.repetido = true;
-
-
-  // El ramo vuelve a estar
-  // disponible para cursarlo.
-
-  ramo.estado = "disponible";
-
-
-  guardarEstado();
-
-  renderMalla();
-
-
-  // =========================
-  // ABRIR AUTOMÁTICAMENTE
-  // PARA PONER EL NUEVO PROMEDIO
-  // =========================
-
-  setTimeout(() => {
-
-    editarPromedio(id);
-
-  }, 50);
-
-}
-
-
-// =========================
-// MOSTRAR PROMEDIO ANTERIOR
-// =========================
-
-function mostrarPromedioAnterior(id) {
-
-  const ramo =
-    buscarRamo(id);
-
-  if (!ramo) return;
-
-
-  if (
-    ramo.promedioAnterior === null ||
-    ramo.promedioAnterior === undefined
-  ) {
-
-    alert(
-      "Este ramo no tiene un promedio anterior registrado."
-    );
-
-    return;
-
-  }
-
-
-  alert(
-    `Promedio anterior de ${ramo.nombre}: ` +
-    `${ramo.promedioAnterior
-      .toFixed(2)
-      .replace(".", ",")}`
-  );
-
-}
-
-
-// =========================
+// =====================================================
 // EDITAR PROMEDIO
-// =========================
+// =====================================================
 
 function editarPromedio(id) {
 
@@ -977,8 +922,6 @@ function editarPromedio(id) {
   if (!divRamo) return;
 
 
-  // Evitar duplicar input
-
   if (
     divRamo.querySelector(
       ".input-promedio"
@@ -987,27 +930,6 @@ function editarPromedio(id) {
     return;
   }
 
-
-  // Cerrar el menú,
-  // pero dejar el ramo visible.
-
-  const menu =
-    divRamo.querySelector(
-      ".menu-ramo"
-    );
-
-  if (menu) {
-
-    menu.classList.remove(
-      "menu-visible"
-    );
-
-  }
-
-
-  // =========================
-  // CREAR INPUT
-  // =========================
 
   const input =
     document.createElement("input");
@@ -1038,15 +960,10 @@ function editarPromedio(id) {
   }
 
 
-  // Evitar que el ramo
-  // se marque al tocar input.
-
   input.addEventListener(
     "click",
     evento => {
-
       evento.stopPropagation();
-
     }
   );
 
@@ -1054,9 +971,7 @@ function editarPromedio(id) {
   input.addEventListener(
     "mousedown",
     evento => {
-
       evento.stopPropagation();
-
     }
   );
 
@@ -1064,24 +979,17 @@ function editarPromedio(id) {
   input.addEventListener(
     "touchstart",
     evento => {
-
       evento.stopPropagation();
-
     }
   );
 
-
-  // =========================
-  // ENTER
-  // =========================
 
   input.addEventListener(
     "keydown",
     evento => {
 
       if (
-        evento.key ===
-        "Enter"
+        evento.key === "Enter"
       ) {
 
         guardarPromedio(
@@ -1093,8 +1001,7 @@ function editarPromedio(id) {
 
 
       if (
-        evento.key ===
-        "Escape"
+        evento.key === "Escape"
       ) {
 
         renderMalla();
@@ -1104,10 +1011,6 @@ function editarPromedio(id) {
     }
   );
 
-
-  // =========================
-  // BLUR
-  // =========================
 
   input.addEventListener(
     "blur",
@@ -1122,18 +1025,16 @@ function editarPromedio(id) {
   );
 
 
-  divRamo.appendChild(
-    input
-  );
+  divRamo.appendChild(input);
 
   input.focus();
 
 }
 
 
-// =========================
+// =====================================================
 // GUARDAR PROMEDIO
-// =========================
+// =====================================================
 
 function guardarPromedio(
   id,
@@ -1145,8 +1046,6 @@ function guardarPromedio(
 
   if (!ramo) return;
 
-
-  // Si queda vacío
 
   if (
     valor.trim() === ""
@@ -1168,10 +1067,6 @@ function guardarPromedio(
       valor.replace(",", ".")
     );
 
-
-  // =========================
-  // VALIDAR
-  // =========================
 
   if (
     isNaN(numero) ||
@@ -1201,9 +1096,110 @@ function guardarPromedio(
 }
 
 
-// =========================
+// =====================================================
+// REPETIR RAMO
+// =====================================================
+
+function repetirRamo(id) {
+
+  const ramo =
+    buscarRamo(id);
+
+  if (!ramo) return;
+
+
+  // ---------------------------------
+  // Si tenía promedio anterior,
+  // guardarlo en historial.
+  // ---------------------------------
+
+  if (
+    ramo.promedio !== null &&
+    ramo.promedio !== undefined
+  ) {
+
+    if (!ramo.historial) {
+      ramo.historial = [];
+    }
+
+    ramo.historial.push(
+      ramo.promedio
+    );
+
+  }
+
+
+  ramo.repetido = true;
+
+
+  // El ramo vuelve a estar disponible
+  // para ingresar la nueva nota.
+
+  ramo.estado = "disponible";
+
+
+  guardarEstado();
+
+  renderMalla();
+
+
+  // ---------------------------------
+  // Abrir automáticamente el promedio
+  // nuevo.
+  // ---------------------------------
+
+  setTimeout(() => {
+
+    editarPromedio(id);
+
+  }, 50);
+
+}
+
+
+// =====================================================
+// MOSTRAR HISTORIAL
+// =====================================================
+
+function mostrarHistorial(ramo) {
+
+  if (
+    !ramo.historial ||
+    ramo.historial.length === 0
+  ) {
+
+    alert(
+      "Este ramo todavía no tiene intentos anteriores."
+    );
+
+    return;
+
+  }
+
+
+  const historialTexto =
+    ramo.historial
+      .map(
+        (nota, indice) =>
+          `Intento ${indice + 1}: ${
+            nota
+              .toFixed(2)
+              .replace(".", ",")
+          }`
+      )
+      .join("\n");
+
+
+  alert(
+    `Historial de ${ramo.nombre}\n\n${historialTexto}`
+  );
+
+}
+
+
+// =====================================================
 // APROBAR / DESMARCAR
-// =========================
+// =====================================================
 
 function aprobarRamo(id) {
 
@@ -1214,8 +1210,7 @@ function aprobarRamo(id) {
 
 
   if (
-    ramo.estado ===
-    "disponible"
+    ramo.estado === "disponible"
   ) {
 
     ramo.estado =
@@ -1224,8 +1219,7 @@ function aprobarRamo(id) {
   }
 
   else if (
-    ramo.estado ===
-    "aprobado"
+    ramo.estado === "aprobado"
   ) {
 
     ramo.estado =
@@ -1234,9 +1228,9 @@ function aprobarRamo(id) {
   }
 
 
-  // =========================
+  // ---------------------------------
   // ACTUALIZAR BLOQUEOS
-  // =========================
+  // ---------------------------------
 
   semestres.forEach(
     sem => {
@@ -1261,7 +1255,7 @@ function aprobarRamo(id) {
                       x =>
                         x.id === req &&
                         x.estado ===
-                        "aprobado"
+                          "aprobado"
                     )
                 )
             );
@@ -1284,9 +1278,9 @@ function aprobarRamo(id) {
   renderMalla();
 
 
-  // =========================
+  // ---------------------------------
   // ANIMACIÓN
-  // =========================
+  // ---------------------------------
 
   const ramoDiv =
     document.getElementById(id);
@@ -1313,33 +1307,344 @@ function aprobarRamo(id) {
 }
 
 
-// =========================
-// CERRAR MENÚ AL HACER CLIC
-// AFUERA
-// =========================
+// =====================================================
+// PANEL "CÓMO FUNCIONA"
+// =====================================================
 
-document.addEventListener(
-  "click",
-  evento => {
+function abrirComoFunciona() {
 
-    if (
-      !evento.target.closest(
-        ".ramo"
-      )
-    ) {
+  cerrarPaneles();
 
-      cerrarMenus();
+  const panel =
+    document.createElement("div");
 
-    }
+  panel.className =
+    "panel-informacion";
+
+  panel.innerHTML = `
+
+    <div class="panel-contenido">
+
+      <button
+        class="cerrar-panel"
+        onclick="cerrarPaneles()"
+      >
+        ×
+      </button>
+
+      <h2>¿Cómo funciona la malla?</h2>
+
+      <div class="explicacion-item">
+        <span class="ejemplo disponible"></span>
+        <div>
+          <strong>Disponible</strong>
+          <p>Puedes tomar o aprobar este ramo.</p>
+        </div>
+      </div>
+
+      <div class="explicacion-item">
+        <span class="ejemplo aprobado"></span>
+        <div>
+          <strong>Aprobado</strong>
+          <p>El ramo ya fue aprobado.</p>
+        </div>
+      </div>
+
+      <div class="explicacion-item">
+        <span class="ejemplo bloqueado"></span>
+        <div>
+          <strong>Bloqueado</strong>
+          <p>Aún falta aprobar uno o más prerrequisitos.</p>
+        </div>
+      </div>
+
+      <div class="explicacion-item">
+        <span class="ejemplo simbolo">↻</span>
+        <div>
+          <strong>Ramo repetido</strong>
+          <p>El símbolo indica que el ramo fue cursado nuevamente.</p>
+        </div>
+      </div>
+
+      <hr>
+
+      <p class="instruccion">
+        💡 Mantén presionado un ramo para abrir sus opciones.
+      </p>
+
+      <p class="instruccion">
+        📝 Desde ese menú puedes ingresar o editar el promedio.
+      </p>
+
+      <p class="instruccion">
+        ↻ También puedes registrar si repetiste el ramo y conservar el intento anterior.
+      </p>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(panel);
+
+}
+
+
+// =====================================================
+// PANEL DE VERSIÓN
+// =====================================================
+
+function abrirVersion() {
+
+  cerrarPaneles();
+
+  const panel =
+    document.createElement("div");
+
+  panel.className =
+    "panel-informacion";
+
+  panel.innerHTML = `
+
+    <div class="panel-contenido">
+
+      <button
+        class="cerrar-panel"
+        onclick="cerrarPaneles()"
+      >
+        ×
+      </button>
+
+      <h2>Información de la malla</h2>
+
+      <p>
+        <strong>Versión actual:</strong>
+        ${VERSION_MALLA}
+      </p>
+
+      <p>
+        Malla interactiva de Ingeniería Civil Industrial.
+      </p>
+
+      <p class="texto-pequeno">
+        Esta versión incluye seguimiento de ramos,
+        promedios, prerrequisitos y registro de ramos repetidos.
+      </p>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(panel);
+
+}
+
+
+// =====================================================
+// PANEL DE SUGERENCIAS
+// =====================================================
+
+function abrirSugerencias() {
+
+  cerrarPaneles();
+
+  const panel =
+    document.createElement("div");
+
+  panel.className =
+    "panel-informacion";
+
+  panel.innerHTML = `
+
+    <div class="panel-contenido">
+
+      <button
+        class="cerrar-panel"
+        onclick="cerrarPaneles()"
+      >
+        ×
+      </button>
+
+      <h2>💜 Sugerencias</h2>
+
+      <p>
+        ¿Encontraste un error o tienes una idea
+        para mejorar la malla?
+      </p>
+
+      <textarea
+        id="texto-sugerencia"
+        placeholder="Escribe aquí tu sugerencia..."
+      ></textarea>
+
+      <button
+        class="boton-enviar"
+        onclick="enviarSugerencia()"
+      >
+        Enviar sugerencia
+      </button>
+
+      <p class="texto-pequeno">
+        Gracias por ayudar a mejorar la malla ♡
+      </p>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(panel);
+
+}
+
+
+// =====================================================
+// ENVIAR SUGERENCIA
+// =====================================================
+
+function enviarSugerencia() {
+
+  const texto =
+    document.getElementById(
+      "texto-sugerencia"
+    )?.value.trim();
+
+
+  if (!texto) {
+
+    alert(
+      "Escribe una sugerencia antes de enviarla 💜"
+    );
+
+    return;
 
   }
-);
 
 
-// =========================
+  /*
+    AQUÍ DESPUÉS PODEMOS CONECTAR
+    UN FORMULARIO REAL PARA QUE
+    LAS SUGERENCIAS TE LLEGUEN.
+  */
+
+  localStorage.setItem(
+    "ultimaSugerencia",
+    texto
+  );
+
+
+  alert(
+    "¡Gracias por tu sugerencia! 💜"
+  );
+
+
+  cerrarPaneles();
+
+}
+
+
+// =====================================================
+// CERRAR PANELES
+// =====================================================
+
+function cerrarPaneles() {
+
+  document
+    .querySelectorAll(
+      ".panel-informacion"
+    )
+    .forEach(
+      panel => panel.remove()
+    );
+
+}
+
+
+// =====================================================
+// CREAR MENÚ SUPERIOR
+// =====================================================
+
+function crearMenuSuperior() {
+
+  if (
+    document.querySelector(
+      ".menu-superior"
+    )
+  ) {
+    return;
+  }
+
+
+  const menu =
+    document.createElement("div");
+
+  menu.className =
+    "menu-superior";
+
+
+  const botonComoFunciona =
+    document.createElement("button");
+
+  botonComoFunciona.textContent =
+    "¿Cómo funciona?";
+
+  botonComoFunciona.onclick =
+    abrirComoFunciona;
+
+
+  const botonVersion =
+    document.createElement("button");
+
+  botonVersion.textContent =
+    VERSION_MALLA;
+
+  botonVersion.onclick =
+    abrirVersion;
+
+
+  const botonSugerencias =
+    document.createElement("button");
+
+  botonSugerencias.textContent =
+    "💜 Sugerencias";
+
+  botonSugerencias.onclick =
+    abrirSugerencias;
+
+
+  menu.appendChild(
+    botonComoFunciona
+  );
+
+  menu.appendChild(
+    botonVersion
+  );
+
+  menu.appendChild(
+    botonSugerencias
+  );
+
+
+  const titulo =
+    document.querySelector("h1");
+
+
+  if (titulo) {
+
+    titulo.insertAdjacentElement(
+      "afterend",
+      menu
+    );
+
+  }
+
+}
+
+
+// =====================================================
 // INICIO
-// =========================
+// =====================================================
 
 cargarEstado();
+
+crearMenuSuperior();
 
 renderMalla();
