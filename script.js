@@ -9,49 +9,60 @@ const VERSION_MALLA = "v1.5";
 const HISTORIAL_VERSIONES = [
   {
     version: "v1.5",
-    titulo: "Comentarios y mejoras",
+    titulo: "Rediseño visual e interacción",
     cambios: [
-      "Comentarios personales por ramo",
-      "Sección de Mis notas",
-      "Sistema de sugerencias",
-      "Mejoras en el menú de los ramos"
+      "Rediseño visual de la malla",
+      "Menú superior",
+      "Panel «¿Cómo funciona?»",
+      "Información de versión",
+      "Sistema de sugerencias"
     ]
   },
   {
     version: "v1.4",
-    titulo: "Ramos repetidos",
+    titulo: "Menús e interacción de los ramos",
     cambios: [
-      "Registro de ramos repetidos",
-      "Historial de promedios anteriores",
-      "Nuevo promedio al repetir un ramo"
+      "Menús de opciones para cada ramo",
+      "Interacción mediante clic y menú de opciones",
+      "Edición de información de los ramos"
     ]
   },
   {
     version: "v1.3",
-    titulo: "Promedios",
+    titulo: "Ramos repetidos",
     cambios: [
-      "Promedio por ramo",
-      "Promedio semestral",
-      "Promedio anual"
+      "Registro de ramos repetidos",
+      "Promedio anterior",
+      "Historial de promedios",
+      "Registro del nuevo promedio al repetir un ramo"
     ]
   },
   {
     version: "v1.2",
-    titulo: "Estados de ramos",
+    titulo: "Registro de promedios",
+    cambios: [
+      "Registro de promedio por ramo",
+      "Cálculo del promedio semestral",
+      "Cálculo del promedio anual"
+    ]
+  },
+  {
+    version: "v1.1",
+    titulo: "Estados de los ramos",
     cambios: [
       "Ramos disponibles",
-      "Ramos aprobados",
       "Ramos bloqueados",
-      "Prerrequisitos"
+      "Ramos aprobados",
+      "Sistema de prerrequisitos"
     ]
   },
   {
     version: "v1.0",
-    titulo: "Malla inicial",
+    titulo: "Malla base",
     cambios: [
-      "Malla curricular interactiva",
-      "11 semestres",
-      "60 asignaturas"
+      "Semestres de la carrera",
+      "Ramos de la malla curricular",
+      "Sistema de prerrequisitos"
     ]
   }
 ];
