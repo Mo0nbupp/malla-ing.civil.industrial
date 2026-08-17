@@ -85,9 +85,9 @@ const HISTORIAL_VERSIONES = [
 // =====================================================
 
 const TEMAS = {
+
   lila: {
     nombre: "Lila pastel",
-    emoji: "💜",
 
     variables: {
       "--color-fondo-1": "#faf8ff",
@@ -121,9 +121,9 @@ const TEMAS = {
     }
   },
 
+
   verde: {
     nombre: "Verde pastel",
-    emoji: "🌿",
 
     variables: {
       "--color-fondo-1": "#f7fcf8",
@@ -157,9 +157,9 @@ const TEMAS = {
     }
   },
 
+
   celeste: {
     nombre: "Celeste pastel",
-    emoji: "🩵",
 
     variables: {
       "--color-fondo-1": "#f7fbff",
@@ -193,9 +193,9 @@ const TEMAS = {
     }
   },
 
+
   rosa: {
     nombre: "Rosa pastel",
-    emoji: "🌸",
 
     variables: {
       "--color-fondo-1": "#fff8fb",
@@ -228,6 +228,7 @@ const TEMAS = {
       "--color-simbolo-texto": "#a36f87"
     }
   }
+
 };
 
 
@@ -416,7 +417,7 @@ const semestres = [
       { id: "r53", nombre: "Planificación estratégica", prereq: [], estado: "bloqueado" },
       { id: "r54", nombre: "Emprendimiento y liderazgo en negocios", prereq: ["r50"], estado: "bloqueado" },
       { id: "r55", nombre: "Eficiencia energética y energías renovables", prereq: ["r44"], estado: "bloqueado" },
-      { id:  "r56", nombre: "Proyecto título I", prereq: ["r48","r49","r50","r51","r52"], estado: "bloqueado" }
+      { id: "r56", nombre: "Proyecto título I", prereq: ["r48","r49","r50","r51","r52"], estado: "bloqueado" }
     ]
   },
 
@@ -430,6 +431,7 @@ const semestres = [
       { id: "r60", nombre: "Práctica profesional", prereq: ["r41"], estado: "bloqueado" }
     ]
   }
+
 ];
 
 
@@ -2406,10 +2408,11 @@ function abrirTemas() {
             type="button"
           >
 
-            <span class="tema-circulo tema-${clave}"></span>
+            <span
+              class="tema-cuadrado tema-${clave}"
+            ></span>
 
             <span class="tema-nombre">
-              ${tema.emoji}
               ${tema.nombre}
             </span>
 
