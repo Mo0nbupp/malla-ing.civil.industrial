@@ -58,16 +58,7 @@ const semestres = [
       { id: "r18", nombre: "Cálculo III", prereq: ["r12"], estado: "bloqueado" },
       { id: "r19", nombre: "Electricidad y magnetismo", prereq: ["r10"], estado: "bloqueado" },
       { id: "r20", nombre: "Curso sello institucional IV", prereq: [], estado: "bloqueado" },
-      {
-        id: "r21",
-        nombre: "Taller integrador de competencias básicas",
-        prereq: [
-          "r1","r2","r3","r4","r5",
-          "r6","r7","r8","r9","r10",
-          "r11","r12","r13","r14","r15","r16"
-        ],
-        estado: "bloqueado"
-      },
+      { id: "r21", nombre: "Taller integrador de competencias básicas", prereq: ["r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15","r16"], estado: "bloqueado" },
       { id: "r22", nombre: "Ciclo de la vida y tecnología de los materiales", prereq: [], estado: "bloqueado" }
     ]
   },
@@ -79,7 +70,7 @@ const semestres = [
       { id: "r23", nombre: "Termodinámica", prereq: [], estado: "bloqueado" },
       { id: "r24", nombre: "Probabilidad y estadística", prereq: ["r12"], estado: "bloqueado" },
       { id: "r25", nombre: "Ondas, óptica y calor", prereq: ["r10"], estado: "bloqueado" },
-      { id: "r26", nombre: "Contabilidad y costos", prereq: ["r6"], estado: "bloqueado" },
+      { id:  "r26", nombre: "Contabilidad y costos", prereq: ["r6"], estado: "bloqueado" },
       { id: "r27", nombre: "Dibujo e interpretación de planos", prereq: [], estado: "bloqueado" },
       { id: "r28", nombre: "Interdisciplinar", prereq: [], estado: "bloqueado" }
     ]
@@ -112,13 +103,10 @@ const semestres = [
         id: "r41",
         nombre: "Práctica operacional",
         prereq: [
-          "r1","r2","r3","r4","r5",
-          "r6","r7","r8","r9","r10",
-          "r11","r12","r13","r14","r15","r16",
-          "r17","r18","r19","r20","r21","r22",
-          "r23","r24","r25","r26","r27","r28",
-          "r29","r30","r31","r32","r33","r34",
-          "r35","r36","r37","r38","r39","r40"
+          "r1","r2","r3","r4","r5","r6","r7","r8","r9","r10",
+          "r11","r12","r13","r14","r15","r16","r17","r18","r19","r20",
+          "r21","r22","r23","r24","r25","r26","r27","r28","r29","r30",
+          "r31","r32","r33","r34","r35","r36","r37","r38","r39","r40"
         ],
         estado: "bloqueado"
       }
@@ -168,29 +156,23 @@ const semestres = [
       { id: "r57", nombre: "Ética y responsabilidad social y empresarial", prereq: [], estado: "bloqueado" },
       { id: "r58", nombre: "Legislación comercial y laboral", prereq: [], estado: "bloqueado" },
       { id: "r59", nombre: "Proyecto título II", prereq: ["r56"], estado: "bloqueado" },
-      { id: 11, nombre: "Práctica profesional", prereq: ["r41"], estado: "bloqueado" }
+      { id: "r60", nombre: "Práctica profesional", prereq: ["r41"], estado: "bloqueado" }
     ]
   }
 ];
 
 
 // =====================================================
-// GUARDAR ESTADO
+// GUARDAR / CARGAR
 // =====================================================
 
 function guardarEstado() {
-
   localStorage.setItem(
     "estadoMalla",
     JSON.stringify(semestres)
   );
-
 }
 
-
-// =====================================================
-// CARGAR ESTADO
-// =====================================================
 
 function cargarEstado() {
 
@@ -264,9 +246,7 @@ function buscarRamo(id) {
         r => r.id === id
       );
 
-    if (ramo) {
-      return ramo;
-    }
+    if (ramo) return ramo;
 
   }
 
@@ -276,7 +256,7 @@ function buscarRamo(id) {
 
 
 // =====================================================
-// PROMEDIO DEL SEMESTRE
+// PROMEDIO SEMESTRE
 // =====================================================
 
 function calcularPromedioSemestre(
@@ -311,7 +291,7 @@ function calcularPromedioSemestre(
 
 
 // =====================================================
-// PROMEDIO DEL AÑO
+// PROMEDIO AÑO
 // =====================================================
 
 function calcularPromedioAño(
@@ -319,10 +299,14 @@ function calcularPromedioAño(
 ) {
 
   const semestre1 =
-    semestres[indiceAño * 2];
+    semestres[
+      indiceAño * 2
+    ];
 
   const semestre2 =
-    semestres[indiceAño * 2 + 1];
+    semestres[
+      indiceAño * 2 + 1
+    ];
 
   const promedios = [];
 
@@ -335,7 +319,9 @@ function calcularPromedioAño(
       );
 
     if (promedio !== null) {
-      promedios.push(promedio);
+      promedios.push(
+        promedio
+      );
     }
 
   }
@@ -349,7 +335,9 @@ function calcularPromedioAño(
       );
 
     if (promedio !== null) {
-      promedios.push(promedio);
+      promedios.push(
+        promedio
+      );
     }
 
   }
@@ -373,7 +361,7 @@ function calcularPromedioAño(
 
 
 // =====================================================
-// FORMATO DE PROMEDIO
+// FORMATO PROMEDIO
 // =====================================================
 
 function mostrarPromedio(
@@ -406,30 +394,40 @@ function renderMalla() {
   ) {
 
     const año =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     año.className = "año";
 
 
     // ---------------------------------
-    // TÍTULO DEL AÑO
+    // TÍTULO AÑO
     // ---------------------------------
 
     const titulo =
-      document.createElement("h2");
+      document.createElement(
+        "h2"
+      );
 
     titulo.textContent =
-      `Año ${Math.floor(i / 2) + 1}`;
+      `Año ${
+        Math.floor(i / 2) + 1
+      }`;
 
-    año.appendChild(titulo);
+    año.appendChild(
+      titulo
+    );
 
 
     // ---------------------------------
-    // PROMEDIO DEL AÑO
+    // PROMEDIO AÑO
     // ---------------------------------
 
     const promedioAño =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     promedioAño.className =
       "promedio-año";
@@ -451,11 +449,13 @@ function renderMalla() {
 
 
     // ---------------------------------
-    // CONTENEDOR DE SEMESTRES
+    // SEMESTRES
     // ---------------------------------
 
     const contSemestres =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     contSemestres.className =
       "semestres";
@@ -463,75 +463,85 @@ function renderMalla() {
 
     semestres
       .slice(i, i + 2)
-      .forEach(sem => {
+      .forEach(
+        sem => {
 
-        const divSem =
-          document.createElement("div");
-
-        divSem.className =
-          "semestre";
-
-
-        // ---------------------------------
-        // TÍTULO SEMESTRE
-        // ---------------------------------
-
-        const h3 =
-          document.createElement("h3");
-
-        h3.textContent =
-          `Semestre ${sem.numero}`;
-
-        divSem.appendChild(h3);
-
-
-        // ---------------------------------
-        // PROMEDIO SEMESTRE
-        // ---------------------------------
-
-        const promedioSemestre =
-          document.createElement("div");
-
-        promedioSemestre.className =
-          "promedio-semestre";
-
-        promedioSemestre.innerHTML = `
-          Promedio:
-          <strong>
-            ${mostrarPromedio(
-              calcularPromedioSemestre(
-                sem
-              )
-            )}
-          </strong>
-        `;
-
-        divSem.appendChild(
-          promedioSemestre
-        );
-
-
-        // ---------------------------------
-        // RAMOS
-        // ---------------------------------
-
-        sem.ramos.forEach(
-          ramo => {
-
-            crearRamo(
-              ramo,
-              divSem
+          const divSem =
+            document.createElement(
+              "div"
             );
 
-          }
-        );
+          divSem.className =
+            "semestre";
 
 
-        contSemestres.appendChild(
-          divSem
-        );
+          // ---------------------------------
+          // TÍTULO SEMESTRE
+          // ---------------------------------
 
-      });
+          const h3 =
+            document.createElement(
+              "h3"
+            );
+
+          h3.textContent =
+            `Semestre ${sem.numero}`;
+
+          divSem.appendChild(
+            h3
+          );
+
+
+          // ---------------------------------
+          // PROMEDIO SEMESTRE
+          // ---------------------------------
+
+          const promedioSemestre =
+            document.createElement(
+              "div"
+            );
+
+          promedioSemestre.className =
+            "promedio-semestre";
+
+          promedioSemestre.innerHTML = `
+            Promedio:
+            <strong>
+              ${mostrarPromedio(
+                calcularPromedioSemestre(
+                  sem
+                )
+              )}
+            </strong>
+          `;
+
+          divSem.appendChild(
+            promedioSemestre
+          );
+
+
+          // ---------------------------------
+          // RAMOS
+          // ---------------------------------
+
+          sem.ramos.forEach(
+            ramo => {
+
+              crearRamo(
+                ramo,
+                divSem
+              );
+
+            }
+          );
+
+
+          contSemestres.appendChild(
+            divSem
+          );
+
+        }
+      );
 
 
     año.appendChild(
@@ -557,7 +567,9 @@ function crearRamo(
 ) {
 
   const divRamo =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   divRamo.className =
     `ramo ${ramo.estado}`;
@@ -566,12 +578,23 @@ function crearRamo(
     ramo.id;
 
 
+  // IMPORTANTE:
+  // El ramo será la referencia visual,
+  // pero el menú será flotante y NO
+  // ocupará espacio dentro de él.
+
+  divRamo.style.position =
+    "relative";
+
+
   // ---------------------------------
-  // CONTENIDO DEL RAMO
+  // CONTENIDO PRINCIPAL
   // ---------------------------------
 
   const contenido =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   contenido.className =
     "contenido-ramo";
@@ -582,7 +605,9 @@ function crearRamo(
   // ---------------------------------
 
   const nombre =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   nombre.className =
     "nombre-ramo";
@@ -596,13 +621,15 @@ function crearRamo(
 
 
   // ---------------------------------
-  // SÍMBOLO DE REPETIDO
+  // SIMBOLO REPETIDO
   // ---------------------------------
 
   if (ramo.repetido) {
 
     const simbolo =
-      document.createElement("span");
+      document.createElement(
+        "span"
+      );
 
     simbolo.className =
       "simbolo-repetido";
@@ -630,7 +657,9 @@ function crearRamo(
   ) {
 
     const nota =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     nota.className =
       "nota-ramo";
@@ -650,7 +679,7 @@ function crearRamo(
 
 
   // ---------------------------------
-  // ÚLTIMO PROMEDIO ANTERIOR
+  // HISTORIAL
   // ---------------------------------
 
   if (
@@ -659,19 +688,21 @@ function crearRamo(
   ) {
 
     const historial =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     historial.className =
       "historial-ramo";
 
-    const anterior =
+    const ultimo =
       ramo.historial[
         ramo.historial.length - 1
       ];
 
     historial.textContent =
       `Anterior: ${
-        anterior
+        ultimo
           .toFixed(2)
           .replace(".", ",")
       }`;
@@ -688,12 +719,14 @@ function crearRamo(
   );
 
 
-  // =================================================
-  // BOTÓN DE OPCIONES
-  // =================================================
+  // ---------------------------------
+  // BOTÓN DE TRES PUNTITOS
+  // ---------------------------------
 
   const botonMenu =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
 
   botonMenu.className =
     "boton-menu-ramo";
@@ -712,11 +745,13 @@ function crearRamo(
     "click",
     evento => {
 
+      evento.preventDefault();
       evento.stopPropagation();
 
       abrirMenuRamo(
         divRamo,
-        ramo
+        ramo,
+        botonMenu
       );
 
     }
@@ -728,53 +763,49 @@ function crearRamo(
   );
 
 
-  // =================================================
-  // CLIC NORMAL EN EL RAMO
-  // =================================================
+  // ---------------------------------
+  // CLIC NORMAL
+  // ---------------------------------
 
-  divRamo.addEventListener(
-    "click",
-    evento => {
+  if (
+    ramo.estado !==
+    "bloqueado"
+  ) {
 
-      // Si se hizo clic en el botón
-      // de opciones, no marcar el ramo.
+    divRamo.addEventListener(
+      "click",
+      evento => {
 
-      if (
-        evento.target.closest(
-          ".boton-menu-ramo"
-        )
-      ) {
-        return;
+        // No aprobar si se tocó
+        // el botón de opciones.
+
+        if (
+          evento.target.closest(
+            ".boton-menu-ramo"
+          )
+        ) {
+          return;
+        }
+
+        // No aprobar si se tocó
+        // algún menú.
+
+        if (
+          evento.target.closest(
+            ".menu-ramo-flotante"
+          )
+        ) {
+          return;
+        }
+
+        aprobarRamo(
+          ramo.id
+        );
+
       }
+    );
 
-
-      // Si se hizo clic dentro del menú,
-      // tampoco marcar el ramo.
-
-      if (
-        evento.target.closest(
-          ".menu-ramo"
-        )
-      ) {
-        return;
-      }
-
-
-      // Los bloqueados no se pueden aprobar.
-
-      if (
-        ramo.estado === "bloqueado"
-      ) {
-        return;
-      }
-
-
-      aprobarRamo(
-        ramo.id
-      );
-
-    }
-  );
+  }
 
 
   contenedor.appendChild(
@@ -790,10 +821,26 @@ function crearRamo(
 
 function abrirMenuRamo(
   divRamo,
-  ramo
+  ramo,
+  boton
 ) {
 
-  // Primero cerramos cualquier otro menú.
+  // Si ya está abierto,
+  // cerrarlo.
+
+  const menuExistente =
+    document.querySelector(
+      `.menu-ramo-flotante[data-ramo="${ramo.id}"]`
+    );
+
+  if (menuExistente) {
+
+    menuExistente.remove();
+
+    return;
+
+  }
+
 
   cerrarMenusRamos();
 
@@ -803,23 +850,15 @@ function abrirMenuRamo(
   // ---------------------------------
 
   const menu =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   menu.className =
-    "menu-ramo";
+    "menu-ramo-flotante";
 
-
-  // Evita que un clic dentro
-  // del menú llegue al documento.
-
-  menu.addEventListener(
-    "click",
-    evento => {
-
-      evento.stopPropagation();
-
-    }
-  );
+  menu.dataset.ramo =
+    ramo.id;
 
 
   // ---------------------------------
@@ -827,7 +866,9 @@ function abrirMenuRamo(
   // ---------------------------------
 
   const titulo =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   titulo.className =
     "menu-ramo-titulo";
@@ -841,11 +882,13 @@ function abrirMenuRamo(
 
 
   // ---------------------------------
-  // PROMEDIO
+  // BOTÓN PROMEDIO
   // ---------------------------------
 
   const botonPromedio =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
 
   botonPromedio.type =
     "button";
@@ -874,33 +917,59 @@ function abrirMenuRamo(
 
 
   // ---------------------------------
-  // REPETIR RAMO
+  // REPETIR / QUITAR REPETICIÓN
   // ---------------------------------
 
   const botonRepetir =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
 
   botonRepetir.type =
     "button";
 
-  botonRepetir.textContent =
-    ramo.repetido
-      ? "↻ Editar repetición"
-      : "↻ Repetir ramo";
 
+  if (ramo.repetido) {
 
-  botonRepetir.addEventListener(
-    "click",
-    evento => {
+    botonRepetir.textContent =
+      "↻ Quitar repetición";
 
-      evento.stopPropagation();
+    botonRepetir.className =
+      "boton-quitar-repeticion";
 
-      repetirRamo(
-        ramo.id
-      );
+    botonRepetir.addEventListener(
+      "click",
+      evento => {
 
-    }
-  );
+        evento.stopPropagation();
+
+        quitarRepeticion(
+          ramo.id
+        );
+
+      }
+    );
+
+  } else {
+
+    botonRepetir.textContent =
+      "↻ Repetir ramo";
+
+    botonRepetir.addEventListener(
+      "click",
+      evento => {
+
+        evento.stopPropagation();
+
+        repetirRamo(
+          ramo.id
+        );
+
+      }
+    );
+
+  }
+
 
   menu.appendChild(
     botonRepetir
@@ -917,14 +986,15 @@ function abrirMenuRamo(
   ) {
 
     const botonHistorial =
-      document.createElement("button");
+      document.createElement(
+        "button"
+      );
 
     botonHistorial.type =
       "button";
 
     botonHistorial.textContent =
       "📋 Ver historial";
-
 
     botonHistorial.addEventListener(
       "click",
@@ -947,12 +1017,111 @@ function abrirMenuRamo(
 
 
   // ---------------------------------
-  // AÑADIR MENÚ AL RAMO
+  // AGREGAR A BODY
   // ---------------------------------
 
-  divRamo.appendChild(
+  // Esto es lo que hace que el menú
+  // esté por encima de la malla.
+
+  document.body.appendChild(
     menu
   );
+
+
+  // ---------------------------------
+  // POSICIONAR MENÚ
+  // ---------------------------------
+
+  posicionarMenuRamo(
+    menu,
+    boton
+  );
+
+}
+
+
+// =====================================================
+// POSICIONAR MENÚ FLOTANTE
+// =====================================================
+
+function posicionarMenuRamo(
+  menu,
+  boton
+) {
+
+  const rect =
+    boton.getBoundingClientRect();
+
+
+  const ancho =
+    menu.offsetWidth;
+
+  const alto =
+    menu.offsetHeight;
+
+
+  let izquierda =
+    rect.right + 8;
+
+  let arriba =
+    rect.top;
+
+
+  // ---------------------------------
+  // SI SE SALE POR LA DERECHA
+  // ---------------------------------
+
+  if (
+    izquierda + ancho >
+    window.innerWidth - 10
+  ) {
+
+    izquierda =
+      rect.left - ancho - 8;
+
+  }
+
+
+  // ---------------------------------
+  // SI SE SALE POR ABAJO
+  // ---------------------------------
+
+  if (
+    arriba + alto >
+    window.innerHeight - 10
+  ) {
+
+    arriba =
+      window.innerHeight -
+      alto -
+      10;
+
+  }
+
+
+  // ---------------------------------
+  // SI SE SALE POR ARRIBA
+  // ---------------------------------
+
+  if (arriba < 10) {
+    arriba = 10;
+  }
+
+
+  // ---------------------------------
+  // SI SE SALE POR LA IZQUIERDA
+  // ---------------------------------
+
+  if (izquierda < 10) {
+    izquierda = 10;
+  }
+
+
+  menu.style.left =
+    `${izquierda}px`;
+
+  menu.style.top =
+    `${arriba}px`;
 
 }
 
@@ -965,7 +1134,7 @@ function cerrarMenusRamos() {
 
   document
     .querySelectorAll(
-      ".menu-ramo"
+      ".menu-ramo-flotante"
     )
     .forEach(
       menu => menu.remove()
@@ -982,13 +1151,9 @@ document.addEventListener(
   "click",
   evento => {
 
-    // Si el clic no fue dentro
-    // de un menú ni sobre un botón,
-    // cerramos los menús.
-
     if (
       !evento.target.closest(
-        ".menu-ramo"
+        ".menu-ramo-flotante"
       ) &&
       !evento.target.closest(
         ".boton-menu-ramo"
@@ -1007,7 +1172,9 @@ document.addEventListener(
 // EDITAR PROMEDIO
 // =====================================================
 
-function editarPromedio(id) {
+function editarPromedio(
+  id
+) {
 
   const ramo =
     buscarRamo(id);
@@ -1021,8 +1188,6 @@ function editarPromedio(id) {
   if (!divRamo) return;
 
 
-  // Evitar duplicar inputs.
-
   if (
     divRamo.querySelector(
       ".input-promedio"
@@ -1033,7 +1198,9 @@ function editarPromedio(id) {
 
 
   const input =
-    document.createElement("input");
+    document.createElement(
+      "input"
+    );
 
   input.type =
     "number";
@@ -1065,9 +1232,6 @@ function editarPromedio(id) {
   }
 
 
-  // Evitar que el input
-  // marque/desmarque el ramo.
-
   input.addEventListener(
     "click",
     evento => {
@@ -1075,12 +1239,14 @@ function editarPromedio(id) {
     }
   );
 
+
   input.addEventListener(
     "mousedown",
     evento => {
       evento.stopPropagation();
     }
   );
+
 
   input.addEventListener(
     "touchstart",
@@ -1090,16 +1256,13 @@ function editarPromedio(id) {
   );
 
 
-  // ---------------------------------
-  // ENTER
-  // ---------------------------------
-
   input.addEventListener(
     "keydown",
     evento => {
 
       if (
-        evento.key === "Enter"
+        evento.key ===
+        "Enter"
       ) {
 
         guardarPromedio(
@@ -1111,7 +1274,8 @@ function editarPromedio(id) {
 
 
       if (
-        evento.key === "Escape"
+        evento.key ===
+        "Escape"
       ) {
 
         renderMalla();
@@ -1121,10 +1285,6 @@ function editarPromedio(id) {
     }
   );
 
-
-  // ---------------------------------
-  // SALIR DEL INPUT
-  // ---------------------------------
 
   input.addEventListener(
     "blur",
@@ -1163,10 +1323,6 @@ function guardarPromedio(
   if (!ramo) return;
 
 
-  // ---------------------------------
-  // BORRAR PROMEDIO
-  // ---------------------------------
-
   if (
     valor.trim() === ""
   ) {
@@ -1183,19 +1339,14 @@ function guardarPromedio(
   }
 
 
-  // ---------------------------------
-  // CONVERTIR NOTA
-  // ---------------------------------
-
   const numero =
     parseFloat(
-      valor.replace(",", ".")
+      valor.replace(
+        ",",
+        "."
+      )
     );
 
-
-  // ---------------------------------
-  // VALIDAR
-  // ---------------------------------
 
   if (
     isNaN(numero) ||
@@ -1217,6 +1368,7 @@ function guardarPromedio(
   ramo.promedio =
     numero;
 
+
   guardarEstado();
 
   renderMalla();
@@ -1228,7 +1380,9 @@ function guardarPromedio(
 // REPETIR RAMO
 // =====================================================
 
-function repetirRamo(id) {
+function repetirRamo(
+  id
+) {
 
   const ramo =
     buscarRamo(id);
@@ -1237,7 +1391,7 @@ function repetirRamo(id) {
 
 
   // ---------------------------------
-  // GUARDAR NOTA ANTERIOR
+  // GUARDAR PROMEDIO ANTERIOR
   // ---------------------------------
 
   if (
@@ -1264,18 +1418,12 @@ function repetirRamo(id) {
     true;
 
 
-  // El ramo vuelve a estar
-  // disponible para la nueva nota.
+  // ---------------------------------
+  // DEJAR DISPONIBLE PARA NUEVA NOTA
+  // ---------------------------------
 
   ramo.estado =
     "disponible";
-
-
-  // Se limpia la nota actual
-  // para ingresar la nueva.
-
-  ramo.promedio =
-    null;
 
 
   guardarEstado();
@@ -1291,11 +1439,52 @@ function repetirRamo(id) {
   setTimeout(
     () => {
 
-      editarPromedio(id);
+      editarPromedio(
+        id
+      );
 
     },
     50
   );
+
+}
+
+
+// =====================================================
+// QUITAR REPETICIÓN
+// =====================================================
+
+function quitarRepeticion(
+  id
+) {
+
+  const ramo =
+    buscarRamo(id);
+
+  if (!ramo) return;
+
+
+  // ---------------------------------
+  // QUITAR MARCA
+  // ---------------------------------
+
+  ramo.repetido =
+    false;
+
+
+  // ---------------------------------
+  // ELIMINAR HISTORIAL
+  // ---------------------------------
+
+  ramo.historial =
+    [];
+
+
+  guardarEstado();
+
+  cerrarMenusRamos();
+
+  renderMalla();
 
 }
 
@@ -1325,31 +1514,37 @@ function mostrarHistorial(
   const historialTexto =
     ramo.historial
       .map(
-        (nota, indice) => {
-
-          return `Intento ${indice + 1}: ${
+        (nota, indice) =>
+          `Intento ${
+            indice + 1
+          }: ${
             nota
               .toFixed(2)
-              .replace(".", ",")
-          }`;
-
-        }
+              .replace(
+                ".",
+                ","
+              )
+          }`
       )
       .join("\n");
 
 
   alert(
-    `Historial de ${ramo.nombre}\n\n${historialTexto}`
+    `Historial de ${
+      ramo.nombre
+    }\n\n${historialTexto}`
   );
 
 }
 
 
 // =====================================================
-// APROBAR / DESMARCAR RAMO
+// APROBAR / DESMARCAR
 // =====================================================
 
-function aprobarRamo(id) {
+function aprobarRamo(
+  id
+) {
 
   const ramo =
     buscarRamo(id);
@@ -1357,12 +1552,9 @@ function aprobarRamo(id) {
   if (!ramo) return;
 
 
-  // ---------------------------------
-  // CAMBIAR ESTADO
-  // ---------------------------------
-
   if (
-    ramo.estado === "disponible"
+    ramo.estado ===
+    "disponible"
   ) {
 
     ramo.estado =
@@ -1371,7 +1563,8 @@ function aprobarRamo(id) {
   }
 
   else if (
-    ramo.estado === "aprobado"
+    ramo.estado ===
+    "aprobado"
   ) {
 
     ramo.estado =
@@ -1390,12 +1583,13 @@ function aprobarRamo(id) {
       sem.ramos.forEach(
         r => {
 
-          // Los aprobados no se bloquean.
-
           if (
-            r.estado === "aprobado"
+            r.estado ===
+            "aprobado"
           ) {
+
             return;
+
           }
 
 
@@ -1436,7 +1630,9 @@ function aprobarRamo(id) {
   // ---------------------------------
 
   const ramoDiv =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
 
   if (ramoDiv) {
 
@@ -1468,13 +1664,13 @@ function abrirComoFunciona() {
 
   cerrarPaneles();
 
-
   const panel =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   panel.className =
     "panel-informacion";
-
 
   panel.innerHTML = `
 
@@ -1489,57 +1685,38 @@ function abrirComoFunciona() {
 
       <h2>¿Cómo funciona la malla?</h2>
 
-
       <div class="explicacion-item">
-
         <span class="ejemplo disponible"></span>
 
         <div>
-
           <strong>Disponible</strong>
-
           <p>
             Puedes tomar o aprobar este ramo.
           </p>
-
         </div>
-
       </div>
 
-
       <div class="explicacion-item">
-
         <span class="ejemplo aprobado"></span>
 
         <div>
-
           <strong>Aprobado</strong>
-
           <p>
             El ramo ya fue aprobado.
           </p>
-
         </div>
-
       </div>
 
-
       <div class="explicacion-item">
-
         <span class="ejemplo bloqueado"></span>
 
         <div>
-
           <strong>Bloqueado</strong>
-
           <p>
             Aún falta aprobar uno o más prerrequisitos.
           </p>
-
         </div>
-
       </div>
-
 
       <div class="explicacion-item">
 
@@ -1548,67 +1725,42 @@ function abrirComoFunciona() {
         </span>
 
         <div>
-
-          <strong>Ramo repetido</strong>
+          <strong>
+            Ramo repetido
+          </strong>
 
           <p>
-            El símbolo indica que el ramo fue cursado nuevamente.
+            El símbolo indica que el ramo
+            fue cursado nuevamente.
           </p>
-
         </div>
 
       </div>
 
-
       <hr>
 
-
       <p class="instruccion">
-        🖱️ Haz clic en un ramo para marcarlo como aprobado.
+        🖱️ Haz clic en el símbolo
+        <strong>⋮</strong>
+        de un ramo para abrir sus opciones.
       </p>
 
       <p class="instruccion">
-        ⋮ Usa el botón de la esquina del ramo para abrir sus opciones.
+        📝 Desde ese menú puedes ingresar
+        o editar el promedio.
       </p>
 
       <p class="instruccion">
-        📝 Desde ese menú puedes ingresar o editar el promedio.
-      </p>
-
-      <p class="instruccion">
-        ↻ También puedes registrar si repetiste el ramo.
-      </p>
-
-      <p class="instruccion">
-        📋 Si un ramo fue repetido, podrás consultar sus intentos anteriores.
+        ↻ También puedes registrar si repetiste
+        el ramo y conservar el intento anterior.
       </p>
 
     </div>
 
   `;
 
-
   document.body.appendChild(
     panel
-  );
-
-
-  // Cerrar haciendo clic
-  // fuera de la caja.
-
-  panel.addEventListener(
-    "click",
-    evento => {
-
-      if (
-        evento.target === panel
-      ) {
-
-        cerrarPaneles();
-
-      }
-
-    }
   );
 
 }
@@ -1622,13 +1774,13 @@ function abrirVersion() {
 
   cerrarPaneles();
 
-
   const panel =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   panel.className =
     "panel-informacion";
-
 
   panel.innerHTML = `
 
@@ -1641,45 +1793,35 @@ function abrirVersion() {
         ×
       </button>
 
-      <h2>Información de la malla</h2>
+      <h2>
+        Información de la malla
+      </h2>
 
       <p>
-        <strong>Versión actual:</strong>
+        <strong>
+          Versión actual:
+        </strong>
+
         ${VERSION_MALLA}
       </p>
 
       <p>
-        Malla interactiva de Ingeniería Civil Industrial.
+        Malla interactiva de
+        Ingeniería Civil Industrial.
       </p>
 
       <p class="texto-pequeno">
-        Esta versión incluye seguimiento de ramos,
-        promedios, prerrequisitos y registro de ramos repetidos.
+        Esta versión incluye seguimiento
+        de ramos, promedios, prerrequisitos
+        y registro de ramos repetidos.
       </p>
 
     </div>
 
   `;
 
-
   document.body.appendChild(
     panel
-  );
-
-
-  panel.addEventListener(
-    "click",
-    evento => {
-
-      if (
-        evento.target === panel
-      ) {
-
-        cerrarPaneles();
-
-      }
-
-    }
   );
 
 }
@@ -1693,13 +1835,13 @@ function abrirSugerencias() {
 
   cerrarPaneles();
 
-
   const panel =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   panel.className =
     "panel-informacion";
-
 
   panel.innerHTML = `
 
@@ -1712,19 +1854,19 @@ function abrirSugerencias() {
         ×
       </button>
 
-      <h2>💜 Sugerencias</h2>
+      <h2>
+        💜 Sugerencias
+      </h2>
 
       <p>
-        ¿Encontraste un error o tienes una idea
-        para mejorar la malla?
+        ¿Encontraste un error o tienes
+        una idea para mejorar la malla?
       </p>
-
 
       <textarea
         id="texto-sugerencia"
         placeholder="Escribe aquí tu sugerencia..."
       ></textarea>
-
 
       <button
         class="boton-enviar"
@@ -1732,7 +1874,6 @@ function abrirSugerencias() {
       >
         Enviar sugerencia
       </button>
-
 
       <p class="texto-pequeno">
         Gracias por ayudar a mejorar la malla ♡
@@ -1742,25 +1883,8 @@ function abrirSugerencias() {
 
   `;
 
-
   document.body.appendChild(
     panel
-  );
-
-
-  panel.addEventListener(
-    "click",
-    evento => {
-
-      if (
-        evento.target === panel
-      ) {
-
-        cerrarPaneles();
-
-      }
-
-    }
   );
 
 }
@@ -1772,14 +1896,13 @@ function abrirSugerencias() {
 
 function enviarSugerencia() {
 
-  const campo =
-    document.getElementById(
-      "texto-sugerencia"
-    );
-
-
   const texto =
-    campo?.value.trim();
+    document
+      .getElementById(
+        "texto-sugerencia"
+      )
+      ?.value
+      .trim();
 
 
   if (!texto) {
@@ -1794,11 +1917,9 @@ function enviarSugerencia() {
 
 
   /*
-    POR AHORA SE GUARDA LOCALMENTE.
-
-    Más adelante podemos conectarlo
-    a un formulario real para que
-    las sugerencias te lleguen a ti.
+    AQUÍ DESPUÉS PODEMOS CONECTAR
+    UN FORMULARIO REAL PARA QUE
+    LAS SUGERENCIAS TE LLEGUEN.
   */
 
   localStorage.setItem(
@@ -1818,7 +1939,7 @@ function enviarSugerencia() {
 
 
 // =====================================================
-// CERRAR PANELES GENERALES
+// CERRAR PANELES
 // =====================================================
 
 function cerrarPaneles() {
@@ -1840,19 +1961,21 @@ function cerrarPaneles() {
 
 function crearMenuSuperior() {
 
-  // Evitar duplicarlo.
-
   if (
     document.querySelector(
       ".menu-superior"
     )
   ) {
+
     return;
+
   }
 
 
   const menu =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   menu.className =
     "menu-superior";
@@ -1863,10 +1986,9 @@ function crearMenuSuperior() {
   // ---------------------------------
 
   const botonComoFunciona =
-    document.createElement("button");
-
-  botonComoFunciona.type =
-    "button";
+    document.createElement(
+      "button"
+    );
 
   botonComoFunciona.textContent =
     "¿Cómo funciona?";
@@ -1880,10 +2002,9 @@ function crearMenuSuperior() {
   // ---------------------------------
 
   const botonVersion =
-    document.createElement("button");
-
-  botonVersion.type =
-    "button";
+    document.createElement(
+      "button"
+    );
 
   botonVersion.textContent =
     VERSION_MALLA;
@@ -1897,10 +2018,9 @@ function crearMenuSuperior() {
   // ---------------------------------
 
   const botonSugerencias =
-    document.createElement("button");
-
-  botonSugerencias.type =
-    "button";
+    document.createElement(
+      "button"
+    );
 
   botonSugerencias.textContent =
     "💜 Sugerencias";
@@ -1908,10 +2028,6 @@ function crearMenuSuperior() {
   botonSugerencias.onclick =
     abrirSugerencias;
 
-
-  // ---------------------------------
-  // AGREGAR BOTONES
-  // ---------------------------------
 
   menu.appendChild(
     botonComoFunciona
@@ -1927,11 +2043,13 @@ function crearMenuSuperior() {
 
 
   // ---------------------------------
-  // UBICAR DEBAJO DEL TÍTULO
+  // INSERTAR DEBAJO DEL TÍTULO
   // ---------------------------------
 
   const titulo =
-    document.querySelector("h1");
+    document.querySelector(
+      "h1"
+    );
 
 
   if (titulo) {
@@ -1944,6 +2062,21 @@ function crearMenuSuperior() {
   }
 
 }
+
+
+// =====================================================
+// CERRAR MENÚ RAMO AL HACER SCROLL
+// =====================================================
+
+window.addEventListener(
+  "scroll",
+  () => {
+
+    cerrarMenusRamos();
+
+  },
+  true
+);
 
 
 // =====================================================
