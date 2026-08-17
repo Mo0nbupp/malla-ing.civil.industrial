@@ -58,7 +58,16 @@ const semestres = [
       { id: "r18", nombre: "Cálculo III", prereq: ["r12"], estado: "bloqueado" },
       { id: "r19", nombre: "Electricidad y magnetismo", prereq: ["r10"], estado: "bloqueado" },
       { id: "r20", nombre: "Curso sello institucional IV", prereq: [], estado: "bloqueado" },
-      { id: "r21", nombre: "Taller integrador de competencias básicas", prereq: ["r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15","r16"], estado: "bloqueado" },
+      {
+        id: "r21",
+        nombre: "Taller integrador de competencias básicas",
+        prereq: [
+          "r1","r2","r3","r4","r5",
+          "r6","r7","r8","r9","r10",
+          "r11","r12","r13","r14","r15","r16"
+        ],
+        estado: "bloqueado"
+      },
       { id: "r22", nombre: "Ciclo de la vida y tecnología de los materiales", prereq: [], estado: "bloqueado" }
     ]
   },
@@ -103,10 +112,13 @@ const semestres = [
         id: "r41",
         nombre: "Práctica operacional",
         prereq: [
-          "r1","r2","r3","r4","r5","r6","r7","r8","r9","r10",
-          "r11","r12","r13","r14","r15","r16","r17","r18","r19","r20",
-          "r21","r22","r23","r24","r25","r26","r27","r28","r29","r30",
-          "r31","r32","r33","r34","r35","r36","r37","r38","r39","r40"
+          "r1","r2","r3","r4","r5",
+          "r6","r7","r8","r9","r10",
+          "r11","r12","r13","r14","r15","r16",
+          "r17","r18","r19","r20","r21","r22",
+          "r23","r24","r25","r26","r27","r28",
+          "r29","r30","r31","r32","r33","r34",
+          "r35","r36","r37","r38","r39","r40"
         ],
         estado: "bloqueado"
       }
@@ -145,7 +157,7 @@ const semestres = [
       { id: "r53", nombre: "Planificación estratégica", prereq: [], estado: "bloqueado" },
       { id: "r54", nombre: "Emprendimiento y liderazgo en negocios", prereq: ["r50"], estado: "bloqueado" },
       { id: "r55", nombre: "Eficiencia energética y energías renovables", prereq: ["r44"], estado: "bloqueado" },
-      { id:  "r56", nombre: "Proyecto título I", prereq: ["r48","r49","r50","r51","r52"], estado: "bloqueado" }
+      { id: "r56", nombre: "Proyecto título I", prereq: ["r48","r49","r50","r51","r52"], estado: "bloqueado" }
     ]
   },
 
@@ -167,19 +179,26 @@ const semestres = [
 // =====================================================
 
 function guardarEstado() {
-  localStorage.setItem("estadoMalla", JSON.stringify(semestres));
+
+  localStorage.setItem(
+    "estadoMalla",
+    JSON.stringify(semestres)
+  );
+
 }
 
 
 function cargarEstado() {
 
-  const guardado = localStorage.getItem("estadoMalla");
+  const guardado =
+    localStorage.getItem("estadoMalla");
 
   if (!guardado) return;
 
   try {
 
-    const datos = JSON.parse(guardado);
+    const datos =
+      JSON.parse(guardado);
 
     datos.forEach((sem, i) => {
 
@@ -189,16 +208,24 @@ function cargarEstado() {
 
         if (!semestres[i].ramos[j]) return;
 
-        const ramo = semestres[i].ramos[j];
+        const ramo =
+          semestres[i].ramos[j];
 
-        ramo.estado = ramoGuardado.estado ?? ramo.estado;
-        ramo.promedio = ramoGuardado.promedio ?? null;
+        ramo.estado =
+          ramoGuardado.estado ??
+          ramo.estado;
 
-        // Historial de intentos anteriores
-        ramo.historial = ramoGuardado.historial ?? [];
+        ramo.promedio =
+          ramoGuardado.promedio ??
+          null;
 
-        // Marcado como repetido
-        ramo.repetido = ramoGuardado.repetido ?? false;
+        ramo.historial =
+          ramoGuardado.historial ??
+          [];
+
+        ramo.repetido =
+          ramoGuardado.repetido ??
+          false;
 
       });
 
@@ -206,9 +233,13 @@ function cargarEstado() {
 
   } catch (error) {
 
-    console.error("No se pudo cargar la malla:", error);
+    console.error(
+      "No se pudo cargar la malla:",
+      error
+    );
 
   }
+
 }
 
 
@@ -220,13 +251,17 @@ function buscarRamo(id) {
 
   for (const sem of semestres) {
 
-    const ramo = sem.ramos.find(r => r.id === id);
+    const ramo =
+      sem.ramos.find(
+        r => r.id === id
+      );
 
     if (ramo) return ramo;
 
   }
 
   return null;
+
 }
 
 
@@ -234,25 +269,32 @@ function buscarRamo(id) {
 // PROMEDIO SEMESTRE
 // =====================================================
 
-function calcularPromedioSemestre(semestre) {
+function calcularPromedioSemestre(
+  semestre
+) {
 
-  const notas = semestre.ramos
-    .map(ramo => ramo.promedio)
-    .filter(
-      nota =>
-        typeof nota === "number" &&
-        !isNaN(nota)
-    );
+  const notas =
+    semestre.ramos
+      .map(ramo => ramo.promedio)
+      .filter(
+        nota =>
+          typeof nota === "number" &&
+          !isNaN(nota)
+      );
 
-  if (notas.length === 0) return null;
+  if (notas.length === 0) {
+    return null;
+  }
 
   const suma =
     notas.reduce(
-      (total, nota) => total + nota,
+      (total, nota) =>
+        total + nota,
       0
     );
 
   return suma / notas.length;
+
 }
 
 
@@ -260,7 +302,9 @@ function calcularPromedioSemestre(semestre) {
 // PROMEDIO AÑO
 // =====================================================
 
-function calcularPromedioAño(indiceAño) {
+function calcularPromedioAño(
+  indiceAño
+) {
 
   const semestre1 =
     semestres[indiceAño * 2];
@@ -273,7 +317,9 @@ function calcularPromedioAño(indiceAño) {
   if (semestre1) {
 
     const promedio =
-      calcularPromedioSemestre(semestre1);
+      calcularPromedioSemestre(
+        semestre1
+      );
 
     if (promedio !== null) {
       promedios.push(promedio);
@@ -284,7 +330,9 @@ function calcularPromedioAño(indiceAño) {
   if (semestre2) {
 
     const promedio =
-      calcularPromedioSemestre(semestre2);
+      calcularPromedioSemestre(
+        semestre2
+      );
 
     if (promedio !== null) {
       promedios.push(promedio);
@@ -304,6 +352,7 @@ function calcularPromedioAño(indiceAño) {
     );
 
   return suma / promedios.length;
+
 }
 
 
@@ -311,7 +360,9 @@ function calcularPromedioAño(indiceAño) {
 // FORMATO PROMEDIO
 // =====================================================
 
-function mostrarPromedio(promedio) {
+function mostrarPromedio(
+  promedio
+) {
 
   if (promedio === null) {
     return "—";
@@ -320,6 +371,7 @@ function mostrarPromedio(promedio) {
   return promedio
     .toFixed(2)
     .replace(".", ",");
+
 }
 
 
@@ -328,6 +380,9 @@ function mostrarPromedio(promedio) {
 // =====================================================
 
 function renderMalla() {
+
+  // Primero cerramos cualquier menú viejo.
+  cerrarMenusRamos();
 
   malla.innerHTML = "";
 
@@ -377,7 +432,9 @@ function renderMalla() {
       </strong>
     `;
 
-    año.appendChild(promedioAño);
+    año.appendChild(
+      promedioAño
+    );
 
 
     // ---------------------------------
@@ -429,7 +486,9 @@ function renderMalla() {
           Promedio:
           <strong>
             ${mostrarPromedio(
-              calcularPromedioSemestre(sem)
+              calcularPromedioSemestre(
+                sem
+              )
             )}
           </strong>
         `;
@@ -443,23 +502,35 @@ function renderMalla() {
         // RAMOS
         // ---------------------------------
 
-        sem.ramos.forEach(ramo => {
+        sem.ramos.forEach(
+          ramo => {
 
-          crearRamo(ramo, divSem);
+            crearRamo(
+              ramo,
+              divSem
+            );
 
-        });
+          }
+        );
 
 
-        contSemestres.appendChild(divSem);
+        contSemestres.appendChild(
+          divSem
+        );
 
       });
 
 
-    año.appendChild(contSemestres);
+    año.appendChild(
+      contSemestres
+    );
 
-    malla.appendChild(año);
+    malla.appendChild(
+      año
+    );
 
   }
+
 }
 
 
@@ -467,7 +538,10 @@ function renderMalla() {
 // CREAR RAMO
 // =====================================================
 
-function crearRamo(ramo, contenedor) {
+function crearRamo(
+  ramo,
+  contenedor
+) {
 
   const divRamo =
     document.createElement("div");
@@ -475,7 +549,14 @@ function crearRamo(ramo, contenedor) {
   divRamo.className =
     `ramo ${ramo.estado}`;
 
-  divRamo.id = ramo.id;
+  divRamo.id =
+    ramo.id;
+
+  // Importante para que el navegador
+  // no intente seleccionar texto al
+  // mantener presionado.
+  divRamo.style.userSelect = "none";
+  divRamo.style.webkitUserSelect = "none";
 
 
   // ---------------------------------
@@ -502,11 +583,13 @@ function crearRamo(ramo, contenedor) {
   nombre.textContent =
     ramo.nombre;
 
-  contenido.appendChild(nombre);
+  contenido.appendChild(
+    nombre
+  );
 
 
   // ---------------------------------
-  // SIMBOLO REPETIDO
+  // SÍMBOLO REPETIDO
   // ---------------------------------
 
   if (ramo.repetido) {
@@ -517,12 +600,15 @@ function crearRamo(ramo, contenedor) {
     simbolo.className =
       "simbolo-repetido";
 
-    simbolo.textContent = "↻";
+    simbolo.textContent =
+      "↻";
 
     simbolo.title =
       "Ramo repetido";
 
-    contenido.appendChild(simbolo);
+    contenido.appendChild(
+      simbolo
+    );
 
   }
 
@@ -549,7 +635,9 @@ function crearRamo(ramo, contenedor) {
           .replace(".", ",")
       }`;
 
-    contenido.appendChild(nota);
+    contenido.appendChild(
+      nota
+    );
 
   }
 
@@ -569,31 +657,44 @@ function crearRamo(ramo, contenedor) {
     historial.className =
       "historial-ramo";
 
+    const ultimo =
+      ramo.historial[
+        ramo.historial.length - 1
+      ];
+
     historial.textContent =
       `Anterior: ${
-        ramo.historial[
-          ramo.historial.length - 1
-        ].toFixed(2).replace(".", ",")
+        ultimo
+          .toFixed(2)
+          .replace(".", ",")
       }`;
 
-    contenido.appendChild(historial);
+    contenido.appendChild(
+      historial
+    );
 
   }
 
 
-  divRamo.appendChild(contenido);
+  divRamo.appendChild(
+    contenido
+  );
 
 
   // ---------------------------------
   // CLIC NORMAL
   // ---------------------------------
 
-  if (ramo.estado !== "bloqueado") {
+  if (
+    ramo.estado !== "bloqueado"
+  ) {
 
     divRamo.addEventListener(
       "click",
       evento => {
 
+        // Si el clic fue dentro del menú,
+        // no hacemos nada.
         if (
           evento.target.closest(
             ".menu-ramo"
@@ -602,6 +703,8 @@ function crearRamo(ramo, contenedor) {
           return;
         }
 
+        // Si acaba de ocurrir una
+        // pulsación larga, no aprobar.
         if (
           divRamo.dataset.presionLarga ===
           "true"
@@ -614,7 +717,9 @@ function crearRamo(ramo, contenedor) {
 
         }
 
-        aprobarRamo(ramo.id);
+        aprobarRamo(
+          ramo.id
+        );
 
       }
     );
@@ -623,7 +728,7 @@ function crearRamo(ramo, contenedor) {
 
 
   // ---------------------------------
-  // MENÚ DE MANTENER PRESIONADO
+  // PULSACIÓN LARGA
   // ---------------------------------
 
   configurarPresionLarga(
@@ -632,13 +737,15 @@ function crearRamo(ramo, contenedor) {
   );
 
 
-  contenedor.appendChild(divRamo);
+  contenedor.appendChild(
+    divRamo
+  );
 
 }
 
 
 // =====================================================
-// PRESIÓN LARGA
+// PULSACIÓN LARGA
 // =====================================================
 
 function configurarPresionLarga(
@@ -648,11 +755,13 @@ function configurarPresionLarga(
 
   let temporizador = null;
 
-  let menuAbierto = false;
+  let presionando = false;
 
 
   function iniciar(evento) {
 
+    // Si ya estamos tocando el menú,
+    // no iniciar otra pulsación.
     if (
       evento.target.closest(
         ".menu-ramo"
@@ -661,14 +770,41 @@ function configurarPresionLarga(
       return;
     }
 
-    if (evento.cancelable) {
-      evento.preventDefault();
+    // Solo permitir interacción
+    // con ramos que no estén bloqueados.
+    if (
+      ramo.estado === "bloqueado"
+    ) {
+      return;
     }
+
+    presionando = true;
+
+    divRamo.dataset.presionLarga =
+      "false";
+
+
+    // En celular evita el menú/contexto
+    // del navegador.
+    if (
+      evento.type === "touchstart" &&
+      evento.cancelable
+    ) {
+
+      evento.preventDefault();
+
+    }
+
 
     cancelar();
 
+
     temporizador =
       setTimeout(() => {
+
+        if (!presionando) {
+          return;
+        }
 
         divRamo.dataset.presionLarga =
           "true";
@@ -678,7 +814,7 @@ function configurarPresionLarga(
           ramo
         );
 
-        menuAbierto = true;
+        temporizador = null;
 
       }, 650);
 
@@ -687,9 +823,13 @@ function configurarPresionLarga(
 
   function cancelar() {
 
-    if (temporizador !== null) {
+    if (
+      temporizador !== null
+    ) {
 
-      clearTimeout(temporizador);
+      clearTimeout(
+        temporizador
+      );
 
       temporizador = null;
 
@@ -698,6 +838,19 @@ function configurarPresionLarga(
   }
 
 
+  function finalizar() {
+
+    presionando = false;
+
+    cancelar();
+
+  }
+
+
+  // ---------------------------------
+  // COMPUTADOR
+  // ---------------------------------
+
   divRamo.addEventListener(
     "mousedown",
     iniciar
@@ -705,29 +858,49 @@ function configurarPresionLarga(
 
   divRamo.addEventListener(
     "mouseup",
-    cancelar
+    finalizar
   );
 
   divRamo.addEventListener(
     "mouseleave",
-    cancelar
+    finalizar
   );
 
+
+  // ---------------------------------
+  // TABLET / CELULAR
+  // ---------------------------------
 
   divRamo.addEventListener(
     "touchstart",
     iniciar,
-    { passive: false }
+    {
+      passive: false
+    }
   );
 
   divRamo.addEventListener(
     "touchend",
-    cancelar
+    finalizar
   );
 
   divRamo.addEventListener(
     "touchcancel",
-    cancelar
+    finalizar
+  );
+
+
+  // ---------------------------------
+  // MENÚ CONTEXTUAL
+  // ---------------------------------
+
+  divRamo.addEventListener(
+    "contextmenu",
+    evento => {
+
+      evento.preventDefault();
+
+    }
   );
 
 }
@@ -742,6 +915,7 @@ function abrirMenuRamo(
   ramo
 ) {
 
+  // Cerramos cualquier otro menú.
   cerrarMenusRamos();
 
 
@@ -750,6 +924,41 @@ function abrirMenuRamo(
 
   menu.className =
     "menu-ramo";
+
+
+  // Evitar que el menú active
+  // el clic del ramo.
+  menu.addEventListener(
+    "click",
+    evento => {
+
+      evento.stopPropagation();
+
+    }
+  );
+
+
+  menu.addEventListener(
+    "mousedown",
+    evento => {
+
+      evento.stopPropagation();
+
+    }
+  );
+
+
+  menu.addEventListener(
+    "touchstart",
+    evento => {
+
+      evento.stopPropagation();
+
+    },
+    {
+      passive: true
+    }
+  );
 
 
   // ---------------------------------
@@ -765,15 +974,20 @@ function abrirMenuRamo(
   titulo.textContent =
     ramo.nombre;
 
-  menu.appendChild(titulo);
+  menu.appendChild(
+    titulo
+  );
 
 
   // ---------------------------------
-  // PONER / EDITAR PROMEDIO
+  // PROMEDIO
   // ---------------------------------
 
   const botonPromedio =
     document.createElement("button");
+
+  botonPromedio.type =
+    "button";
 
   botonPromedio.textContent =
     "📝 Promedio";
@@ -799,11 +1013,14 @@ function abrirMenuRamo(
 
 
   // ---------------------------------
-  // REPETIR RAMO
+  // REPETIR
   // ---------------------------------
 
   const botonRepetir =
     document.createElement("button");
+
+  botonRepetir.type =
+    "button";
 
   botonRepetir.textContent =
     ramo.repetido
@@ -816,11 +1033,11 @@ function abrirMenuRamo(
 
       evento.stopPropagation();
 
+      cerrarMenusRamos();
+
       repetirRamo(
         ramo.id
       );
-
-      cerrarMenusRamos();
 
     }
   );
@@ -831,7 +1048,7 @@ function abrirMenuRamo(
 
 
   // ---------------------------------
-  // VER HISTORIAL
+  // HISTORIAL
   // ---------------------------------
 
   if (
@@ -840,7 +1057,12 @@ function abrirMenuRamo(
   ) {
 
     const botonHistorial =
-      document.createElement("button");
+      document.createElement(
+        "button"
+      );
+
+    botonHistorial.type =
+      "button";
 
     botonHistorial.textContent =
       "📋 Ver historial";
@@ -851,7 +1073,9 @@ function abrirMenuRamo(
 
         evento.stopPropagation();
 
-        mostrarHistorial(ramo);
+        mostrarHistorial(
+          ramo
+        );
 
       }
     );
@@ -863,13 +1087,15 @@ function abrirMenuRamo(
   }
 
 
-  divRamo.appendChild(menu);
+  divRamo.appendChild(
+    menu
+  );
 
 }
 
 
 // =====================================================
-// CERRAR MENÚS
+// CERRAR MENÚS DE RAMOS
 // =====================================================
 
 function cerrarMenusRamos() {
@@ -878,14 +1104,33 @@ function cerrarMenusRamos() {
     .querySelectorAll(
       ".menu-ramo"
     )
-    .forEach(menu => {
-      menu.remove();
-    });
+    .forEach(
+      menu => menu.remove()
+    );
+
+
+  // También limpiamos la marca
+  // de pulsación larga.
+  document
+    .querySelectorAll(
+      ".ramo"
+    )
+    .forEach(
+      ramo => {
+
+        ramo.dataset.presionLarga =
+          "false";
+
+      }
+    );
 
 }
 
 
-// Cerrar si se hace clic fuera
+// =====================================================
+// CERRAR MENÚ AL HACER CLIC AFUERA
+// =====================================================
+
 document.addEventListener(
   "click",
   evento => {
@@ -908,7 +1153,9 @@ document.addEventListener(
 // EDITAR PROMEDIO
 // =====================================================
 
-function editarPromedio(id) {
+function editarPromedio(
+  id
+) {
 
   const ramo =
     buscarRamo(id);
@@ -922,33 +1169,44 @@ function editarPromedio(id) {
   if (!divRamo) return;
 
 
+  // Si ya hay un input,
+  // no crear otro.
   if (
     divRamo.querySelector(
       ".input-promedio"
     )
   ) {
+
     return;
+
   }
 
 
   const input =
-    document.createElement("input");
+    document.createElement(
+      "input"
+    );
 
-  input.type = "number";
+  input.type =
+    "number";
 
   input.className =
     "input-promedio";
 
-  input.min = "1.0";
+  input.min =
+    "1.0";
 
-  input.max = "7.0";
+  input.max =
+    "7.0";
 
-  input.step = "0.1";
+  input.step =
+    "0.1";
 
   input.placeholder =
     "Ej: 5,6";
 
 
+  // Mostrar promedio actual.
   if (
     ramo.promedio !== null &&
     ramo.promedio !== undefined
@@ -960,10 +1218,16 @@ function editarPromedio(id) {
   }
 
 
+  // ---------------------------------
+  // EVITAR CLICS DEL RAMO
+  // ---------------------------------
+
   input.addEventListener(
     "click",
     evento => {
+
       evento.stopPropagation();
+
     }
   );
 
@@ -971,7 +1235,9 @@ function editarPromedio(id) {
   input.addEventListener(
     "mousedown",
     evento => {
+
       evento.stopPropagation();
+
     }
   );
 
@@ -979,10 +1245,19 @@ function editarPromedio(id) {
   input.addEventListener(
     "touchstart",
     evento => {
+
       evento.stopPropagation();
+
+    },
+    {
+      passive: true
     }
   );
 
+
+  // ---------------------------------
+  // ENTER / ESCAPE
+  // ---------------------------------
 
   input.addEventListener(
     "keydown",
@@ -991,6 +1266,8 @@ function editarPromedio(id) {
       if (
         evento.key === "Enter"
       ) {
+
+        evento.preventDefault();
 
         guardarPromedio(
           id,
@@ -1004,6 +1281,8 @@ function editarPromedio(id) {
         evento.key === "Escape"
       ) {
 
+        evento.preventDefault();
+
         renderMalla();
 
       }
@@ -1011,6 +1290,10 @@ function editarPromedio(id) {
     }
   );
 
+
+  // ---------------------------------
+  // BLUR
+  // ---------------------------------
 
   input.addEventListener(
     "blur",
@@ -1025,9 +1308,13 @@ function editarPromedio(id) {
   );
 
 
-  divRamo.appendChild(input);
+  divRamo.appendChild(
+    input
+  );
 
   input.focus();
+
+  input.select();
 
 }
 
@@ -1047,11 +1334,16 @@ function guardarPromedio(
   if (!ramo) return;
 
 
+  // ---------------------------------
+  // VACÍO
+  // ---------------------------------
+
   if (
     valor.trim() === ""
   ) {
 
-    ramo.promedio = null;
+    ramo.promedio =
+      null;
 
     guardarEstado();
 
@@ -1062,11 +1354,19 @@ function guardarPromedio(
   }
 
 
+  // ---------------------------------
+  // CONVERTIR COMA A PUNTO
+  // ---------------------------------
+
   const numero =
     parseFloat(
       valor.replace(",", ".")
     );
 
+
+  // ---------------------------------
+  // VALIDAR
+  // ---------------------------------
 
   if (
     isNaN(numero) ||
@@ -1100,7 +1400,9 @@ function guardarPromedio(
 // REPETIR RAMO
 // =====================================================
 
-function repetirRamo(id) {
+function repetirRamo(
+  id
+) {
 
   const ramo =
     buscarRamo(id);
@@ -1109,8 +1411,7 @@ function repetirRamo(id) {
 
 
   // ---------------------------------
-  // Si tenía promedio anterior,
-  // guardarlo en historial.
+  // GUARDAR PROMEDIO ANTERIOR
   // ---------------------------------
 
   if (
@@ -1119,8 +1420,11 @@ function repetirRamo(id) {
   ) {
 
     if (!ramo.historial) {
+
       ramo.historial = [];
+
     }
+
 
     ramo.historial.push(
       ramo.promedio
@@ -1129,13 +1433,27 @@ function repetirRamo(id) {
   }
 
 
-  ramo.repetido = true;
+  // ---------------------------------
+  // MARCAR COMO REPETIDO
+  // ---------------------------------
+
+  ramo.repetido =
+    true;
 
 
-  // El ramo vuelve a estar disponible
-  // para ingresar la nueva nota.
+  // ---------------------------------
+  // VOLVER A DISPONIBLE
+  // ---------------------------------
 
-  ramo.estado = "disponible";
+  ramo.estado =
+    "disponible";
+
+
+  // Quitamos temporalmente el
+  // promedio actual para que el
+  // usuario ingrese el nuevo.
+  ramo.promedio =
+    null;
 
 
   guardarEstado();
@@ -1144,15 +1462,20 @@ function repetirRamo(id) {
 
 
   // ---------------------------------
-  // Abrir automáticamente el promedio
-  // nuevo.
+  // ABRIR AUTOMÁTICAMENTE
+  // EL NUEVO PROMEDIO
   // ---------------------------------
 
-  setTimeout(() => {
+  setTimeout(
+    () => {
 
-    editarPromedio(id);
+      editarPromedio(
+        id
+      );
 
-  }, 50);
+    },
+    80
+  );
 
 }
 
@@ -1161,7 +1484,9 @@ function repetirRamo(id) {
 // MOSTRAR HISTORIAL
 // =====================================================
 
-function mostrarHistorial(ramo) {
+function mostrarHistorial(
+  ramo
+) {
 
   if (
     !ramo.historial ||
@@ -1201,7 +1526,9 @@ function mostrarHistorial(ramo) {
 // APROBAR / DESMARCAR
 // =====================================================
 
-function aprobarRamo(id) {
+function aprobarRamo(
+  id
+) {
 
   const ramo =
     buscarRamo(id);
@@ -1209,8 +1536,13 @@ function aprobarRamo(id) {
   if (!ramo) return;
 
 
+  // ---------------------------------
+  // CAMBIAR ESTADO
+  // ---------------------------------
+
   if (
-    ramo.estado === "disponible"
+    ramo.estado ===
+    "disponible"
   ) {
 
     ramo.estado =
@@ -1219,7 +1551,8 @@ function aprobarRamo(id) {
   }
 
   else if (
-    ramo.estado === "aprobado"
+    ramo.estado ===
+    "aprobado"
   ) {
 
     ramo.estado =
@@ -1238,11 +1571,14 @@ function aprobarRamo(id) {
       sem.ramos.forEach(
         r => {
 
+          // Un aprobado permanece aprobado.
           if (
             r.estado ===
             "aprobado"
           ) {
+
             return;
+
           }
 
 
@@ -1255,7 +1591,7 @@ function aprobarRamo(id) {
                       x =>
                         x.id === req &&
                         x.estado ===
-                          "aprobado"
+                        "aprobado"
                     )
                 )
             );
@@ -1283,7 +1619,9 @@ function aprobarRamo(id) {
   // ---------------------------------
 
   const ramoDiv =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
 
   if (ramoDiv) {
 
@@ -1316,7 +1654,9 @@ function abrirComoFunciona() {
   cerrarPaneles();
 
   const panel =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   panel.className =
     "panel-informacion";
@@ -1335,46 +1675,85 @@ function abrirComoFunciona() {
       <h2>¿Cómo funciona la malla?</h2>
 
       <div class="explicacion-item">
+
         <span class="ejemplo disponible"></span>
+
         <div>
           <strong>Disponible</strong>
-          <p>Puedes tomar o aprobar este ramo.</p>
+
+          <p>
+            Puedes tomar o aprobar este ramo.
+          </p>
         </div>
+
       </div>
 
+
       <div class="explicacion-item">
+
         <span class="ejemplo aprobado"></span>
+
         <div>
+
           <strong>Aprobado</strong>
-          <p>El ramo ya fue aprobado.</p>
+
+          <p>
+            El ramo ya fue aprobado.
+          </p>
+
         </div>
+
       </div>
 
+
       <div class="explicacion-item">
+
         <span class="ejemplo bloqueado"></span>
+
         <div>
+
           <strong>Bloqueado</strong>
-          <p>Aún falta aprobar uno o más prerrequisitos.</p>
+
+          <p>
+            Aún falta aprobar uno o más prerrequisitos.
+          </p>
+
         </div>
+
       </div>
 
+
       <div class="explicacion-item">
-        <span class="ejemplo simbolo">↻</span>
+
+        <span class="ejemplo simbolo">
+          ↻
+        </span>
+
         <div>
+
           <strong>Ramo repetido</strong>
-          <p>El símbolo indica que el ramo fue cursado nuevamente.</p>
+
+          <p>
+            El símbolo indica que el ramo fue cursado nuevamente.
+          </p>
+
         </div>
+
       </div>
+
 
       <hr>
+
 
       <p class="instruccion">
         💡 Mantén presionado un ramo para abrir sus opciones.
       </p>
 
+
       <p class="instruccion">
         📝 Desde ese menú puedes ingresar o editar el promedio.
       </p>
+
 
       <p class="instruccion">
         ↻ También puedes registrar si repetiste el ramo y conservar el intento anterior.
@@ -1384,7 +1763,9 @@ function abrirComoFunciona() {
 
   `;
 
-  document.body.appendChild(panel);
+  document.body.appendChild(
+    panel
+  );
 
 }
 
@@ -1398,7 +1779,9 @@ function abrirVersion() {
   cerrarPaneles();
 
   const panel =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   panel.className =
     "panel-informacion";
@@ -1434,7 +1817,9 @@ function abrirVersion() {
 
   `;
 
-  document.body.appendChild(panel);
+  document.body.appendChild(
+    panel
+  );
 
 }
 
@@ -1448,7 +1833,9 @@ function abrirSugerencias() {
   cerrarPaneles();
 
   const panel =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   panel.className =
     "panel-informacion";
@@ -1491,7 +1878,9 @@ function abrirSugerencias() {
 
   `;
 
-  document.body.appendChild(panel);
+  document.body.appendChild(
+    panel
+  );
 
 }
 
@@ -1502,10 +1891,15 @@ function abrirSugerencias() {
 
 function enviarSugerencia() {
 
-  const texto =
+  const textarea =
     document.getElementById(
       "texto-sugerencia"
-    )?.value.trim();
+    );
+
+  const texto =
+    textarea
+      ? textarea.value.trim()
+      : "";
 
 
   if (!texto) {
@@ -1520,9 +1914,11 @@ function enviarSugerencia() {
 
 
   /*
-    AQUÍ DESPUÉS PODEMOS CONECTAR
-    UN FORMULARIO REAL PARA QUE
-    LAS SUGERENCIAS TE LLEGUEN.
+    POR AHORA SE GUARDA LOCALMENTE.
+
+    Más adelante podemos conectar esto
+    a un formulario real para que las
+    sugerencias lleguen al creador.
   */
 
   localStorage.setItem(
@@ -1569,19 +1965,32 @@ function crearMenuSuperior() {
       ".menu-superior"
     )
   ) {
+
     return;
+
   }
 
 
   const menu =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   menu.className =
     "menu-superior";
 
 
+  // ---------------------------------
+  // CÓMO FUNCIONA
+  // ---------------------------------
+
   const botonComoFunciona =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
+
+  botonComoFunciona.type =
+    "button";
 
   botonComoFunciona.textContent =
     "¿Cómo funciona?";
@@ -1590,8 +1999,17 @@ function crearMenuSuperior() {
     abrirComoFunciona;
 
 
+  // ---------------------------------
+  // VERSIÓN
+  // ---------------------------------
+
   const botonVersion =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
+
+  botonVersion.type =
+    "button";
 
   botonVersion.textContent =
     VERSION_MALLA;
@@ -1600,8 +2018,17 @@ function crearMenuSuperior() {
     abrirVersion;
 
 
+  // ---------------------------------
+  // SUGERENCIAS
+  // ---------------------------------
+
   const botonSugerencias =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
+
+  botonSugerencias.type =
+    "button";
 
   botonSugerencias.textContent =
     "💜 Sugerencias";
@@ -1624,7 +2051,9 @@ function crearMenuSuperior() {
 
 
   const titulo =
-    document.querySelector("h1");
+    document.querySelector(
+      "h1"
+    );
 
 
   if (titulo) {
