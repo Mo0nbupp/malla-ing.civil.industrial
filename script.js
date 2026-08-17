@@ -1,10 +1,10 @@
 const malla = document.getElementById("malla");
 
-// =========================
-// SEMESTRES Y RAMOS COMPLETOS
-// =========================
+// =====================================================
+// SEMESTRES Y RAMOS
+// =====================================================
+
 const semestres = [
-  // --- Semestre 1 ---
   {
     numero: 1,
     ramos: [
@@ -16,7 +16,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 2 ---
   {
     numero: 2,
     ramos: [
@@ -28,7 +27,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 3 ---
   {
     numero: 3,
     ramos: [
@@ -41,7 +39,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 4 ---
   {
     numero: 4,
     ramos: [
@@ -54,20 +51,18 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 5 ---
   {
     numero: 5,
     ramos: [
       { id: "r23", nombre: "Termodinámica", prereq: [], estado: "bloqueado" },
       { id: "r24", nombre: "Probabilidad y estadística", prereq: ["r12"], estado: "bloqueado" },
       { id: "r25", nombre: "Ondas, óptica y calor", prereq: ["r10"], estado: "bloqueado" },
-      { id: 26, nombre: "Contabilidad y costos", prereq: ["r6"], estado: "bloqueado" },
+      { id: "r26", nombre: "Contabilidad y costos", prereq: ["r6"], estado: "bloqueado" },
       { id: "r27", nombre: "Dibujo e interpretación de planos", prereq: [], estado: "bloqueado" },
       { id: "r28", nombre: "Interdisciplinar", prereq: [], estado: "bloqueado" }
     ]
   },
 
-  // --- Semestre 6 ---
   {
     numero: 6,
     ramos: [
@@ -80,7 +75,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 7 ---
   {
     numero: 7,
     ramos: [
@@ -94,7 +88,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 8 ---
   {
     numero: 8,
     ramos: [
@@ -107,7 +100,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 9 ---
   {
     numero: 9,
     ramos: [
@@ -119,7 +111,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 10 ---
   {
     numero: 10,
     ramos: [
@@ -130,7 +121,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 11 ---
   {
     numero: 11,
     ramos: [
@@ -142,13 +132,15 @@ const semestres = [
   }
 ];
 
-// =========================
-// GUARDAR Y CARGAR ESTADO
-// =========================
+
+// =====================================================
+// GUARDAR / CARGAR
+// =====================================================
 
 function guardarEstado() {
   localStorage.setItem("estadoMalla", JSON.stringify(semestres));
 }
+
 
 function cargarEstado() {
 
@@ -156,61 +148,113 @@ function cargarEstado() {
 
   if (!guardado) return;
 
-  const datos = JSON.parse(guardado);
+  try {
 
-  datos.forEach((sem, i) => {
+    const datos = JSON.parse(guardado);
 
-    if (!semestres[i]) return;
+    datos.forEach((sem, i) => {
 
-    semestres[i].ramos.forEach((ramo, j) => {
+      if (!semestres[i]) return;
 
-      if (!sem.ramos[j]) return;
+      sem.ramos.forEach((ramoGuardado, j) => {
 
-      ramo.estado = sem.ramos[j].estado;
-      ramo.promedio = sem.ramos[j].promedio ?? null;
-      ramo.repetido = sem.ramos[j].repetido ?? false;
+        if (!semestres[i].ramos[j]) return;
+
+        const ramo = semestres[i].ramos[j];
+
+        ramo.estado = ramoGuardado.estado;
+
+        ramo.promedio =
+          ramoGuardado.promedio ?? null;
+
+        ramo.repetido =
+          ramoGuardado.repetido ?? false;
+
+        ramo.promedioAnterior =
+          ramoGuardado.promedioAnterior ?? null;
+
+      });
 
     });
 
-  });
+  } catch (error) {
+
+    console.error("No se pudo cargar la malla:", error);
+
+  }
 
 }
 
-// =========================
-// PROMEDIO DEL SEMESTRE
-// =========================
+
+// =====================================================
+// BUSCAR RAMO
+// =====================================================
+
+function buscarRamo(id) {
+
+  for (const sem of semestres) {
+
+    const ramo = sem.ramos.find(
+      r => r.id === id
+    );
+
+    if (ramo) return ramo;
+
+  }
+
+  return null;
+
+}
+
+
+// =====================================================
+// PROMEDIO SEMESTRE
+// =====================================================
 
 function calcularPromedioSemestre(semestre) {
 
   const notas = semestre.ramos
     .map(ramo => ramo.promedio)
-    .filter(nota => typeof nota === "number" && !isNaN(nota));
+    .filter(
+      nota =>
+        typeof nota === "number" &&
+        !isNaN(nota)
+    );
 
   if (notas.length === 0) return null;
 
-  const suma = notas.reduce(
-    (total, nota) => total + nota,
-    0
-  );
+  const suma =
+    notas.reduce(
+      (total, nota) =>
+        total + nota,
+      0
+    );
 
   return suma / notas.length;
 
 }
 
-// =========================
-// PROMEDIO DEL AÑO
-// =========================
+
+// =====================================================
+// PROMEDIO AÑO
+// =====================================================
 
 function calcularPromedioAño(indiceAño) {
 
-  const semestre1 = semestres[indiceAño * 2];
-  const semestre2 = semestres[indiceAño * 2 + 1];
+  const semestre1 =
+    semestres[indiceAño * 2];
+
+  const semestre2 =
+    semestres[indiceAño * 2 + 1];
 
   const promedios = [];
 
   if (semestre1) {
 
-    const promedio = calcularPromedioSemestre(semestre1);
+    const promedio =
+      calcularPromedioSemestre(
+        semestre1
+      );
 
     if (promedio !== null) {
       promedios.push(promedio);
@@ -220,7 +264,10 @@ function calcularPromedioAño(indiceAño) {
 
   if (semestre2) {
 
-    const promedio = calcularPromedioSemestre(semestre2);
+    const promedio =
+      calcularPromedioSemestre(
+        semestre2
+      );
 
     if (promedio !== null) {
       promedios.push(promedio);
@@ -228,20 +275,25 @@ function calcularPromedioAño(indiceAño) {
 
   }
 
-  if (promedios.length === 0) return null;
+  if (promedios.length === 0) {
+    return null;
+  }
 
-  const suma = promedios.reduce(
-    (total, promedio) => total + promedio,
-    0
-  );
+  const suma =
+    promedios.reduce(
+      (total, promedio) =>
+        total + promedio,
+      0
+    );
 
   return suma / promedios.length;
 
 }
 
-// =========================
-// FORMATO DE PROMEDIOS
-// =========================
+
+// =====================================================
+// FORMATO PROMEDIO
+// =====================================================
 
 function mostrarPromedio(promedio) {
 
@@ -255,34 +307,552 @@ function mostrarPromedio(promedio) {
 
 }
 
-// =========================
+
+// =====================================================
+// CREAR BOTÓN "¿CÓMO FUNCIONA?"
+// =====================================================
+
+function crearBotonAyuda() {
+
+  if (
+    document.getElementById(
+      "boton-ayuda-malla"
+    )
+  ) {
+    return;
+  }
+
+  const boton =
+    document.createElement("button");
+
+  boton.id =
+    "boton-ayuda-malla";
+
+  boton.textContent =
+    "ⓘ ¿Cómo funciona la malla?";
+
+  boton.addEventListener(
+    "click",
+    mostrarAyuda
+  );
+
+  document.body.insertBefore(
+    boton,
+    malla
+  );
+
+}
+
+
+// =====================================================
+// VENTANA DE AYUDA
+// =====================================================
+
+function mostrarAyuda() {
+
+  const existente =
+    document.getElementById(
+      "ventana-ayuda-malla"
+    );
+
+  if (existente) {
+
+    existente.remove();
+
+    return;
+
+  }
+
+  const fondo =
+    document.createElement("div");
+
+  fondo.id =
+    "ventana-ayuda-malla";
+
+  const caja =
+    document.createElement("div");
+
+  caja.className =
+    "caja-ayuda-malla";
+
+  caja.innerHTML = `
+
+    <button class="cerrar-ayuda">
+      ×
+    </button>
+
+    <h2>
+      📚 ¿Cómo funciona la malla?
+    </h2>
+
+    <h3>
+      Estados de los ramos
+    </h3>
+
+    <p>
+      🟣 <strong>Disponible</strong><br>
+      Puedes cursar este ramo.
+    </p>
+
+    <p>
+      🔒 <strong>Bloqueado</strong><br>
+      Necesitas aprobar uno o más
+      prerrequisitos.
+    </p>
+
+    <p>
+      ✅ <strong>Aprobado</strong><br>
+      Ramo que ya aprobaste.
+    </p>
+
+    <p>
+      ↻ <strong>Repetido</strong><br>
+      Ramo que cursaste nuevamente.
+      Se conserva el promedio anterior.
+    </p>
+
+    <h3>
+      Promedios
+    </h3>
+
+    <p>
+      <strong>Promedio del ramo</strong>:
+      nota registrada para ese ramo.
+    </p>
+
+    <p>
+      <strong>Promedio semestre</strong>:
+      promedio de los ramos que tienen
+      una nota registrada.
+    </p>
+
+    <p>
+      <strong>Promedio anual</strong>:
+      promedio de los semestres que
+      tienen notas registradas.
+    </p>
+
+    <h3>
+      Interacción
+    </h3>
+
+    <p>
+      🖱️ <strong>Clic</strong>:
+      aprobar o desmarcar un ramo.
+    </p>
+
+    <p>
+      👆 <strong>Mantener presionado</strong>:
+      abrir las opciones del ramo.
+    </p>
+
+    <p>
+      ↻ <strong>Presionar el símbolo</strong>:
+      consultar el historial del ramo.
+    </p>
+
+  `;
+
+  fondo.appendChild(caja);
+
+  document.body.appendChild(fondo);
+
+
+  // Cerrar botón
+
+  caja
+    .querySelector(".cerrar-ayuda")
+    .addEventListener(
+      "click",
+      () => fondo.remove()
+    );
+
+
+  // Cerrar haciendo clic fuera
+
+  fondo.addEventListener(
+    "click",
+    evento => {
+
+      if (evento.target === fondo) {
+        fondo.remove();
+      }
+
+    }
+  );
+
+}
+
+
+// =====================================================
+// MOSTRAR HISTORIAL
+// =====================================================
+
+function mostrarHistorial(id) {
+
+  const ramo =
+    buscarRamo(id);
+
+  if (!ramo) return;
+
+  const existente =
+    document.getElementById(
+      "ventana-historial"
+    );
+
+  if (existente) {
+    existente.remove();
+  }
+
+  const fondo =
+    document.createElement("div");
+
+  fondo.id =
+    "ventana-historial";
+
+  const caja =
+    document.createElement("div");
+
+  caja.className =
+    "caja-historial";
+
+  caja.innerHTML = `
+
+    <button class="cerrar-historial">
+      ×
+    </button>
+
+    <h2>
+      ${ramo.nombre}
+    </h2>
+
+    <p>
+      ↻ <strong>Ramo repetido</strong>
+    </p>
+
+    <div class="historial-notas">
+
+      <div>
+        <span>Primer promedio</span>
+        <strong>
+          ${mostrarPromedio(
+            ramo.promedioAnterior
+          )}
+        </strong>
+      </div>
+
+      <div>
+        <span>Promedio actual</span>
+        <strong>
+          ${mostrarPromedio(
+            ramo.promedio
+          )}
+        </strong>
+      </div>
+
+    </div>
+
+  `;
+
+  fondo.appendChild(caja);
+
+  document.body.appendChild(fondo);
+
+
+  caja
+    .querySelector(
+      ".cerrar-historial"
+    )
+    .addEventListener(
+      "click",
+      () => fondo.remove()
+    );
+
+
+  fondo.addEventListener(
+    "click",
+    evento => {
+
+      if (evento.target === fondo) {
+        fondo.remove();
+      }
+
+    }
+  );
+
+}
+
+
+// =====================================================
+// MENÚ DEL RAMO
+// =====================================================
+
+function mostrarMenuRamo(id) {
+
+  const existente =
+    document.getElementById(
+      "menu-ramo"
+    );
+
+  if (existente) {
+    existente.remove();
+  }
+
+  const ramo =
+    buscarRamo(id);
+
+  if (!ramo) return;
+
+
+  const divRamo =
+    document.getElementById(id);
+
+  if (!divRamo) return;
+
+
+  const menu =
+    document.createElement("div");
+
+  menu.id =
+    "menu-ramo";
+
+  menu.className =
+    "menu-ramo";
+
+  menu.innerHTML = `
+
+    <div class="menu-titulo">
+      ${ramo.nombre}
+    </div>
+
+    <button
+      class="opcion-menu"
+      data-opcion="promedio"
+    >
+      📝
+      ${
+        ramo.promedio !== null
+          ? "Editar promedio"
+          : "Ingresar promedio"
+      }
+    </button>
+
+    <button
+      class="opcion-menu"
+      data-opcion="repetido"
+    >
+      ↻
+      ${
+        ramo.repetido
+          ? "Quitar repetición"
+          : "Marcar como repetido"
+      }
+    </button>
+
+    <button
+      class="opcion-menu cancelar"
+      data-opcion="cerrar"
+    >
+      ✕ Cancelar
+    </button>
+
+  `;
+
+
+  document.body.appendChild(menu);
+
+
+  // Posición cerca del ramo
+
+  const rect =
+    divRamo.getBoundingClientRect();
+
+  const menuWidth = 220;
+
+  let left =
+    rect.left +
+    rect.width / 2 -
+    menuWidth / 2;
+
+  let top =
+    rect.bottom + 8;
+
+
+  // Evitar que salga de la pantalla
+
+  if (
+    left + menuWidth >
+    window.innerWidth - 10
+  ) {
+
+    left =
+      window.innerWidth -
+      menuWidth -
+      10;
+
+  }
+
+  if (left < 10) {
+    left = 10;
+  }
+
+
+  if (
+    top + 180 >
+    window.innerHeight
+  ) {
+
+    top =
+      rect.top -
+      190;
+
+  }
+
+
+  menu.style.left =
+    `${left}px`;
+
+  menu.style.top =
+    `${top}px`;
+
+
+  // Opciones
+
+  menu
+    .querySelectorAll(
+      ".opcion-menu"
+    )
+    .forEach(boton => {
+
+      boton.addEventListener(
+        "click",
+        evento => {
+
+          const opcion =
+            evento.currentTarget
+              .dataset.opcion;
+
+          menu.remove();
+
+
+          if (
+            opcion === "promedio"
+          ) {
+
+            editarPromedio(id);
+
+          }
+
+
+          if (
+            opcion === "repetido"
+          ) {
+
+            alternarRepetido(id);
+
+          }
+
+        }
+      );
+
+    });
+
+}
+
+
+// =====================================================
+// MARCAR / DESMARCAR REPETIDO
+// =====================================================
+
+function alternarRepetido(id) {
+
+  const ramo =
+    buscarRamo(id);
+
+  if (!ramo) return;
+
+
+  // Quitar repetición
+
+  if (ramo.repetido) {
+
+    ramo.repetido = false;
+
+    ramo.promedioAnterior =
+      null;
+
+    guardarEstado();
+
+    renderMalla();
+
+    return;
+
+  }
+
+
+  // Para marcar como repetido
+  // necesitamos guardar el promedio actual.
+
+  if (
+    ramo.promedio === null ||
+    ramo.promedio === undefined
+  ) {
+
+    alert(
+      "Primero ingresa el promedio que obtuviste antes de repetir el ramo."
+    );
+
+    return;
+
+  }
+
+
+  ramo.promedioAnterior =
+    ramo.promedio;
+
+  ramo.repetido = true;
+
+  guardarEstado();
+
+  renderMalla();
+
+}
+
+
+// =====================================================
 // RENDER MALLA
-// =========================
+// =====================================================
 
 function renderMalla() {
 
   malla.innerHTML = "";
 
-  for (let i = 0; i < semestres.length; i += 2) {
 
-    const año = document.createElement("div");
+  for (
+    let i = 0;
+    i < semestres.length;
+    i += 2
+  ) {
 
-    año.className = "año";
+    const año =
+      document.createElement("div");
 
-    // =========================
-    // TÍTULO AÑO
-    // =========================
+    año.className =
+      "año";
 
-    const titulo = document.createElement("h2");
+
+    // Título año
+
+    const titulo =
+      document.createElement("h2");
 
     titulo.textContent =
       `Año ${Math.floor(i / 2) + 1}`;
 
     año.appendChild(titulo);
 
-    // =========================
-    // PROMEDIO AÑO
-    // =========================
+
+    // Promedio anual
 
     const promedioAño =
       document.createElement("div");
@@ -301,17 +871,17 @@ function renderMalla() {
       </strong>
     `;
 
-    año.appendChild(promedioAño);
+    año.appendChild(
+      promedioAño
+    );
 
-    // =========================
-    // CONTENEDOR SEMESTRES
-    // =========================
 
     const contSemestres =
       document.createElement("div");
 
     contSemestres.className =
       "semestres";
+
 
     semestres
       .slice(i, i + 2)
@@ -323,9 +893,8 @@ function renderMalla() {
         divSem.className =
           "semestre";
 
-        // =========================
-        // TÍTULO SEMESTRE
-        // =========================
+
+        // Título semestre
 
         const h3 =
           document.createElement("h3");
@@ -335,9 +904,8 @@ function renderMalla() {
 
         divSem.appendChild(h3);
 
-        // =========================
-        // PROMEDIO SEMESTRE
-        // =========================
+
+        // Promedio semestre
 
         const promedioSemestre =
           document.createElement("div");
@@ -349,7 +917,9 @@ function renderMalla() {
           Promedio:
           <strong>
             ${mostrarPromedio(
-              calcularPromedioSemestre(sem)
+              calcularPromedioSemestre(
+                sem
+              )
             )}
           </strong>
         `;
@@ -358,221 +928,269 @@ function renderMalla() {
           promedioSemestre
         );
 
-        // =========================
-        // RAMOS
-        // =========================
 
-        sem.ramos.forEach(ramo => {
+        // Ramos
 
-          const divRamo =
-            document.createElement("div");
+        sem.ramos.forEach(
+          ramo => {
 
-          divRamo.className =
-            `ramo ${ramo.estado}`;
-
-          divRamo.id = ramo.id;
-
-          // =========================
-          // CONTENEDOR DEL NOMBRE
-          // =========================
-
-          const nombreRamo =
-            document.createElement("div");
-
-          nombreRamo.className =
-            "nombre-ramo";
-
-          nombreRamo.textContent =
-            ramo.nombre;
-
-          // =========================
-          // SÍMBOLO DE REPETIDO
-          // =========================
-
-          if (ramo.repetido) {
-
-            const simbolo =
-              document.createElement("span");
-
-            simbolo.className =
-              "simbolo-repetido";
-
-            simbolo.textContent = "↻";
-
-            simbolo.title =
-              "Ramo repetido";
-
-            nombreRamo.appendChild(
-              simbolo
-            );
-
-          }
-
-          divRamo.appendChild(
-            nombreRamo
-          );
-
-          // =========================
-          // PROMEDIO RAMO
-          // =========================
-
-          if (
-            ramo.promedio !== null &&
-            ramo.promedio !== undefined
-          ) {
-
-            const nota =
+            const divRamo =
               document.createElement("div");
 
-            nota.className =
-              "nota-ramo";
+            divRamo.className =
+              `ramo ${ramo.estado}`;
 
-            nota.textContent =
-              `Promedio: ${ramo.promedio
-                .toFixed(2)
-                .replace(".", ",")}`;
+            divRamo.id =
+              ramo.id;
 
-            divRamo.appendChild(nota);
 
-          }
+            // Contenido principal
 
-          // =========================
-          // CLIC NORMAL
-          // =========================
+            const contenido =
+              document.createElement("div");
 
-          if (ramo.estado !== "bloqueado") {
+            contenido.className =
+              "contenido-ramo";
 
-            divRamo.addEventListener(
-              "click",
-              evento => {
 
-                if (
-                  divRamo.dataset.presionLarga ===
-                  "true"
-                ) {
+            // Nombre
 
-                  divRamo.dataset.presionLarga =
-                    "false";
+            const nombreRamo =
+              document.createElement("div");
 
-                  return;
+            nombreRamo.className =
+              "nombre-ramo";
+
+            nombreRamo.textContent =
+              ramo.nombre;
+
+            contenido.appendChild(
+              nombreRamo
+            );
+
+
+            // Promedio
+
+            if (
+              ramo.promedio !== null &&
+              ramo.promedio !== undefined
+            ) {
+
+              const nota =
+                document.createElement("div");
+
+              nota.className =
+                "nota-ramo";
+
+              nota.textContent =
+                `Promedio: ${
+                  ramo.promedio
+                    .toFixed(2)
+                    .replace(".", ",")
+                }`;
+
+              contenido.appendChild(
+                nota
+              );
+
+            }
+
+
+            divRamo.appendChild(
+              contenido
+            );
+
+
+            // Símbolo repetido
+
+            if (ramo.repetido) {
+
+              const simbolo =
+                document.createElement("button");
+
+              simbolo.className =
+                "simbolo-repetido";
+
+              simbolo.textContent =
+                "↻";
+
+              simbolo.title =
+                "Ramo repetido";
+
+              simbolo.addEventListener(
+                "click",
+                evento => {
+
+                  evento.stopPropagation();
+
+                  mostrarHistorial(
+                    ramo.id
+                  );
 
                 }
+              );
 
-                if (
-                  evento.target.classList.contains(
-                    "input-promedio"
-                  )
-                ) {
+              divRamo.appendChild(
+                simbolo
+              );
 
-                  return;
+            }
+
+
+            // Clic normal
+
+            if (
+              ramo.estado !==
+              "bloqueado"
+            ) {
+
+              divRamo.addEventListener(
+                "click",
+                evento => {
+
+                  if (
+                    evento.target.closest(
+                      ".simbolo-repetido"
+                    )
+                  ) {
+                    return;
+                  }
+
+
+                  if (
+                    divRamo.dataset
+                      .presionLarga ===
+                    "true"
+                  ) {
+
+                    divRamo.dataset
+                      .presionLarga =
+                      "false";
+
+                    return;
+
+                  }
+
+
+                  aprobarRamo(
+                    ramo.id
+                  );
 
                 }
+              );
 
-                aprobarRamo(
-                  ramo.id
-                );
+            }
+
+
+            // Mantener presionado
+
+            let temporizador = null;
+
+
+            function iniciarPresion(
+              evento
+            ) {
+
+              if (
+                evento.cancelable
+              ) {
+
+                evento.preventDefault();
 
               }
+
+
+              divRamo.dataset
+                .presionLarga =
+                "false";
+
+
+              temporizador =
+                setTimeout(() => {
+
+                  divRamo.dataset
+                    .presionLarga =
+                    "true";
+
+                  mostrarMenuRamo(
+                    ramo.id
+                  );
+
+                }, 600);
+
+            }
+
+
+            function cancelarPresion() {
+
+              if (
+                temporizador !==
+                null
+              ) {
+
+                clearTimeout(
+                  temporizador
+                );
+
+                temporizador =
+                  null;
+
+              }
+
+            }
+
+
+            // PC
+
+            divRamo.addEventListener(
+              "mousedown",
+              iniciarPresion
+            );
+
+            divRamo.addEventListener(
+              "mouseup",
+              cancelarPresion
+            );
+
+            divRamo.addEventListener(
+              "mouseleave",
+              cancelarPresion
+            );
+
+
+            // Celular / tablet
+
+            divRamo.addEventListener(
+              "touchstart",
+              iniciarPresion,
+              { passive: false }
+            );
+
+            divRamo.addEventListener(
+              "touchend",
+              cancelarPresion
+            );
+
+            divRamo.addEventListener(
+              "touchcancel",
+              cancelarPresion
+            );
+
+
+            divSem.appendChild(
+              divRamo
             );
 
           }
+        );
 
-          // =========================
-          // PRESIÓN LARGA
-          // =========================
-
-          let temporizadorPresion = null;
-
-          function iniciarPresion(evento) {
-
-            if (evento.cancelable) {
-              evento.preventDefault();
-            }
-
-            divRamo.dataset.presionLarga =
-              "false";
-
-            temporizadorPresion =
-              setTimeout(() => {
-
-                divRamo.dataset.presionLarga =
-                  "true";
-
-                mostrarMenuRamo(
-                  ramo.id
-                );
-
-              }, 600);
-
-          }
-
-          function cancelarPresion() {
-
-            if (
-              temporizadorPresion !== null
-            ) {
-
-              clearTimeout(
-                temporizadorPresion
-              );
-
-              temporizadorPresion =
-                null;
-
-            }
-
-          }
-
-          // =========================
-          // MOUSE
-          // =========================
-
-          nombreRamo.addEventListener(
-            "mousedown",
-            iniciarPresion
-          );
-
-          nombreRamo.addEventListener(
-            "mouseup",
-            cancelarPresion
-          );
-
-          nombreRamo.addEventListener(
-            "mouseleave",
-            cancelarPresion
-          );
-
-          // =========================
-          // TOUCH
-          // =========================
-
-          nombreRamo.addEventListener(
-            "touchstart",
-            iniciarPresion,
-            { passive: false }
-          );
-
-          nombreRamo.addEventListener(
-            "touchend",
-            cancelarPresion
-          );
-
-          nombreRamo.addEventListener(
-            "touchcancel",
-            cancelarPresion
-          );
-
-          divSem.appendChild(
-            divRamo
-          );
-
-        });
 
         contSemestres.appendChild(
           divSem
         );
 
       });
+
 
     año.appendChild(
       contSemestres
@@ -586,157 +1204,10 @@ function renderMalla() {
 
 }
 
-// =========================
-// MINI MENÚ DEL RAMO
-// =========================
 
-function mostrarMenuRamo(id) {
-
-  // Eliminar cualquier menú anterior
-
-  const menuAnterior =
-    document.querySelector(
-      ".menu-ramo"
-    );
-
-  if (menuAnterior) {
-    menuAnterior.remove();
-  }
-
-  const ramo =
-    buscarRamo(id);
-
-  if (!ramo) return;
-
-  const divRamo =
-    document.getElementById(id);
-
-  if (!divRamo) return;
-
-  const menu =
-    document.createElement("div");
-
-  menu.className =
-    "menu-ramo";
-
-  // =========================
-  // BOTÓN PROMEDIO
-  // =========================
-
-  const botonPromedio =
-    document.createElement("button");
-
-  botonPromedio.textContent =
-    "✏️ Editar promedio";
-
-  botonPromedio.addEventListener(
-    "click",
-    evento => {
-
-      evento.stopPropagation();
-
-      menu.remove();
-
-      editarPromedio(id);
-
-    }
-  );
-
-  menu.appendChild(
-    botonPromedio
-  );
-
-  // =========================
-  // BOTÓN REPETIDO
-  // =========================
-
-  const botonRepetido =
-    document.createElement("button");
-
-  if (ramo.repetido) {
-
-    botonRepetido.textContent =
-      "✓ Quitar repetido";
-
-  } else {
-
-    botonRepetido.textContent =
-      "↻ Marcar como repetido";
-
-  }
-
-  botonRepetido.addEventListener(
-    "click",
-    evento => {
-
-      evento.stopPropagation();
-
-      ramo.repetido =
-        !ramo.repetido;
-
-      guardarEstado();
-
-      menu.remove();
-
-      renderMalla();
-
-    }
-  );
-
-  menu.appendChild(
-    botonRepetido
-  );
-
-  // =========================
-  // BOTÓN CANCELAR
-  // =========================
-
-  const botonCancelar =
-    document.createElement("button");
-
-  botonCancelar.textContent =
-    "Cancelar";
-
-  botonCancelar.addEventListener(
-    "click",
-    evento => {
-
-      evento.stopPropagation();
-
-      menu.remove();
-
-    }
-  );
-
-  menu.appendChild(
-    botonCancelar
-  );
-
-  // =========================
-  // POSICIONAR MENÚ
-  // =========================
-
-  const rect =
-    divRamo.getBoundingClientRect();
-
-  menu.style.position =
-    "fixed";
-
-  menu.style.left =
-    `${rect.left + rect.width / 2}px`;
-
-  menu.style.top =
-    `${rect.bottom + 8}px`;
-
-  document.body.appendChild(
-    menu
-  );
-
-}
-
-// =========================
+// =====================================================
 // EDITAR PROMEDIO
-// =========================
+// =====================================================
 
 function editarPromedio(id) {
 
@@ -745,10 +1216,12 @@ function editarPromedio(id) {
 
   if (!ramo) return;
 
+
   const divRamo =
     document.getElementById(id);
 
   if (!divRamo) return;
+
 
   if (
     divRamo.querySelector(
@@ -760,22 +1233,28 @@ function editarPromedio(id) {
 
   }
 
+
   const input =
     document.createElement("input");
 
-  input.type = "number";
+  input.type =
+    "number";
 
   input.className =
     "input-promedio";
 
-  input.min = "1.0";
+  input.min =
+    "1.0";
 
-  input.max = "7.0";
+  input.max =
+    "7.0";
 
-  input.step = "0.1";
+  input.step =
+    "0.1";
 
   input.placeholder =
     "Ej: 5,6";
+
 
   if (
     ramo.promedio !== null &&
@@ -787,33 +1266,33 @@ function editarPromedio(id) {
 
   }
 
+
   input.addEventListener(
     "click",
-    evento => {
-      evento.stopPropagation();
-    }
+    evento =>
+      evento.stopPropagation()
   );
 
   input.addEventListener(
     "mousedown",
-    evento => {
-      evento.stopPropagation();
-    }
+    evento =>
+      evento.stopPropagation()
   );
 
   input.addEventListener(
     "touchstart",
-    evento => {
-      evento.stopPropagation();
-    }
+    evento =>
+      evento.stopPropagation()
   );
+
 
   input.addEventListener(
     "keydown",
     evento => {
 
       if (
-        evento.key === "Enter"
+        evento.key ===
+        "Enter"
       ) {
 
         guardarPromedio(
@@ -823,8 +1302,10 @@ function editarPromedio(id) {
 
       }
 
+
       if (
-        evento.key === "Escape"
+        evento.key ===
+        "Escape"
       ) {
 
         renderMalla();
@@ -833,6 +1314,7 @@ function editarPromedio(id) {
 
     }
   );
+
 
   input.addEventListener(
     "blur",
@@ -846,6 +1328,7 @@ function editarPromedio(id) {
     }
   );
 
+
   divRamo.appendChild(
     input
   );
@@ -854,9 +1337,10 @@ function editarPromedio(id) {
 
 }
 
-// =========================
+
+// =====================================================
 // GUARDAR PROMEDIO
-// =========================
+// =====================================================
 
 function guardarPromedio(
   id,
@@ -868,11 +1352,13 @@ function guardarPromedio(
 
   if (!ramo) return;
 
+
   if (
     valor.trim() === ""
   ) {
 
-    ramo.promedio = null;
+    ramo.promedio =
+      null;
 
     guardarEstado();
 
@@ -882,10 +1368,15 @@ function guardarPromedio(
 
   }
 
+
   const numero =
     parseFloat(
-      valor.replace(",", ".")
+      valor.replace(
+        ",",
+        "."
+      )
     );
+
 
   if (
     isNaN(numero) ||
@@ -903,8 +1394,10 @@ function guardarPromedio(
 
   }
 
+
   ramo.promedio =
     numero;
+
 
   guardarEstado();
 
@@ -912,34 +1405,10 @@ function guardarPromedio(
 
 }
 
-// =========================
-// BUSCAR RAMO
-// =========================
 
-function buscarRamo(id) {
-
-  for (
-    const sem of semestres
-  ) {
-
-    const ramo =
-      sem.ramos.find(
-        r => r.id === id
-      );
-
-    if (ramo) {
-      return ramo;
-    }
-
-  }
-
-  return null;
-
-}
-
-// =========================
-// APROBAR / DESMARCAR RAMO
-// =========================
+// =====================================================
+// APROBAR / DESMARCAR
+// =====================================================
 
 function aprobarRamo(id) {
 
@@ -981,9 +1450,8 @@ function aprobarRamo(id) {
     }
   );
 
-  // =========================
-  // ACTUALIZAR BLOQUEOS
-  // =========================
+
+  // Actualizar bloqueos
 
   semestres.forEach(
     sem => {
@@ -1003,13 +1471,13 @@ function aprobarRamo(id) {
                     s =>
                       s.ramos.some(
                         x =>
-                          x.id ===
-                            req &&
+                          x.id === req &&
                           x.estado ===
                             "aprobado"
                       )
                   )
               );
+
 
             r.estado =
               cumple
@@ -1024,11 +1492,13 @@ function aprobarRamo(id) {
     }
   );
 
+
+  guardarEstado();
+
   renderMalla();
 
-  // =========================
-  // ANIMACIÓN
-  // =========================
+
+  // Animación
 
   const ramoDiv =
     document.getElementById(id);
@@ -1040,26 +1510,24 @@ function aprobarRamo(id) {
     );
 
     setTimeout(
-      () => {
-
+      () =>
         ramoDiv.classList.remove(
           "pulse"
-        );
-
-      },
+        ),
       400
     );
 
   }
 
-  guardarEstado();
-
 }
 
-// =========================
+
+// =====================================================
 // INICIO
-// =========================
+// =====================================================
 
 cargarEstado();
+
+crearBotonAyuda();
 
 renderMalla();
