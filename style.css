@@ -44,9 +44,15 @@ p {
 #malla {
   display: flex;
   gap: 25px;
+
   overflow-x: auto;
+  overflow-y: visible;
+
   padding: 10px 10px 25px 10px;
+
   scroll-behavior: smooth;
+
+  position: relative;
 }
 
 
@@ -79,8 +85,11 @@ p {
 
 .año {
   background: rgba(239, 232, 252, 0.9);
+
   min-width: 310px;
+
   padding: 20px;
+
   border-radius: 22px;
 
   display: flex;
@@ -93,6 +102,10 @@ p {
   border: 1px solid #e5dcf5;
 
   flex-shrink: 0;
+
+  position: relative;
+
+  overflow: visible;
 }
 
 
@@ -102,8 +115,11 @@ p {
 
 .año > h2 {
   margin: 0 0 4px 0;
+
   color: #6a4fa3;
+
   font-size: 21px;
+
   text-align: center;
 }
 
@@ -114,13 +130,17 @@ p {
 
 .promedio-año {
   font-size: 12px;
+
   color: #8065aa;
+
   margin-bottom: 16px;
+
   text-align: center;
 }
 
 .promedio-año strong {
   font-size: 13px;
+
   color: #5b3d91;
 }
 
@@ -131,9 +151,16 @@ p {
 
 .semestres {
   display: flex;
+
   flex-direction: column;
+
   gap: 16px;
+
   width: 100%;
+
+  overflow: visible;
+
+  position: relative;
 }
 
 
@@ -143,7 +170,9 @@ p {
 
 .semestre {
   background: #ffffff;
+
   padding: 15px;
+
   border-radius: 18px;
 
   box-shadow:
@@ -152,10 +181,16 @@ p {
   width: 100%;
 
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
 
   border: 1px solid #e5dcf5;
+
+  position: relative;
+
+  overflow: visible;
 }
 
 
@@ -165,8 +200,11 @@ p {
 
 .semestre h3 {
   text-align: center;
+
   color: #6a4fa3;
+
   margin: 0 0 3px 0;
+
   font-size: 17px;
 }
 
@@ -177,13 +215,17 @@ p {
 
 .promedio-semestre {
   font-size: 12px;
+
   color: #8065aa;
+
   margin-bottom: 8px;
+
   text-align: center;
 }
 
 .promedio-semestre strong {
   color: #5b3d91;
+
   font-size: 13px;
 }
 
@@ -196,11 +238,13 @@ p {
   position: relative;
 
   border-radius: 13px;
+
   padding: 11px 12px;
 
   margin-top: 8px;
 
   font-size: 14px;
+
   text-align: center;
 
   cursor: pointer;
@@ -213,6 +257,22 @@ p {
   width: 92%;
 
   box-sizing: border-box;
+
+  /*
+    IMPORTANTE:
+    Permite que el menú pueda
+    colocarse encima de otros ramos.
+  */
+  z-index: 1;
+}
+
+
+/* =========================
+   RAMO CON MENÚ ABIERTO
+========================= */
+
+.ramo:has(.menu-ramo) {
+  z-index: 99999;
 }
 
 
@@ -222,7 +282,9 @@ p {
 
 .ramo:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(90, 65, 130, 0.12);
+
+  box-shadow:
+    0 4px 10px rgba(90, 65, 130, 0.12);
 }
 
 
@@ -232,7 +294,19 @@ p {
 
 .nombre-ramo {
   width: 100%;
+
   line-height: 1.25;
+}
+
+
+/* =========================
+   CONTENIDO DEL RAMO
+========================= */
+
+.contenido-ramo {
+  position: relative;
+
+  width: 100%;
 }
 
 
@@ -242,10 +316,46 @@ p {
 
 .nota-ramo {
   font-size: 11px;
+
   margin-top: 5px;
+
   opacity: 0.8;
+
   font-weight: normal;
+
   text-decoration: none;
+}
+
+
+/* =========================
+   PROMEDIO ANTERIOR
+========================= */
+
+.promedio-anterior {
+  margin-top: 5px;
+
+  font-size: 10px;
+
+  color: #9a8eaa;
+
+  font-style: italic;
+
+  opacity: 0.9;
+}
+
+
+/* =========================
+   HISTORIAL
+========================= */
+
+.historial-ramo {
+  margin-top: 4px;
+
+  font-size: 10px;
+
+  color: #9a8eaa;
+
+  font-style: italic;
 }
 
 
@@ -255,6 +365,7 @@ p {
 
 .ramo.disponible {
   background-color: #e7dcfa;
+
   color: #4b2c83;
 }
 
@@ -269,13 +380,19 @@ p {
 
 .ramo.aprobado {
   background-color: #cbb6f0;
+
   color: #2e1a47;
 
   text-decoration: line-through;
+
   font-weight: bold;
 }
 
 .ramo.aprobado .nota-ramo {
+  text-decoration: none;
+}
+
+.ramo.aprobado .historial-ramo {
   text-decoration: none;
 }
 
@@ -286,6 +403,7 @@ p {
 
 .ramo.bloqueado {
   background-color: #f0edf5;
+
   color: #9a91a8;
 
   cursor: not-allowed;
@@ -293,6 +411,204 @@ p {
   opacity: 0.65;
 
   box-shadow: none;
+}
+
+
+/* =========================
+   BOTÓN DE LOS TRES PUNTITOS
+========================= */
+
+.boton-menu-ramo {
+  position: absolute;
+
+  top: 6px;
+
+  right: 6px;
+
+  width: 25px;
+
+  height: 25px;
+
+  padding: 0;
+
+  margin: 0;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #a98bd2;
+
+  color: #ffffff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 15px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  z-index: 20;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.boton-menu-ramo:hover {
+  background: #8e6bbb;
+
+  transform: scale(1.05);
+}
+
+.boton-menu-ramo:active {
+  transform: scale(0.95);
+}
+
+
+/* =========================
+   MINI MENÚ DEL RAMO
+========================= */
+
+.menu-ramo {
+  position: absolute;
+
+  top: calc(100% + 8px);
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: 190px;
+
+  padding: 10px;
+
+  background: #ffffff;
+
+  border: 1px solid #d8c9ed;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 10px 28px rgba(70, 50, 100, 0.20);
+
+  /*
+    MUY IMPORTANTE:
+    Hace que aparezca sobre
+    los demás elementos.
+  */
+  z-index: 999999;
+
+  overflow: visible;
+
+  animation: aparecerMenu 0.15s ease;
+}
+
+
+/* =========================
+   ANIMACIÓN DEL MINI MENÚ
+========================= */
+
+@keyframes aparecerMenu {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateX(-50%)
+      translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateX(-50%)
+      translateY(0);
+  }
+
+}
+
+
+/* =========================
+   TÍTULO DEL MINI MENÚ
+========================= */
+
+.menu-ramo-titulo {
+  padding: 5px 7px 8px 7px;
+
+  margin-bottom: 5px;
+
+  color: #6a4fa3;
+
+  font-size: 12px;
+
+  font-weight: bold;
+
+  text-align: center;
+
+  border-bottom: 1px solid #eee7f7;
+}
+
+
+/* =========================
+   OPCIONES DEL MINI MENÚ
+========================= */
+
+.menu-ramo button {
+  display: block;
+
+  width: 100%;
+
+  padding: 8px 10px;
+
+  margin: 4px 0;
+
+  border: none;
+
+  border-radius: 9px;
+
+  background: #f1eafa;
+
+  color: #5b4380;
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.menu-ramo button:hover {
+  background: #e2d4f5;
+
+  transform: translateX(2px);
+}
+
+.menu-ramo button:active {
+  transform: scale(0.98);
+}
+
+
+/* =========================
+   BOTÓN PARA QUITAR REPETICIÓN
+========================= */
+
+.menu-ramo .boton-eliminar-repetido {
+  background: #f7edf8;
+
+  color: #8a527e;
+}
+
+.menu-ramo .boton-eliminar-repetido:hover {
+  background: #eedcef;
 }
 
 
@@ -308,6 +624,7 @@ p {
   padding: 5px 7px;
 
   border: 1px solid #b9a2df;
+
   border-radius: 8px;
 
   background: #ffffff;
@@ -361,113 +678,49 @@ p {
 ========================= */
 
 /*
-   Si el JavaScript agrega la clase .repetido,
-   el símbolo queda separado del nombre.
+   El símbolo queda separado
+   del nombre y aparece como
+   una pequeña marca.
 */
 
-.ramo.repetido::after {
-  content: "↻";
-
+.simbolo-repetido {
   display: inline-flex;
 
   align-items: center;
+
   justify-content: center;
 
-  margin-left: 9px;
+  margin-left: 6px;
 
-  width: 18px;
-  height: 18px;
+  width: 19px;
+
+  height: 19px;
 
   border-radius: 50%;
 
-  background: #eee5ff;
+  background: #d9c8f2;
 
-  color: #8065aa;
+  color: #6f5198;
 
   font-size: 11px;
 
   font-weight: bold;
 
   vertical-align: middle;
+
+  text-decoration: none;
+
+  line-height: 1;
 }
 
 
-/* =========================
-   MINI MENÚ
-========================= */
+/*
+   Si el JS utiliza la clase
+   .repetido directamente.
+*/
 
-.menu-ramo {
-  position: absolute;
-
-  top: calc(100% + 7px);
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  width: 175px;
-
-  padding: 10px;
-
-  background: #ffffff;
-
-  border: 1px solid #dfd4f0;
-
-  border-radius: 14px;
-
-  box-shadow:
-    0 8px 22px rgba(70, 50, 100, 0.15);
-
-  z-index: 100;
-}
-
-
-/* =========================
-   OPCIONES DEL MINI MENÚ
-========================= */
-
-.menu-ramo button {
-  display: block;
-
-  width: 100%;
-
-  padding: 8px 10px;
-
-  margin: 4px 0;
-
-  border: none;
-
-  border-radius: 9px;
-
-  background: #f4effb;
-
-  color: #5b4380;
-
-  font-size: 12px;
-
-  cursor: pointer;
-
-  transition: background 0.2s ease;
-}
-
-.menu-ramo button:hover {
-  background: #e5d9f7;
-}
-
-
-/* =========================
-   REGISTRO DEL PROMEDIO ANTERIOR
-========================= */
-
-.promedio-anterior {
-  margin-top: 5px;
-
-  font-size: 10px;
-
-  color: #9a8eaa;
-
-  font-style: italic;
-
-  opacity: 0.9;
+.ramo.repetido::after {
+  content: none;
 }
 
 
@@ -523,6 +776,7 @@ p {
 
 .leyenda-color {
   width: 18px;
+
   height: 18px;
 
   border-radius: 6px;
@@ -546,16 +800,18 @@ p {
   display: inline-flex;
 
   align-items: center;
+
   justify-content: center;
 
   width: 18px;
+
   height: 18px;
 
   border-radius: 50%;
 
-  background: #eee5ff;
+  background: #d9c8f2;
 
-  color: #8065aa;
+  color: #6f5198;
 
   font-size: 11px;
 }
@@ -569,6 +825,7 @@ p {
   position: fixed;
 
   bottom: 10px;
+
   left: 15px;
 
   font-size: 11px;
@@ -587,6 +844,7 @@ p {
   position: fixed;
 
   bottom: 10px;
+
   right: 15px;
 
   font-size: 11px;
@@ -596,6 +854,355 @@ p {
   font-style: italic;
 
   pointer-events: none;
+}
+
+
+/* =========================
+   PANELES DE INFORMACIÓN
+========================= */
+
+.panel-informacion {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000000;
+
+  background: rgba(60, 45, 80, 0.28);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  animation: aparecerPanel 0.18s ease;
+}
+
+
+/* =========================
+   CONTENIDO DEL PANEL
+========================= */
+
+.panel-contenido {
+  position: relative;
+
+  width: min(520px, 95vw);
+
+  max-height: 85vh;
+
+  overflow-y: auto;
+
+  padding: 25px;
+
+  background: #ffffff;
+
+  border: 1px solid #dfd2ef;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 15px 45px rgba(65, 45, 90, 0.22);
+}
+
+.panel-contenido h2 {
+  margin-top: 0;
+
+  color: #6a4fa3;
+
+  text-align: center;
+
+  font-size: 21px;
+}
+
+.panel-contenido p {
+  color: #6d6377;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+
+  font-style: normal;
+}
+
+
+/* =========================
+   BOTÓN CERRAR PANEL
+========================= */
+
+.cerrar-panel {
+  position: absolute;
+
+  top: 10px;
+
+  right: 12px;
+
+  width: 30px;
+
+  height: 30px;
+
+  border: none;
+
+  border-radius: 9px;
+
+  background: #f0e8f8;
+
+  color: #76549c;
+
+  font-size: 20px;
+
+  cursor: pointer;
+}
+
+.cerrar-panel:hover {
+  background: #e1d3ef;
+}
+
+
+/* =========================
+   ELEMENTOS DE EXPLICACIÓN
+========================= */
+
+.explicacion-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin: 12px 0;
+}
+
+.explicacion-item p {
+  margin: 3px 0 0 0;
+
+  text-align: left;
+
+  font-size: 12px;
+}
+
+.explicacion-item strong {
+  color: #5d447f;
+
+  font-size: 13px;
+}
+
+
+/* =========================
+   EJEMPLOS DE COLORES
+========================= */
+
+.ejemplo {
+  width: 38px;
+
+  height: 30px;
+
+  flex-shrink: 0;
+
+  border-radius: 8px;
+}
+
+.ejemplo.disponible {
+  background: #e7dcfa;
+}
+
+.ejemplo.aprobado {
+  background: #cbb6f0;
+}
+
+.ejemplo.bloqueado {
+  background: #f0edf5;
+}
+
+.ejemplo.simbolo {
+  width: 30px;
+
+  height: 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #d9c8f2;
+
+  color: #6f5198;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   INSTRUCCIONES
+========================= */
+
+.instruccion {
+  text-align: left !important;
+
+  margin: 8px 0 !important;
+
+  font-style: normal !important;
+
+  font-size: 12px !important;
+
+  color: #6d6377 !important;
+}
+
+
+/* =========================
+   TEXTO PEQUEÑO
+========================= */
+
+.texto-pequeno {
+  font-size: 11px !important;
+
+  color: #958ba0 !important;
+}
+
+
+/* =========================
+   SUGERENCIAS
+========================= */
+
+#texto-sugerencia {
+  width: 100%;
+
+  min-height: 130px;
+
+  resize: vertical;
+
+  padding: 12px;
+
+  border: 1px solid #d8c9ed;
+
+  border-radius: 12px;
+
+  background: #faf8fd;
+
+  color: #4b3b5f;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  outline: none;
+}
+
+#texto-sugerencia:focus {
+  border-color: #a98bd2;
+
+  box-shadow:
+    0 0 0 3px rgba(169, 139, 210, 0.12);
+}
+
+
+/* =========================
+   BOTÓN ENVIAR SUGERENCIA
+========================= */
+
+.boton-enviar {
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 10px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #9d7ac8;
+
+  color: #ffffff;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.boton-enviar:hover {
+  background: #8966b5;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   MENÚ SUPERIOR
+========================= */
+
+.menu-superior {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin: 12px auto 25px auto;
+
+  flex-wrap: wrap;
+
+  position: relative;
+
+  z-index: 50;
+}
+
+.menu-superior button {
+  border: 1px solid #d9c9eb;
+
+  background: #eee5fa;
+
+  color: #624786;
+
+  padding: 8px 13px;
+
+  border-radius: 10px;
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.menu-superior button:hover {
+  background: #dfd0f2;
+
+  transform: translateY(-1px);
+}
+
+.menu-superior button:active {
+  transform: scale(0.97);
+}
+
+
+/* =========================
+   ANIMACIÓN DE PANELES
+========================= */
+
+@keyframes aparecerPanel {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+
 }
 
 
@@ -615,11 +1222,36 @@ p {
 
   #malla {
     gap: 18px;
+
+    padding-left: 5px;
+
+    padding-right: 5px;
   }
 
   .año {
     min-width: 285px;
+
     padding: 16px;
+  }
+
+  .menu-ramo {
+    width: 180px;
+  }
+
+  .menu-superior {
+    gap: 6px;
+  }
+
+  .menu-superior button {
+    padding: 7px 10px;
+
+    font-size: 11px;
+  }
+
+  .panel-contenido {
+    padding: 20px;
+
+    width: 94vw;
   }
 
 }
