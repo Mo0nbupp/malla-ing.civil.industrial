@@ -1,18 +1,8 @@
 const malla = document.getElementById("malla");
 
-// ======================================================
-// CONFIGURACIÓN
-// ======================================================
-
-const VERSION_MALLA = "1.4";
-
-const EMAIL_CREADORA = "TU-CORREO-AQUI@ejemplo.com";
-// ↑ CAMBIA ESTO POR TU CORREO CUANDO QUIERAS RECIBIR
-// LAS SUGERENCIAS MEDIANTE CORREO.
-
-// ======================================================
+// =========================
 // SEMESTRES Y RAMOS
-// ======================================================
+// =========================
 
 const semestres = [
   {
@@ -56,15 +46,7 @@ const semestres = [
       { id: "r18", nombre: "Cálculo III", prereq: ["r12"], estado: "bloqueado" },
       { id: "r19", nombre: "Electricidad y magnetismo", prereq: ["r10"], estado: "bloqueado" },
       { id: "r20", nombre: "Curso sello institucional IV", prereq: [], estado: "bloqueado" },
-      {
-        id: "r21",
-        nombre: "Taller integrador de competencias básicas",
-        prereq: [
-          "r1","r2","r3","r4","r5","r6","r7","r8",
-          "r9","r10","r11","r12","r13","r14","r15","r16"
-        ],
-        estado: "bloqueado"
-      },
+      { id: "r21", nombre: "Taller integrador de competencias básicas", prereq: ["r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15","r16"], estado: "bloqueado" },
       { id: "r22", nombre: "Ciclo de la vida y tecnología de los materiales", prereq: [], estado: "bloqueado" }
     ]
   },
@@ -160,42 +142,15 @@ const semestres = [
   }
 ];
 
-// ======================================================
-// ESTADO INICIAL DE LOS RAMOS
-// ======================================================
 
-semestres.forEach(sem => {
-  sem.ramos.forEach(ramo => {
-
-    if (ramo.promedio === undefined) {
-      ramo.promedio = null;
-    }
-
-    if (ramo.promedioAnterior === undefined) {
-      ramo.promedioAnterior = null;
-    }
-
-    if (ramo.repetido === undefined) {
-      ramo.repetido = false;
-    }
-
-    if (ramo.comentario === undefined) {
-      ramo.comentario = "";
-    }
-
-  });
-});
-
-// ======================================================
-// GUARDAR Y CARGAR
-// ======================================================
+// =========================
+// GUARDAR / CARGAR
+// =========================
 
 function guardarEstado() {
-  localStorage.setItem(
-    "estadoMalla",
-    JSON.stringify(semestres)
-  );
+  localStorage.setItem("estadoMalla", JSON.stringify(semestres));
 }
+
 
 function cargarEstado() {
 
@@ -203,78 +158,39 @@ function cargarEstado() {
 
   if (!guardado) return;
 
-  try {
+  const datos = JSON.parse(guardado);
 
-    const datos = JSON.parse(guardado);
+  datos.forEach((sem, i) => {
 
-    datos.forEach((sem, i) => {
+    if (!semestres[i]) return;
 
-      if (!semestres[i]) return;
+    semestres[i].ramos.forEach((ramo, j) => {
 
-      sem.ramos.forEach((ramoGuardado, j) => {
+      if (!sem.ramos[j]) return;
 
-        if (!semestres[i].ramos[j]) return;
+      ramo.estado = sem.ramos[j].estado;
 
-        const ramo = semestres[i].ramos[j];
+      ramo.promedio =
+        sem.ramos[j].promedio ?? null;
 
-        ramo.estado =
-          ramoGuardado.estado ?? ramo.estado;
-
-        ramo.promedio =
-          ramoGuardado.promedio ?? null;
-
-        ramo.promedioAnterior =
-          ramoGuardado.promedioAnterior ?? null;
-
-        ramo.repetido =
-          ramoGuardado.repetido ?? false;
-
-        ramo.comentario =
-          ramoGuardado.comentario ?? "";
-
-      });
+      // Historial de repeticiones
+      ramo.historial =
+        sem.ramos[j].historial ?? [];
 
     });
 
-  } catch (error) {
-
-    console.error(
-      "No se pudo cargar la malla:",
-      error
-    );
-
-  }
+  });
 }
 
-// ======================================================
-// BUSCAR RAMO
-// ======================================================
 
-function buscarRamo(id) {
-
-  for (const sem of semestres) {
-
-    const ramo = sem.ramos.find(
-      r => r.id === id
-    );
-
-    if (ramo) return ramo;
-
-  }
-
-  return null;
-}
-
-// ======================================================
+// =========================
 // PROMEDIO SEMESTRE
-// ======================================================
+// =========================
 
 function calcularPromedioSemestre(semestre) {
 
   const notas = semestre.ramos
-
     .map(ramo => ramo.promedio)
-
     .filter(
       nota =>
         typeof nota === "number" &&
@@ -283,17 +199,19 @@ function calcularPromedioSemestre(semestre) {
 
   if (notas.length === 0) return null;
 
-  const suma = notas.reduce(
-    (total, nota) => total + nota,
-    0
+  return (
+    notas.reduce(
+      (total, nota) =>
+        total + nota,
+      0
+    ) / notas.length
   );
-
-  return suma / notas.length;
 }
 
-// ======================================================
+
+// =========================
 // PROMEDIO AÑO
-// ======================================================
+// =========================
 
 function calcularPromedioAño(indiceAño) {
 
@@ -308,56 +226,56 @@ function calcularPromedioAño(indiceAño) {
   if (semestre1) {
 
     const promedio =
-      calcularPromedioSemestre(semestre1);
+      calcularPromedioSemestre(
+        semestre1
+      );
 
-    if (promedio !== null) {
+    if (promedio !== null)
       promedios.push(promedio);
-    }
-
   }
 
   if (semestre2) {
 
     const promedio =
-      calcularPromedioSemestre(semestre2);
+      calcularPromedioSemestre(
+        semestre2
+      );
 
-    if (promedio !== null) {
+    if (promedio !== null)
       promedios.push(promedio);
-    }
-
   }
 
-  if (promedios.length === 0) {
+  if (promedios.length === 0)
     return null;
-  }
 
-  const suma = promedios.reduce(
-    (total, promedio) =>
-      total + promedio,
-    0
+  return (
+    promedios.reduce(
+      (total, promedio) =>
+        total + promedio,
+      0
+    ) / promedios.length
   );
-
-  return suma / promedios.length;
 }
 
-// ======================================================
-// FORMATO PROMEDIO
-// ======================================================
+
+// =========================
+// FORMATO PROMEDIOS
+// =========================
 
 function mostrarPromedio(promedio) {
 
-  if (promedio === null) {
+  if (promedio === null)
     return "—";
-  }
 
   return promedio
     .toFixed(2)
     .replace(".", ",");
 }
 
-// ======================================================
+
+// =========================
 // RENDER MALLA
-// ======================================================
+// =========================
 
 function renderMalla() {
 
@@ -374,9 +292,8 @@ function renderMalla() {
 
     año.className = "año";
 
-    // ------------------------------------------
+
     // TÍTULO AÑO
-    // ------------------------------------------
 
     const titulo =
       document.createElement("h2");
@@ -386,9 +303,8 @@ function renderMalla() {
 
     año.appendChild(titulo);
 
-    // ------------------------------------------
+
     // PROMEDIO AÑO
-    // ------------------------------------------
 
     const promedioAño =
       document.createElement("div");
@@ -409,15 +325,15 @@ function renderMalla() {
 
     año.appendChild(promedioAño);
 
-    // ------------------------------------------
+
     // SEMESTRES
-    // ------------------------------------------
 
     const contSemestres =
       document.createElement("div");
 
     contSemestres.className =
       "semestres";
+
 
     semestres
       .slice(i, i + 2)
@@ -429,9 +345,8 @@ function renderMalla() {
         divSem.className =
           "semestre";
 
-        // --------------------------------------
-        // TÍTULO SEMESTRE
-        // --------------------------------------
+
+        // TÍTULO
 
         const h3 =
           document.createElement("h3");
@@ -441,9 +356,8 @@ function renderMalla() {
 
         divSem.appendChild(h3);
 
-        // --------------------------------------
+
         // PROMEDIO SEMESTRE
-        // --------------------------------------
 
         const promedioSemestre =
           document.createElement("div");
@@ -455,7 +369,9 @@ function renderMalla() {
           Promedio:
           <strong>
             ${mostrarPromedio(
-              calcularPromedioSemestre(sem)
+              calcularPromedioSemestre(
+                sem
+              )
             )}
           </strong>
         `;
@@ -464,9 +380,8 @@ function renderMalla() {
           promedioSemestre
         );
 
-        // --------------------------------------
+
         // RAMOS
-        // --------------------------------------
 
         sem.ramos.forEach(ramo => {
 
@@ -479,9 +394,8 @@ function renderMalla() {
           divRamo.id =
             ramo.id;
 
-          // ------------------------------------
+
           // NOMBRE
-          // ------------------------------------
 
           const nombreRamo =
             document.createElement("div");
@@ -496,17 +410,13 @@ function renderMalla() {
             nombreRamo
           );
 
-          // ------------------------------------
-          // INDICADORES
-          // ------------------------------------
 
-          const indicadores =
-            document.createElement("div");
+          // SÍMBOLO REPETIDO
 
-          indicadores.className =
-            "indicadores-ramo";
-
-          if (ramo.repetido) {
+          if (
+            ramo.historial &&
+            ramo.historial.length > 0
+          ) {
 
             const simbolo =
               document.createElement("span");
@@ -514,56 +424,18 @@ function renderMalla() {
             simbolo.className =
               "simbolo-repetido";
 
-            simbolo.textContent =
-              "↻";
+            simbolo.textContent = "↻";
 
             simbolo.title =
-              `Repetido. Promedio anterior: ${
-                ramo.promedioAnterior !== null
-                  ? mostrarPromedio(
-                      ramo.promedioAnterior
-                    )
-                  : "sin registrar"
-              }`;
+              "Ramo repetido";
 
-            indicadores.appendChild(
+            divRamo.appendChild(
               simbolo
             );
           }
 
-          if (
-            ramo.comentario &&
-            ramo.comentario.trim() !== ""
-          ) {
 
-            const comentarioIcono =
-              document.createElement("span");
-
-            comentarioIcono.className =
-              "simbolo-comentario";
-
-            comentarioIcono.textContent =
-              "💬";
-
-            comentarioIcono.title =
-              "Este ramo tiene un comentario";
-
-            indicadores.appendChild(
-              comentarioIcono
-            );
-          }
-
-          if (indicadores.children.length > 0) {
-
-            divRamo.appendChild(
-              indicadores
-            );
-
-          }
-
-          // ------------------------------------
           // PROMEDIO ACTUAL
-          // ------------------------------------
 
           if (
             ramo.promedio !== null &&
@@ -578,9 +450,9 @@ function renderMalla() {
 
             nota.textContent =
               `Promedio: ${
-                mostrarPromedio(
-                  ramo.promedio
-                )
+                ramo.promedio
+                  .toFixed(2)
+                  .replace(".", ",")
               }`;
 
             divRamo.appendChild(
@@ -588,12 +460,12 @@ function renderMalla() {
             );
           }
 
-          // ------------------------------------
-          // CLICK NORMAL
-          // ------------------------------------
+
+          // CLIC NORMAL
 
           if (
-            ramo.estado !== "bloqueado"
+            ramo.estado !==
+            "bloqueado"
           ) {
 
             divRamo.addEventListener(
@@ -601,19 +473,17 @@ function renderMalla() {
               evento => {
 
                 if (
-                  divRamo.dataset.presionLarga ===
-                  "true"
+                  evento.target.closest(
+                    ".menu-ramo"
+                  )
                 ) {
-
-                  divRamo.dataset.presionLarga =
-                    "false";
-
                   return;
                 }
 
                 if (
-                  evento.target.tagName ===
-                  "INPUT"
+                  evento.target.classList.contains(
+                    "input-promedio"
+                  )
                 ) {
                   return;
                 }
@@ -627,33 +497,25 @@ function renderMalla() {
 
           }
 
-          // ------------------------------------
-          // PRESIÓN LARGA
-          // ------------------------------------
 
-          let temporizadorPresion = null;
+          // =========================
+          // PULSACIÓN LARGA
+          // =========================
 
-          function iniciarPresion(evento) {
+          let temporizador = null;
+
+          function iniciarPresion(
+            evento
+          ) {
 
             if (
-              evento.target.tagName ===
-              "INPUT"
+              evento.cancelable
             ) {
-              return;
-            }
-
-            if (evento.cancelable) {
               evento.preventDefault();
             }
 
-            divRamo.dataset.presionLarga =
-              "false";
-
-            temporizadorPresion =
+            temporizador =
               setTimeout(() => {
-
-                divRamo.dataset.presionLarga =
-                  "true";
 
                 mostrarMenuRamo(
                   ramo.id
@@ -663,52 +525,60 @@ function renderMalla() {
 
           }
 
+
           function cancelarPresion() {
 
             if (
-              temporizadorPresion !== null
+              temporizador !== null
             ) {
 
               clearTimeout(
-                temporizadorPresion
+                temporizador
               );
 
-              temporizadorPresion =
-                null;
+              temporizador = null;
+
             }
 
           }
 
-          nombreRamo.addEventListener(
+
+          // COMPUTADOR
+
+          divRamo.addEventListener(
             "mousedown",
             iniciarPresion
           );
 
-          nombreRamo.addEventListener(
+          divRamo.addEventListener(
             "mouseup",
             cancelarPresion
           );
 
-          nombreRamo.addEventListener(
+          divRamo.addEventListener(
             "mouseleave",
             cancelarPresion
           );
 
-          nombreRamo.addEventListener(
+
+          // CELULAR
+
+          divRamo.addEventListener(
             "touchstart",
             iniciarPresion,
             { passive: false }
           );
 
-          nombreRamo.addEventListener(
+          divRamo.addEventListener(
             "touchend",
             cancelarPresion
           );
 
-          nombreRamo.addEventListener(
+          divRamo.addEventListener(
             "touchcancel",
             cancelarPresion
           );
+
 
           divSem.appendChild(
             divRamo
@@ -716,36 +586,41 @@ function renderMalla() {
 
         });
 
+
         contSemestres.appendChild(
           divSem
         );
 
       });
 
+
     año.appendChild(
       contSemestres
     );
 
-    malla.appendChild(
-      año
-    );
+    malla.appendChild(año);
 
   }
-
 }
 
-// ======================================================
-// MENÚ DEL RAMO
-// ======================================================
+
+// =========================
+// MINI MENÚ DEL RAMO
+// =========================
 
 function mostrarMenuRamo(id) {
+
+  cerrarMenusRamo();
 
   const ramo =
     buscarRamo(id);
 
-  if (!ramo) return;
+  const divRamo =
+    document.getElementById(id);
 
-  cerrarMenus();
+  if (!ramo || !divRamo)
+    return;
+
 
   const menu =
     document.createElement("div");
@@ -753,247 +628,195 @@ function mostrarMenuRamo(id) {
   menu.className =
     "menu-ramo";
 
-  menu.id =
-    "menu-ramo-activo";
 
-  // ------------------------------------------
-  // TÍTULO
-  // ------------------------------------------
-
-  const titulo =
-    document.createElement("div");
-
-  titulo.className =
-    "menu-ramo-titulo";
-
-  titulo.textContent =
-    ramo.nombre;
-
-  menu.appendChild(
-    titulo
-  );
-
-  // ------------------------------------------
-  // EDITAR PROMEDIO
-  // ------------------------------------------
+  // BOTÓN EDITAR PROMEDIO
 
   const btnPromedio =
-    crearBotonMenu(
-      "✏️ Editar promedio",
-      () => {
-
-        cerrarMenus();
-
-        editarPromedio(
-          ramo.id
-        );
-
-      }
-    );
-
-  menu.appendChild(
-    btnPromedio
-  );
-
-  // ------------------------------------------
-  // REPETIDO
-  // ------------------------------------------
-
-  const btnRepetido =
-    crearBotonMenu(
-      ramo.repetido
-        ? "↻ Editar repetición"
-        : "↻ Marcar como repetido",
-      () => {
-
-        cerrarMenus();
-
-        marcarRepetido(
-          ramo.id
-        );
-
-      }
-    );
-
-  menu.appendChild(
-    btnRepetido
-  );
-
-  // ------------------------------------------
-  // COMENTARIO
-  // ------------------------------------------
-
-  const btnComentario =
-    crearBotonMenu(
-      "💬 Agregar comentario",
-      () => {
-
-        cerrarMenus();
-
-        editarComentario(
-          ramo.id
-        );
-
-      }
-    );
-
-  menu.appendChild(
-    btnComentario
-  );
-
-  // ------------------------------------------
-  // CERRAR
-  // ------------------------------------------
-
-  const btnCerrar =
-    crearBotonMenu(
-      "✕ Cerrar",
-      () => {
-        cerrarMenus();
-      }
-    );
-
-  menu.appendChild(
-    btnCerrar
-  );
-
-  document.body.appendChild(
-    menu
-  );
-
-  // ------------------------------------------
-  // POSICIÓN
-  // ------------------------------------------
-
-  const divRamo =
-    document.getElementById(id);
-
-  if (divRamo) {
-
-    const rect =
-      divRamo.getBoundingClientRect();
-
-    menu.style.position =
-      "fixed";
-
-    menu.style.left =
-      `${Math.min(
-        rect.left,
-        window.innerWidth - 250
-      )}px`;
-
-    menu.style.top =
-      `${Math.min(
-        rect.bottom + 8,
-        window.innerHeight - 300
-      )}px`;
-
-  }
-
-}
-
-// ======================================================
-// CREAR BOTÓN MENÚ
-// ======================================================
-
-function crearBotonMenu(
-  texto,
-  funcion
-) {
-
-  const boton =
     document.createElement("button");
 
-  boton.type =
-    "button";
+  btnPromedio.textContent =
+    "✏️ Editar promedio";
 
-  boton.textContent =
-    texto;
-
-  boton.addEventListener(
+  btnPromedio.addEventListener(
     "click",
     evento => {
 
       evento.stopPropagation();
 
-      funcion();
+      editarPromedio(id);
 
     }
   );
 
-  return boton;
-}
 
-// ======================================================
-// CERRAR MENÚS
-// ======================================================
+  // BOTÓN REPETIR
 
-function cerrarMenus() {
+  const btnRepetir =
+    document.createElement("button");
 
-  const menu =
-    document.getElementById(
-      "menu-ramo-activo"
-    );
+  btnRepetir.textContent =
+    "↻ Marcar como repetido";
 
-  if (menu) {
-    menu.remove();
-  }
+  btnRepetir.addEventListener(
+    "click",
+    evento => {
 
-}
+      evento.stopPropagation();
 
-// ======================================================
-// CLIC FUERA DEL MENÚ
-// ======================================================
-
-document.addEventListener(
-  "click",
-  evento => {
-
-    const menu =
-      document.getElementById(
-        "menu-ramo-activo"
-      );
-
-    if (
-      menu &&
-      !menu.contains(
-        evento.target
-      )
-    ) {
-
-      cerrarMenus();
+      marcarRepetido(id);
 
     }
+  );
+
+
+  // BOTÓN CERRAR
+
+  const btnCerrar =
+    document.createElement("button");
+
+  btnCerrar.textContent =
+    "✕ Cerrar";
+
+  btnCerrar.addEventListener(
+    "click",
+    evento => {
+
+      evento.stopPropagation();
+
+      menu.remove();
+
+    }
+  );
+
+
+  menu.appendChild(
+    btnPromedio
+  );
+
+  menu.appendChild(
+    btnRepetir
+  );
+
+  menu.appendChild(
+    btnCerrar
+  );
+
+
+  divRamo.appendChild(
+    menu
+  );
+}
+
+
+// =========================
+// CERRAR MENÚS DE RAMOS
+// =========================
+
+function cerrarMenusRamo() {
+
+  document
+    .querySelectorAll(
+      ".menu-ramo"
+    )
+    .forEach(menu => {
+
+      menu.remove();
+
+    });
+
+}
+
+
+// =========================
+// MARCAR RAMO REPETIDO
+// =========================
+
+function marcarRepetido(id) {
+
+  const ramo =
+    buscarRamo(id);
+
+  if (!ramo)
+    return;
+
+
+  if (!ramo.historial)
+    ramo.historial = [];
+
+
+  // Guardar el promedio anterior
+
+  if (
+    ramo.promedio !== null &&
+    ramo.promedio !== undefined
+  ) {
+
+    ramo.historial.push({
+      promedio: ramo.promedio,
+      fecha:
+        new Date()
+          .toLocaleDateString(
+            "es-CL"
+          )
+    });
 
   }
-);
 
-// ======================================================
+
+  // Mantener el ramo disponible
+
+  ramo.estado =
+    "disponible";
+
+
+  guardarEstado();
+
+  renderMalla();
+
+
+  // Abrir automáticamente
+  // el campo para el nuevo promedio
+
+  setTimeout(() => {
+
+    editarPromedio(id);
+
+  }, 100);
+
+}
+
+
+// =========================
 // EDITAR PROMEDIO
-// ======================================================
+// =========================
 
 function editarPromedio(id) {
 
   const ramo =
     buscarRamo(id);
 
-  if (!ramo) return;
-
   const divRamo =
     document.getElementById(id);
 
-  if (!divRamo) return;
+  if (
+    !ramo ||
+    !divRamo
+  )
+    return;
+
 
   if (
     divRamo.querySelector(
       ".input-promedio"
     )
-  ) {
+  )
     return;
-  }
+
 
   const input =
-    document.createElement("input");
+    document.createElement(
+      "input"
+    );
 
   input.type =
     "number";
@@ -1013,6 +836,7 @@ function editarPromedio(id) {
   input.placeholder =
     "Ej: 5,6";
 
+
   if (
     ramo.promedio !== null &&
     ramo.promedio !== undefined
@@ -1023,33 +847,33 @@ function editarPromedio(id) {
 
   }
 
+
   input.addEventListener(
     "click",
-    evento => {
-      evento.stopPropagation();
-    }
+    evento =>
+      evento.stopPropagation()
   );
 
   input.addEventListener(
     "mousedown",
-    evento => {
-      evento.stopPropagation();
-    }
+    evento =>
+      evento.stopPropagation()
   );
 
   input.addEventListener(
     "touchstart",
-    evento => {
-      evento.stopPropagation();
-    }
+    evento =>
+      evento.stopPropagation()
   );
+
 
   input.addEventListener(
     "keydown",
     evento => {
 
       if (
-        evento.key === "Enter"
+        evento.key ===
+        "Enter"
       ) {
 
         guardarPromedio(
@@ -1059,8 +883,10 @@ function editarPromedio(id) {
 
       }
 
+
       if (
-        evento.key === "Escape"
+        evento.key ===
+        "Escape"
       ) {
 
         renderMalla();
@@ -1069,6 +895,7 @@ function editarPromedio(id) {
 
     }
   );
+
 
   input.addEventListener(
     "blur",
@@ -1082,6 +909,7 @@ function editarPromedio(id) {
     }
   );
 
+
   divRamo.appendChild(
     input
   );
@@ -1090,9 +918,10 @@ function editarPromedio(id) {
 
 }
 
-// ======================================================
+
+// =========================
 // GUARDAR PROMEDIO
-// ======================================================
+// =========================
 
 function guardarPromedio(
   id,
@@ -1102,7 +931,9 @@ function guardarPromedio(
   const ramo =
     buscarRamo(id);
 
-  if (!ramo) return;
+  if (!ramo)
+    return;
+
 
   if (
     valor.trim() === ""
@@ -1119,10 +950,15 @@ function guardarPromedio(
 
   }
 
+
   const numero =
     parseFloat(
-      valor.replace(",", ".")
+      valor.replace(
+        ",",
+        "."
+      )
     );
+
 
   if (
     isNaN(numero) ||
@@ -1134,11 +970,10 @@ function guardarPromedio(
       "Ingresa un promedio válido entre 1,0 y 7,0."
     );
 
-    renderMalla();
-
     return;
 
   }
+
 
   ramo.promedio =
     numero;
@@ -1149,799 +984,82 @@ function guardarPromedio(
 
 }
 
-// ======================================================
-// MARCAR COMO REPETIDO
-// ======================================================
 
-function marcarRepetido(id) {
+// =========================
+// BUSCAR RAMO
+// =========================
 
-  const ramo =
-    buscarRamo(id);
+function buscarRamo(id) {
 
-  if (!ramo) return;
-
-  // ------------------------------------------
-  // SI YA ESTÁ REPETIDO
-  // ------------------------------------------
-
-  if (ramo.repetido) {
-
-    const continuar =
-      confirm(
-        "Este ramo ya está marcado como repetido.\n\n" +
-        "¿Quieres quitar la marca de repetición?"
-      );
-
-    if (continuar) {
-
-      ramo.repetido =
-        false;
-
-      ramo.promedioAnterior =
-        null;
-
-      guardarEstado();
-
-      renderMalla();
-
-    }
-
-    return;
-
-  }
-
-  // ------------------------------------------
-  // GUARDAR PROMEDIO ANTERIOR
-  // ------------------------------------------
-
-  let anterior =
-    ramo.promedio;
-
-  if (
-    anterior === null ||
-    anterior === undefined
+  for (
+    const sem of semestres
   ) {
 
-    const texto =
-      prompt(
-        `¿Cuál fue el promedio con el que reprobaste ${ramo.nombre}?\n\n` +
-        "Puedes dejarlo vacío si no quieres registrarlo."
+    const ramo =
+      sem.ramos.find(
+        r => r.id === id
       );
 
-    if (
-      texto !== null &&
-      texto.trim() !== ""
-    ) {
-
-      anterior =
-        parseFloat(
-          texto.replace(",", ".")
-        );
-
-      if (
-        isNaN(anterior) ||
-        anterior < 1 ||
-        anterior > 7
-      ) {
-
-        alert(
-          "El promedio debe estar entre 1,0 y 7,0."
-        );
-
-        return;
-
-      }
-
-    } else {
-
-      anterior =
-        null;
-
-    }
+    if (ramo)
+      return ramo;
 
   }
 
-  // ------------------------------------------
-  // GUARDAR ANTERIOR
-  // ------------------------------------------
-
-  ramo.promedioAnterior =
-    anterior;
-
-  ramo.repetido =
-    true;
-
-  // ------------------------------------------
-  // PEDIR NUEVO PROMEDIO
-  // ------------------------------------------
-
-  const nuevo =
-    prompt(
-      `↻ ${ramo.nombre}\n\n` +
-      `Promedio anterior: ${
-        anterior !== null
-          ? mostrarPromedio(anterior)
-          : "Sin registrar"
-      }\n\n` +
-      "Ingresa el nuevo promedio:"
-    );
-
-  if (
-    nuevo === null
-  ) {
-
-    // Si cancela,
-    // mantenemos la repetición,
-    // pero no inventamos una nota.
-
-    guardarEstado();
-
-    renderMalla();
-
-    return;
-
-  }
-
-  const nuevoNumero =
-    parseFloat(
-      nuevo.replace(",", ".")
-    );
-
-  if (
-    isNaN(nuevoNumero) ||
-    nuevoNumero < 1 ||
-    nuevoNumero > 7
-  ) {
-
-    alert(
-      "El promedio debe estar entre 1,0 y 7,0."
-    );
-
-    guardarEstado();
-
-    renderMalla();
-
-    return;
-
-  }
-
-  ramo.promedio =
-    nuevoNumero;
-
-  guardarEstado();
-
-  renderMalla();
-
+  return null;
 }
 
-// ======================================================
-// COMENTARIO DEL RAMO
-// ======================================================
 
-function editarComentario(id) {
-
-  const ramo =
-    buscarRamo(id);
-
-  if (!ramo) return;
-
-  const comentario =
-    prompt(
-      `💬 Comentario para:\n${ramo.nombre}\n\n` +
-      "Escribe algo que quieras recordar:",
-      ramo.comentario || ""
-    );
-
-  if (
-    comentario === null
-  ) {
-    return;
-  }
-
-  ramo.comentario =
-    comentario.trim();
-
-  guardarEstado();
-
-  renderMalla();
-
-}
-
-// ======================================================
-// CAJA "MIS NOTAS"
-// ======================================================
-
-function abrirMisNotas() {
-
-  const guardado =
-    localStorage.getItem(
-      "notasPersonalesMalla"
-    ) || "";
-
-  const modal =
-    crearModal(
-      "💭 Mis notas"
-    );
-
-  const texto =
-    document.createElement("p");
-
-  texto.textContent =
-    "Estas notas son personales y se guardan únicamente en este navegador.";
-
-  modal.contenido.appendChild(
-    texto
-  );
-
-  const textarea =
-    document.createElement("textarea");
-
-  textarea.className =
-    "textarea-notas";
-
-  textarea.placeholder =
-    "Escribe aquí tus apuntes, recordatorios, metas, etc.";
-
-  textarea.value =
-    guardado;
-
-  modal.contenido.appendChild(
-    textarea
-  );
-
-  const guardar =
-    document.createElement("button");
-
-  guardar.textContent =
-    "Guardar notas";
-
-  guardar.addEventListener(
-    "click",
-    () => {
-
-      localStorage.setItem(
-        "notasPersonalesMalla",
-        textarea.value
-      );
-
-      cerrarModal();
-
-      alert(
-        "💜 Tus notas fueron guardadas."
-      );
-
-    }
-  );
-
-  modal.contenido.appendChild(
-    guardar
-  );
-
-}
-
-// ======================================================
-// SUGERENCIAS PARA LA CREADORA
-// ======================================================
-
-function abrirSugerencias() {
-
-  const modal =
-    crearModal(
-      "💌 Enviar sugerencia"
-    );
-
-  const texto =
-    document.createElement("p");
-
-  texto.textContent =
-    "¿Encontraste un error o tienes una idea para mejorar la malla?";
-
-  modal.contenido.appendChild(
-    texto
-  );
-
-  // ------------------------------------------
-  // CATEGORÍA
-  // ------------------------------------------
-
-  const select =
-    document.createElement("select");
-
-  select.innerHTML = `
-    <option value="Idea de nueva función">
-      Idea de nueva función
-    </option>
-
-    <option value="Error en un ramo">
-      Error en un ramo
-    </option>
-
-    <option value="Prerrequisito incorrecto">
-      Prerrequisito incorrecto
-    </option>
-
-    <option value="Problema de diseño">
-      Problema de diseño
-    </option>
-
-    <option value="Otro">
-      Otro
-    </option>
-  `;
-
-  modal.contenido.appendChild(
-    select
-  );
-
-  // ------------------------------------------
-  // RAMO
-  // ------------------------------------------
-
-  const selectRamo =
-    document.createElement("select");
-
-  const opcionGeneral =
-    document.createElement("option");
-
-  opcionGeneral.value =
-    "";
-
-  opcionGeneral.textContent =
-    "No corresponde a un ramo específico";
-
-  selectRamo.appendChild(
-    opcionGeneral
-  );
-
-  semestres.forEach(sem => {
-
-    sem.ramos.forEach(ramo => {
-
-      const opcion =
-        document.createElement("option");
-
-      opcion.value =
-        ramo.nombre;
-
-      opcion.textContent =
-        ramo.nombre;
-
-      selectRamo.appendChild(
-        opcion
-      );
-
-    });
-
-  });
-
-  modal.contenido.appendChild(
-    selectRamo
-  );
-
-  // ------------------------------------------
-  // MENSAJE
-  // ------------------------------------------
-
-  const textarea =
-    document.createElement("textarea");
-
-  textarea.placeholder =
-    "Escribe aquí tu sugerencia...";
-
-  textarea.className =
-    "textarea-sugerencia";
-
-  modal.contenido.appendChild(
-    textarea
-  );
-
-  // ------------------------------------------
-  // ENVIAR
-  // ------------------------------------------
-
-  const enviar =
-    document.createElement("button");
-
-  enviar.textContent =
-    "💌 Enviar sugerencia";
-
-  enviar.addEventListener(
-    "click",
-    () => {
-
-      const mensaje =
-        textarea.value.trim();
-
-      if (!mensaje) {
-
-        alert(
-          "Escribe una sugerencia antes de enviarla."
-        );
-
-        return;
-
-      }
-
-      const categoria =
-        select.value;
-
-      const ramo =
-        selectRamo.value ||
-        "General";
-
-      const asunto =
-        encodeURIComponent(
-          `[Malla v${VERSION_MALLA}] ${categoria}`
-        );
-
-      const cuerpo =
-        encodeURIComponent(
-          `Sugerencia para la malla curricular\n\n` +
-          `Versión: ${VERSION_MALLA}\n` +
-          `Categoría: ${categoria}\n` +
-          `Ramo: ${ramo}\n\n` +
-          `Mensaje:\n${mensaje}`
-        );
-
-      window.location.href =
-        `mailto:${EMAIL_CREADORA}?subject=${asunto}&body=${cuerpo}`;
-
-    }
-  );
-
-  modal.contenido.appendChild(
-    enviar
-  );
-
-}
-
-// ======================================================
-// ¿CÓMO FUNCIONA?
-// ======================================================
-
-function abrirComoFunciona() {
-
-  const modal =
-    crearModal(
-      "❔ ¿Cómo funciona la malla?"
-    );
-
-  const contenido =
-    document.createElement("div");
-
-  contenido.innerHTML = `
-
-    <h3>Estados de los ramos</h3>
-
-    <p>🟣 <strong>Disponible:</strong>
-    puedes tomar este ramo.</p>
-
-    <p>🟢 <strong>Aprobado:</strong>
-    ya aprobaste este ramo.</p>
-
-    <p>🔒 <strong>Bloqueado:</strong>
-    todavía necesitas aprobar uno o más prerrequisitos.</p>
-
-    <h3>Indicadores</h3>
-
-    <p>↻ <strong>Ramo repetido:</strong>
-    cursaste nuevamente este ramo.</p>
-
-    <p>💬 <strong>Comentario:</strong>
-    tienes una nota personal guardada en ese ramo.</p>
-
-    <h3>Interacciones</h3>
-
-    <p>🖱️ <strong>Clic:</strong>
-    aprobar o desmarcar un ramo.</p>
-
-    <p>👆 <strong>Mantener presionado:</strong>
-    abrir el menú de opciones.</p>
-
-    <p>✏️ <strong>Editar promedio:</strong>
-    registrar o cambiar la nota.</p>
-
-    <p>↻ <strong>Marcar como repetido:</strong>
-    guarda el promedio anterior y permite registrar el nuevo.</p>
-
-  `;
-
-  modal.contenido.appendChild(
-    contenido
-  );
-
-}
-
-// ======================================================
-// HISTORIAL DE VERSIONES
-// ======================================================
-
-function abrirVersion() {
-
-  const modal =
-    crearModal(
-      `Malla Curricular v${VERSION_MALLA}`
-    );
-
-  const contenido =
-    document.createElement("div");
-
-  contenido.innerHTML = `
-
-    <h3>v1.4</h3>
-
-    <p>• Registro de ramos repetidos.</p>
-    <p>• Promedio anterior y nuevo promedio.</p>
-    <p>• Comentarios por ramo.</p>
-    <p>• Sistema de sugerencias.</p>
-
-    <h3>v1.3</h3>
-
-    <p>• Promedios por ramo.</p>
-    <p>• Promedios semestrales y anuales.</p>
-
-    <h3>v1.2</h3>
-
-    <p>• Guardado automático de la malla.</p>
-    <p>• Sistema de prerrequisitos.</p>
-
-    <h3>v1.0</h3>
-
-    <p>• Primera versión de la malla curricular.</p>
-
-  `;
-
-  modal.contenido.appendChild(
-    contenido
-  );
-
-}
-
-// ======================================================
-// CREAR MODAL
-// ======================================================
-
-function crearModal(tituloTexto) {
-
-  cerrarModal();
-
-  const fondo =
-    document.createElement("div");
-
-  fondo.className =
-    "modal-fondo";
-
-  fondo.id =
-    "modal-activo";
-
-  const ventana =
-    document.createElement("div");
-
-  ventana.className =
-    "modal-ventana";
-
-  const titulo =
-    document.createElement("h2");
-
-  titulo.textContent =
-    tituloTexto;
-
-  ventana.appendChild(
-    titulo
-  );
-
-  const contenido =
-    document.createElement("div");
-
-  contenido.className =
-    "modal-contenido";
-
-  ventana.appendChild(
-    contenido
-  );
-
-  const cerrar =
-    document.createElement("button");
-
-  cerrar.textContent =
-    "Cerrar";
-
-  cerrar.addEventListener(
-    "click",
-    cerrarModal
-  );
-
-  ventana.appendChild(
-    cerrar
-  );
-
-  fondo.appendChild(
-    ventana
-  );
-
-  fondo.addEventListener(
-    "click",
-    evento => {
-
-      if (
-        evento.target === fondo
-      ) {
-
-        cerrarModal();
-
-      }
-
-    }
-  );
-
-  document.body.appendChild(
-    fondo
-  );
-
-  return {
-    fondo,
-    ventana,
-    contenido
-  };
-
-}
-
-// ======================================================
-// CERRAR MODAL
-// ======================================================
-
-function cerrarModal() {
-
-  const modal =
-    document.getElementById(
-      "modal-activo"
-    );
-
-  if (modal) {
-    modal.remove();
-  }
-
-}
-
-// ======================================================
-// BOTONES GENERALES
-// ======================================================
-
-function crearBotonesGenerales() {
-
-  let contenedor =
-    document.getElementById(
-      "controles-malla"
-    );
-
-  if (!contenedor) {
-
-    contenedor =
-      document.createElement("div");
-
-    contenedor.id =
-      "controles-malla";
-
-    // Lo colocamos antes de la malla
-    malla.parentNode.insertBefore(
-      contenedor,
-      malla
-    );
-
-  }
-
-  contenedor.innerHTML = "";
-
-  const botones = [
-
-    {
-      texto: "❔ ¿Cómo funciona?",
-      funcion: abrirComoFunciona
-    },
-
-    {
-      texto: "💭 Mis notas",
-      funcion: abrirMisNotas
-    },
-
-    {
-      texto: "💌 Sugerencias",
-      funcion: abrirSugerencias
-    },
-
-    {
-      texto: `v${VERSION_MALLA}`,
-      funcion: abrirVersion
-    }
-
-  ];
-
-  botones.forEach(
-    elemento => {
-
-      const boton =
-        document.createElement("button");
-
-      boton.textContent =
-        elemento.texto;
-
-      boton.addEventListener(
-        "click",
-        elemento.funcion
-      );
-
-      contenedor.appendChild(
-        boton
-      );
-
-    }
-  );
-
-}
-
-// ======================================================
+// =========================
 // APROBAR / DESMARCAR
-// ======================================================
+// =========================
 
 function aprobarRamo(id) {
 
-  semestres.forEach(
-    sem => {
+  const ramo =
+    buscarRamo(id);
 
-      sem.ramos.forEach(
-        ramo => {
+  if (!ramo)
+    return;
 
-          if (
-            ramo.id === id
-          ) {
 
-            if (
-              ramo.estado ===
-              "disponible"
-            ) {
+  if (
+    ramo.estado ===
+    "disponible"
+  ) {
 
-              ramo.estado =
-                "aprobado";
+    ramo.estado =
+      "aprobado";
 
-            }
+  }
 
-            else if (
-              ramo.estado ===
-              "aprobado"
-            ) {
+  else if (
+    ramo.estado ===
+    "aprobado"
+  ) {
 
-              ramo.estado =
-                "disponible";
+    ramo.estado =
+      "disponible";
 
-            }
+  }
 
-          }
 
-        }
-      );
-
-    }
-  );
-
-  // ------------------------------------------
   // ACTUALIZAR BLOQUEOS
-  // ------------------------------------------
 
   semestres.forEach(
     sem => {
 
       sem.ramos.forEach(
-        ramo => {
+        r => {
 
           if (
-            ramo.estado ===
+            r.estado ===
             "aprobado"
-          ) {
+          )
             return;
-          }
+
 
           const cumple =
-            ramo.prereq.every(
+            r.prereq.every(
               req =>
                 semestres.some(
                   s =>
@@ -1954,7 +1072,8 @@ function aprobarRamo(id) {
                 )
             );
 
-          ramo.estado =
+
+          r.estado =
             cumple
               ? "disponible"
               : "bloqueado";
@@ -1965,16 +1084,16 @@ function aprobarRamo(id) {
     }
   );
 
+
   guardarEstado();
 
   renderMalla();
 
-  // ------------------------------------------
-  // ANIMACIÓN
-  // ------------------------------------------
 
   const ramoDiv =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
 
   if (ramoDiv) {
 
@@ -1982,27 +1101,49 @@ function aprobarRamo(id) {
       "pulse"
     );
 
-    setTimeout(
-      () => {
+    setTimeout(() => {
 
-        ramoDiv.classList.remove(
-          "pulse"
-        );
+      ramoDiv.classList.remove(
+        "pulse"
+      );
 
-      },
-      400
-    );
+    }, 400);
 
   }
 
 }
 
-// ======================================================
+
+// =========================
 // INICIO
-// ======================================================
+// =========================
 
 cargarEstado();
 
-crearBotonesGenerales();
-
 renderMalla();
+
+
+// =========================
+// CERRAR MENÚS AL HACER
+// CLICK FUERA
+// =========================
+
+document.addEventListener(
+  "click",
+  evento => {
+
+    if (
+      !evento.target.closest(
+        ".menu-ramo"
+      ) &&
+      !evento.target.closest(
+        ".ramo"
+      )
+    ) {
+
+      cerrarMenusRamo();
+
+    }
+
+  }
+);
