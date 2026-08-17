@@ -1,3 +1,4 @@
+```javascript
 const malla = document.getElementById("malla");
 
 // =========================
@@ -15,6 +16,7 @@ const semestres = [
       { id: "r5", nombre: "Formación básica para la vida académica I", prereq: [], estado: "disponible" }
     ]
   },
+
   // --- Semestre 2 ---
   {
     numero: 2,
@@ -26,6 +28,7 @@ const semestres = [
       { id: "r10", nombre: "Mecánica", prereq: [], estado: "disponible" }
     ]
   },
+
   // --- Semestre 3 ---
   {
     numero: 3,
@@ -33,11 +36,12 @@ const semestres = [
       { id: "r11", nombre: "Álgebra II", prereq: ["r6"], estado: "bloqueado" },
       { id: "r12", nombre: "Cálculo II", prereq: ["r7"], estado: "bloqueado" },
       { id: "r13", nombre: "Química general", prereq: [], estado: "bloqueado" },
-      { id: "r14", nombre: "Curso sello institucional III", prereq: [], estado: "bloqueado" },
+      { id:  "r14", nombre: "Curso sello institucional III", prereq: [], estado: "bloqueado" },
       { id: "r15", nombre: "Programación computacional", prereq: [], estado: "bloqueado" },
       { id: "r16", nombre: "Administración", prereq: [], estado: "bloqueado" }
     ]
   },
+
   // --- Semestre 4 ---
   {
     numero: 4,
@@ -50,6 +54,7 @@ const semestres = [
       { id: "r22", nombre: "Ciclo de la vida y tecnología de los materiales", prereq: [], estado: "bloqueado" }
     ]
   },
+
   // --- Semestre 5 ---
   {
     numero: 5,
@@ -62,6 +67,7 @@ const semestres = [
       { id: "r28", nombre: "Interdisciplinar", prereq: [], estado: "bloqueado" }
     ]
   },
+
   // --- Semestre 6 ---
   {
     numero: 6,
@@ -74,6 +80,7 @@ const semestres = [
       { id: "r34", nombre: "Mecánica de fluidos", prereq: ["r18"], estado: "bloqueado" }
     ]
   },
+
   // --- Semestre 7 ---
   {
     numero: 7,
@@ -87,6 +94,7 @@ const semestres = [
       { id: "r41", nombre: "Práctica operacional", prereq: ["r1","r2","r3","r4","r5","r6","r7","r8","r9","r10","r11","r12","r13","r14","r15","r16","r17","r18","r19","r20","r21","r22","r23","r24","r25","r26","r27","r28","r29","r30","r31","r32","r33","r34","r35","r36","r37","r38","r39","r40"], estado: "bloqueado" }
     ]
   },
+
   // --- Semestre 8 ---
   {
     numero: 8,
@@ -99,6 +107,7 @@ const semestres = [
       { id: "r47", nombre: "Taller integrador de competencias intermedias", prereq: ["r41"], estado: "bloqueado" }
     ]
   },
+
   // --- Semestre 9 ---
   {
     numero: 9,
@@ -110,6 +119,7 @@ const semestres = [
       { id: "r52", nombre: "Econometría", prereq: ["r30"], estado: "bloqueado" }
     ]
   },
+
   // --- Semestre 10 ---
   {
     numero: 10,
@@ -120,6 +130,7 @@ const semestres = [
       { id: "r56", nombre: "Proyecto título I", prereq: ["r48","r49","r50","r51","r52"], estado: "bloqueado" }
     ]
   },
+
   // --- Semestre 11 ---
   {
     numero: 11,
@@ -144,11 +155,66 @@ function cargarEstado() {
   if (!guardado) return;
 
   const datos = JSON.parse(guardado);
+
   datos.forEach((sem, i) => {
+    if (!semestres[i]) return;
+
     semestres[i].ramos.forEach((ramo, j) => {
+      if (!sem.ramos[j]) return;
+
       ramo.estado = sem.ramos[j].estado;
+
+      // Cargar promedio si existe
+      ramo.promedio = sem.ramos[j].promedio ?? null;
     });
   });
+}
+
+// =========================
+// OBTENER PROMEDIO DEL SEMESTRE
+// =========================
+function calcularPromedioSemestre(semestre) {
+  const notas = semestre.ramos
+    .map(ramo => ramo.promedio)
+    .filter(nota => typeof nota === "number" && !isNaN(nota));
+
+  if (notas.length === 0) return null;
+
+  const suma = notas.reduce((total, nota) => total + nota, 0);
+  return suma / notas.length;
+}
+
+// =========================
+// OBTENER PROMEDIO DEL AÑO
+// =========================
+function calcularPromedioAño(indiceAño) {
+  const semestre1 = semestres[indiceAño * 2];
+  const semestre2 = semestres[indiceAño * 2 + 1];
+
+  const promedios = [];
+
+  if (semestre1) {
+    const promedio = calcularPromedioSemestre(semestre1);
+    if (promedio !== null) promedios.push(promedio);
+  }
+
+  if (semestre2) {
+    const promedio = calcularPromedioSemestre(semestre2);
+    if (promedio !== null) promedios.push(promedio);
+  }
+
+  if (promedios.length === 0) return null;
+
+  const suma = promedios.reduce((total, promedio) => total + promedio, 0);
+  return suma / promedios.length;
+}
+
+// =========================
+// FORMATO DE PROMEDIOS
+// =========================
+function mostrarPromedio(promedio) {
+  if (promedio === null) return "—";
+  return promedio.toFixed(2).replace(".", ",");
 }
 
 // =========================
@@ -165,6 +231,14 @@ function renderMalla() {
     titulo.textContent = `Año ${Math.floor(i / 2) + 1}`;
     año.appendChild(titulo);
 
+    // Promedio del año
+    const promedioAño = document.createElement("div");
+    promedioAño.className = "promedio-año";
+    promedioAño.innerHTML = `
+      Promedio anual: <strong>${mostrarPromedio(calcularPromedioAño(Math.floor(i / 2)))}</strong>
+    `;
+    año.appendChild(promedioAño);
+
     const contSemestres = document.createElement("div");
     contSemestres.className = "semestres";
 
@@ -176,15 +250,46 @@ function renderMalla() {
       h3.textContent = `Semestre ${sem.numero}`;
       divSem.appendChild(h3);
 
+      // Promedio del semestre
+      const promedioSemestre = document.createElement("div");
+      promedioSemestre.className = "promedio-semestre";
+      promedioSemestre.innerHTML = `
+        Promedio: <strong>${mostrarPromedio(calcularPromedioSemestre(sem))}</strong>
+      `;
+      divSem.appendChild(promedioSemestre);
+
       sem.ramos.forEach(ramo => {
         const divRamo = document.createElement("div");
         divRamo.className = `ramo ${ramo.estado}`;
-        divRamo.textContent = ramo.nombre;
         divRamo.id = ramo.id;
 
-        if (ramo.estado !== "bloqueado") {
-          divRamo.addEventListener("click", () => aprobarRamo(ramo.id));
+        // Nombre del ramo
+        const nombreRamo = document.createElement("div");
+        nombreRamo.className = "nombre-ramo";
+        nombreRamo.textContent = ramo.nombre;
+        divRamo.appendChild(nombreRamo);
+
+        // Mostrar promedio si existe
+        if (ramo.promedio !== null && ramo.promedio !== undefined) {
+          const nota = document.createElement("div");
+          nota.className = "nota-ramo";
+          nota.textContent = `Promedio: ${ramo.promedio.toFixed(2).replace(".", ",")}`;
+          divRamo.appendChild(nota);
         }
+
+        // Clic normal = aprobar/desmarcar
+        if (ramo.estado !== "bloqueado") {
+          divRamo.addEventListener("click", () => {
+            aprobarRamo(ramo.id);
+          });
+        }
+
+        // Doble clic = poner/editar promedio
+        divRamo.addEventListener("dblclick", (evento) => {
+          evento.preventDefault();
+          evento.stopPropagation();
+          editarPromedio(ramo.id);
+        });
 
         divSem.appendChild(divRamo);
       });
@@ -198,14 +303,112 @@ function renderMalla() {
 }
 
 // =========================
+// EDITAR PROMEDIO
+// =========================
+function editarPromedio(id) {
+  const ramo = buscarRamo(id);
+
+  if (!ramo) return;
+
+  const divRamo = document.getElementById(id);
+  if (!divRamo) return;
+
+  // Evitar crear varios campos al mismo tiempo
+  if (divRamo.querySelector(".input-promedio")) return;
+
+  const input = document.createElement("input");
+  input.type = "number";
+  input.className = "input-promedio";
+  input.min = "1.0";
+  input.max = "7.0";
+  input.step = "0.1";
+  input.placeholder = "Ej: 5,6";
+
+  if (ramo.promedio !== null && ramo.promedio !== undefined) {
+    input.value = ramo.promedio;
+  }
+
+  input.addEventListener("click", evento => {
+    evento.stopPropagation();
+  });
+
+  input.addEventListener("dblclick", evento => {
+    evento.stopPropagation();
+  });
+
+  input.addEventListener("keydown", evento => {
+    if (evento.key === "Enter") {
+      guardarPromedio(id, input.value);
+    }
+
+    if (evento.key === "Escape") {
+      renderMalla();
+    }
+  });
+
+  input.addEventListener("blur", () => {
+    guardarPromedio(id, input.value);
+  });
+
+  divRamo.appendChild(input);
+  input.focus();
+}
+
+// =========================
+// GUARDAR PROMEDIO
+// =========================
+function guardarPromedio(id, valor) {
+  const ramo = buscarRamo(id);
+
+  if (!ramo) return;
+
+  if (valor.trim() === "") {
+    ramo.promedio = null;
+    guardarEstado();
+    renderMalla();
+    return;
+  }
+
+  const numero = parseFloat(valor.replace(",", "."));
+
+  // Validar nota
+  if (isNaN(numero) || numero < 1 || numero > 7) {
+    alert("Ingresa un promedio válido entre 1,0 y 7,0.");
+    renderMalla();
+    return;
+  }
+
+  ramo.promedio = numero;
+
+  guardarEstado();
+  renderMalla();
+}
+
+// =========================
+// BUSCAR RAMO
+// =========================
+function buscarRamo(id) {
+  for (const sem of semestres) {
+    const ramo = sem.ramos.find(r => r.id === id);
+
+    if (ramo) return ramo;
+  }
+
+  return null;
+}
+
+// =========================
 // APROBAR / DESMARCAR RAMO
 // =========================
 function aprobarRamo(id) {
   semestres.forEach(sem => {
     sem.ramos.forEach(r => {
       if (r.id === id) {
-        if (r.estado === "disponible") r.estado = "aprobado";
-        else if (r.estado === "aprobado") r.estado = "disponible";
+        if (r.estado === "disponible") {
+          r.estado = "aprobado";
+        } else if (r.estado === "aprobado") {
+          r.estado = "disponible";
+        }
       }
     });
   });
@@ -218,6 +421,7 @@ function aprobarRamo(id) {
             s.ramos.some(x => x.id === req && x.estado === "aprobado")
           )
         );
+
         r.estado = cumple ? "disponible" : "bloqueado";
       }
     });
@@ -225,14 +429,17 @@ function aprobarRamo(id) {
 
   renderMalla();
 
-  // --- Pulse al aprobar/desmarcar
+  // Pulse al aprobar/desmarcar
   const ramoDiv = document.getElementById(id);
+
   if (ramoDiv) {
     ramoDiv.classList.add("pulse");
-    setTimeout(() => ramoDiv.classList.remove("pulse"), 400);
+
+    setTimeout(() => {
+      ramoDiv.classList.remove("pulse");
+    }, 400);
   }
 
-  // Guardar el estado
   guardarEstado();
 }
 
@@ -241,3 +448,4 @@ function aprobarRamo(id) {
 // =========================
 cargarEstado();
 renderMalla();
+```
