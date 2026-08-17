@@ -1,4 +1,3 @@
-```javascript
 const malla = document.getElementById("malla");
 
 // =========================
@@ -36,7 +35,7 @@ const semestres = [
       { id: "r11", nombre: "Álgebra II", prereq: ["r6"], estado: "bloqueado" },
       { id: "r12", nombre: "Cálculo II", prereq: ["r7"], estado: "bloqueado" },
       { id: "r13", nombre: "Química general", prereq: [], estado: "bloqueado" },
-      { id:  "r14", nombre: "Curso sello institucional III", prereq: [], estado: "bloqueado" },
+      { id: "r14", nombre: "Curso sello institucional III", prereq: [], estado: "bloqueado" },
       { id: "r15", nombre: "Programación computacional", prereq: [], estado: "bloqueado" },
       { id: "r16", nombre: "Administración", prereq: [], estado: "bloqueado" }
     ]
@@ -144,48 +143,75 @@ const semestres = [
 ];
 
 // =========================
-// GUARDAR Y CARGAR ESTADO
+// GUARDAR ESTADO
 // =========================
 function guardarEstado() {
   localStorage.setItem("estadoMalla", JSON.stringify(semestres));
 }
 
+// =========================
+// CARGAR ESTADO
+// =========================
 function cargarEstado() {
   const guardado = localStorage.getItem("estadoMalla");
+
   if (!guardado) return;
 
-  const datos = JSON.parse(guardado);
+  try {
+    const datos = JSON.parse(guardado);
 
-  datos.forEach((sem, i) => {
-    if (!semestres[i]) return;
+    datos.forEach((sem, i) => {
+      if (!semestres[i] || !sem.ramos) return;
 
-    semestres[i].ramos.forEach((ramo, j) => {
-      if (!sem.ramos[j]) return;
+      sem.ramos.forEach((ramoGuardado, j) => {
+        if (!semestres[i].ramos[j]) return;
 
-      ramo.estado = sem.ramos[j].estado;
+        semestres[i].ramos[j].estado =
+          ramoGuardado.estado || semestres[i].ramos[j].estado;
 
-      // Cargar promedio si existe
-      ramo.promedio = sem.ramos[j].promedio ?? null;
+        semestres[i].ramos[j].promedio =
+          typeof ramoGuardado.promedio === "number"
+            ? ramoGuardado.promedio
+            : null;
+      });
     });
-  });
+  } catch (error) {
+    console.error("No se pudo cargar el estado guardado:", error);
+  }
 }
 
 // =========================
-// OBTENER PROMEDIO DEL SEMESTRE
+// BUSCAR RAMO
+// =========================
+function buscarRamo(id) {
+  for (const sem of semestres) {
+    const ramo = sem.ramos.find(r => r.id === id);
+
+    if (ramo) return ramo;
+  }
+
+  return null;
+}
+
+// =========================
+// PROMEDIO DEL SEMESTRE
 // =========================
 function calcularPromedioSemestre(semestre) {
   const notas = semestre.ramos
     .map(ramo => ramo.promedio)
     .filter(nota => typeof nota === "number" && !isNaN(nota));
 
-  if (notas.length === 0) return null;
+  if (notas.length === 0) {
+    return null;
+  }
 
   const suma = notas.reduce((total, nota) => total + nota, 0);
+
   return suma / notas.length;
 }
 
 // =========================
-// OBTENER PROMEDIO DEL AÑO
+// PROMEDIO DEL AÑO
 // =========================
 function calcularPromedioAño(indiceAño) {
   const semestre1 = semestres[indiceAño * 2];
@@ -194,18 +220,30 @@ function calcularPromedioAño(indiceAño) {
   const promedios = [];
 
   if (semestre1) {
-    const promedio = calcularPromedioSemestre(semestre1);
-    if (promedio !== null) promedios.push(promedio);
+    const promedio1 = calcularPromedioSemestre(semestre1);
+
+    if (promedio1 !== null) {
+      promedios.push(promedio1);
+    }
   }
 
   if (semestre2) {
-    const promedio = calcularPromedioSemestre(semestre2);
-    if (promedio !== null) promedios.push(promedio);
+    const promedio2 = calcularPromedioSemestre(semestre2);
+
+    if (promedio2 !== null) {
+      promedios.push(promedio2);
+    }
   }
 
-  if (promedios.length === 0) return null;
+  if (promedios.length === 0) {
+    return null;
+  }
 
-  const suma = promedios.reduce((total, promedio) => total + promedio, 0);
+  const suma = promedios.reduce(
+    (total, promedio) => total + promedio,
+    0
+  );
+
   return suma / promedios.length;
 }
 
@@ -213,17 +251,24 @@ function calcularPromedioAño(indiceAño) {
 // FORMATO DE PROMEDIOS
 // =========================
 function mostrarPromedio(promedio) {
-  if (promedio === null) return "—";
+  if (promedio === null) {
+    return "—";
+  }
+
   return promedio.toFixed(2).replace(".", ",");
 }
 
 // =========================
-// RENDER MALLA
+// RENDERIZAR MALLA
 // =========================
 function renderMalla() {
   malla.innerHTML = "";
 
   for (let i = 0; i < semestres.length; i += 2) {
+
+    // =========================
+    // AÑO
+    // =========================
     const año = document.createElement("div");
     año.className = "año";
 
@@ -231,34 +276,49 @@ function renderMalla() {
     titulo.textContent = `Año ${Math.floor(i / 2) + 1}`;
     año.appendChild(titulo);
 
-    // Promedio del año
+    // Promedio anual
     const promedioAño = document.createElement("div");
     promedioAño.className = "promedio-año";
+
     promedioAño.innerHTML = `
-      Promedio anual: <strong>${mostrarPromedio(calcularPromedioAño(Math.floor(i / 2)))}</strong>
+      Promedio anual:
+      <strong>${mostrarPromedio(calcularPromedioAño(Math.floor(i / 2)))}</strong>
     `;
+
     año.appendChild(promedioAño);
 
+    // =========================
+    // SEMESTRES
+    // =========================
     const contSemestres = document.createElement("div");
     contSemestres.className = "semestres";
 
     semestres.slice(i, i + 2).forEach(sem => {
+
       const divSem = document.createElement("div");
       divSem.className = "semestre";
 
+      // Título semestre
       const h3 = document.createElement("h3");
       h3.textContent = `Semestre ${sem.numero}`;
       divSem.appendChild(h3);
 
-      // Promedio del semestre
+      // Promedio semestre
       const promedioSemestre = document.createElement("div");
       promedioSemestre.className = "promedio-semestre";
+
       promedioSemestre.innerHTML = `
-        Promedio: <strong>${mostrarPromedio(calcularPromedioSemestre(sem))}</strong>
+        Promedio:
+        <strong>${mostrarPromedio(calcularPromedioSemestre(sem))}</strong>
       `;
+
       divSem.appendChild(promedioSemestre);
 
+      // =========================
+      // RAMOS
+      // =========================
       sem.ramos.forEach(ramo => {
+
         const divRamo = document.createElement("div");
         divRamo.className = `ramo ${ramo.estado}`;
         divRamo.id = ramo.id;
@@ -267,28 +327,70 @@ function renderMalla() {
         const nombreRamo = document.createElement("div");
         nombreRamo.className = "nombre-ramo";
         nombreRamo.textContent = ramo.nombre;
+
         divRamo.appendChild(nombreRamo);
 
         // Mostrar promedio si existe
-        if (ramo.promedio !== null && ramo.promedio !== undefined) {
+        if (
+          ramo.promedio !== null &&
+          ramo.promedio !== undefined
+        ) {
           const nota = document.createElement("div");
+
           nota.className = "nota-ramo";
-          nota.textContent = `Promedio: ${ramo.promedio.toFixed(2).replace(".", ",")}`;
+          nota.textContent =
+            `Promedio: ${ramo.promedio.toFixed(2).replace(".", ",")}`;
+
           divRamo.appendChild(nota);
         }
 
-        // Clic normal = aprobar/desmarcar
+        // =========================
+        // CLIC NORMAL
+        // =========================
+
+        let temporizadorClick = null;
+
         if (ramo.estado !== "bloqueado") {
+
           divRamo.addEventListener("click", () => {
-            aprobarRamo(ramo.id);
+
+            temporizadorClick = setTimeout(() => {
+              aprobarRamo(ramo.id);
+            }, 250);
+
           });
+
         }
 
-        // Doble clic = poner/editar promedio
-        divRamo.addEventListener("dblclick", (evento) => {
+        // =========================
+        // DOBLE CLIC EN EL NOMBRE
+        // =========================
+
+        nombreRamo.addEventListener("dblclick", evento => {
+
           evento.preventDefault();
           evento.stopPropagation();
+
+          if (temporizadorClick) {
+            clearTimeout(temporizadorClick);
+            temporizadorClick = null;
+          }
+
           editarPromedio(ramo.id);
+
+        });
+
+        // Evitar que el input active el ramo
+        divRamo.addEventListener("click", evento => {
+
+          if (
+            evento.target.classList.contains("input-promedio") ||
+            evento.target.classList.contains("guardar-nota") ||
+            evento.target.classList.contains("cancelar-nota")
+          ) {
+            evento.stopPropagation();
+          }
+
         });
 
         divSem.appendChild(divRamo);
@@ -306,28 +408,39 @@ function renderMalla() {
 // EDITAR PROMEDIO
 // =========================
 function editarPromedio(id) {
+
   const ramo = buscarRamo(id);
 
   if (!ramo) return;
 
   const divRamo = document.getElementById(id);
+
   if (!divRamo) return;
 
-  // Evitar crear varios campos al mismo tiempo
-  if (divRamo.querySelector(".input-promedio")) return;
+  // Evitar abrir más de un campo
+  if (divRamo.querySelector(".input-promedio")) {
+    return;
+  }
 
   const input = document.createElement("input");
+
   input.type = "number";
   input.className = "input-promedio";
-  input.min = "1.0";
-  input.max = "7.0";
+
+  input.min = "1";
+  input.max = "7";
   input.step = "0.1";
+
   input.placeholder = "Ej: 5,6";
 
-  if (ramo.promedio !== null && ramo.promedio !== undefined) {
+  if (
+    ramo.promedio !== null &&
+    ramo.promedio !== undefined
+  ) {
     input.value = ramo.promedio;
   }
 
+  // Evitar que el clic del input apruebe el ramo
   input.addEventListener("click", evento => {
     evento.stopPropagation();
   });
@@ -336,7 +449,9 @@ function editarPromedio(id) {
     evento.stopPropagation();
   });
 
+  // Enter = guardar
   input.addEventListener("keydown", evento => {
+
     if (evento.key === "Enter") {
       guardarPromedio(id, input.value);
     }
@@ -344,37 +459,58 @@ function editarPromedio(id) {
     if (evento.key === "Escape") {
       renderMalla();
     }
+
   });
 
+  // Salir del campo = guardar
   input.addEventListener("blur", () => {
     guardarPromedio(id, input.value);
   });
 
   divRamo.appendChild(input);
+
   input.focus();
+  input.select();
 }
 
 // =========================
 // GUARDAR PROMEDIO
 // =========================
 function guardarPromedio(id, valor) {
+
   const ramo = buscarRamo(id);
 
   if (!ramo) return;
 
+  // Si se dejó vacío
   if (valor.trim() === "") {
+
     ramo.promedio = null;
+
     guardarEstado();
     renderMalla();
+
     return;
   }
 
-  const numero = parseFloat(valor.replace(",", "."));
+  // Aceptar coma o punto
+  const numero = parseFloat(
+    valor.replace(",", ".")
+  );
 
-  // Validar nota
-  if (isNaN(numero) || numero < 1 || numero > 7) {
-    alert("Ingresa un promedio válido entre 1,0 y 7,0.");
+  // Validar
+  if (
+    isNaN(numero) ||
+    numero < 1 ||
+    numero > 7
+  ) {
+
+    alert(
+      "Ingresa un promedio válido entre 1,0 y 7,0."
+    );
+
     renderMalla();
+
     return;
   }
 
@@ -385,62 +521,75 @@ function guardarPromedio(id, valor) {
 }
 
 // =========================
-// BUSCAR RAMO
-// =========================
-function buscarRamo(id) {
-  for (const sem of semestres) {
-    const ramo = sem.ramos.find(r => r.id === id);
-
-    if (ramo) return ramo;
-  }
-
-  return null;
-}
-
-// =========================
 // APROBAR / DESMARCAR RAMO
 // =========================
 function aprobarRamo(id) {
+
   semestres.forEach(sem => {
-    sem.ramos.forEach(r => {
-      if (r.id === id) {
-        if (r.estado === "disponible") {
-          r.estado = "aprobado";
-        } else if (r.estado === "aprobado") {
-          r.estado = "disponible";
+
+    sem.ramos.forEach(ramo => {
+
+      if (ramo.id === id) {
+
+        if (ramo.estado === "disponible") {
+          ramo.estado = "aprobado";
         }
+
+        else if (ramo.estado === "aprobado") {
+          ramo.estado = "disponible";
+        }
+
       }
+
     });
+
   });
 
+  // =========================
+  // ACTUALIZAR BLOQUEOS
+  // =========================
   semestres.forEach(sem => {
-    sem.ramos.forEach(r => {
-      if (r.estado !== "aprobado") {
-        const cumple = r.prereq.every(req =>
-          semestres.some(s =>
-            s.ramos.some(x => x.id === req && x.estado === "aprobado")
-          )
-        );
 
-        r.estado = cumple ? "disponible" : "bloqueado";
+    sem.ramos.forEach(ramo => {
+
+      if (ramo.estado === "aprobado") {
+        return;
       }
+
+      const cumple = ramo.prereq.every(req =>
+        semestres.some(semestre =>
+          semestre.ramos.some(
+            r => r.id === req && r.estado === "aprobado"
+          )
+        )
+      );
+
+      ramo.estado = cumple
+        ? "disponible"
+        : "bloqueado";
+
     });
+
   });
+
+  guardarEstado();
 
   renderMalla();
 
-  // Pulse al aprobar/desmarcar
+  // =========================
+  // ANIMACIÓN
+  // =========================
   const ramoDiv = document.getElementById(id);
 
   if (ramoDiv) {
+
     ramoDiv.classList.add("pulse");
 
     setTimeout(() => {
       ramoDiv.classList.remove("pulse");
     }, 400);
-  }
 
-  guardarEstado();
+  }
 }
 
 // =========================
@@ -448,4 +597,3 @@ function aprobarRamo(id) {
 // =========================
 cargarEstado();
 renderMalla();
-```
