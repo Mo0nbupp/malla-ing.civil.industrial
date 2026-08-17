@@ -4,9 +4,21 @@ const malla = document.getElementById("malla");
 // INFORMACIÓN DE LA MALLA
 // =====================================================
 
-const VERSION_MALLA = "v1.5";
+const VERSION_MALLA = "v1.6";
 
 const HISTORIAL_VERSIONES = [
+  {
+    version: "v1.6",
+    titulo: "Sistema de temas",
+    cambios: [
+      "Nuevo sistema de personalización visual",
+      "Tema lila pastel",
+      "Tema verde pastel",
+      "Tema celeste pastel",
+      "Tema rosa pastel",
+      "Guardado automático del tema elegido"
+    ]
+  },
   {
     version: "v1.5",
     titulo: "Rediseño visual e interacción",
@@ -66,6 +78,204 @@ const HISTORIAL_VERSIONES = [
     ]
   }
 ];
+
+
+// =====================================================
+// TEMAS
+// =====================================================
+
+const TEMAS = {
+  lila: {
+    nombre: "Lila pastel",
+    emoji: "💜",
+
+    variables: {
+      "--color-fondo-1": "#faf8ff",
+      "--color-fondo-2": "#f3effc",
+      "--color-titulo": "#6a4fa3",
+      "--color-texto": "#4b3b5f",
+      "--color-secundario": "#8065aa",
+
+      "--color-año": "rgba(239, 232, 252, 0.9)",
+      "--color-semestre": "#ffffff",
+
+      "--color-disponible": "#e7dcfa",
+      "--color-disponible-texto": "#4b2c83",
+
+      "--color-aprobado": "#cbb6f0",
+      "--color-aprobado-texto": "#2e1a47",
+
+      "--color-bloqueado": "#f0edf5",
+      "--color-bloqueado-texto": "#9a91a8",
+
+      "--color-borde": "#e5dcf5",
+      "--color-menu": "#ffffff",
+      "--color-boton": "#f4effb",
+      "--color-boton-hover": "#e5d9f7",
+
+      "--color-scroll": "#c5b3e6",
+      "--color-scroll-hover": "#aa94d2",
+
+      "--color-simbolo": "#eee5ff",
+      "--color-simbolo-texto": "#8065aa"
+    }
+  },
+
+  verde: {
+    nombre: "Verde pastel",
+    emoji: "🌿",
+
+    variables: {
+      "--color-fondo-1": "#f7fcf8",
+      "--color-fondo-2": "#edf8f0",
+      "--color-titulo": "#4f8060",
+      "--color-texto": "#3d5947",
+      "--color-secundario": "#668f72",
+
+      "--color-año": "rgba(226, 244, 232, 0.9)",
+      "--color-semestre": "#ffffff",
+
+      "--color-disponible": "#dff2e5",
+      "--color-disponible-texto": "#376449",
+
+      "--color-aprobado": "#b9dfc5",
+      "--color-aprobado-texto": "#285237",
+
+      "--color-bloqueado": "#edf2ee",
+      "--color-bloqueado-texto": "#8c9d91",
+
+      "--color-borde": "#d8eadc",
+      "--color-menu": "#ffffff",
+      "--color-boton": "#eef8f1",
+      "--color-boton-hover": "#dcefe2",
+
+      "--color-scroll": "#b7d8c0",
+      "--color-scroll-hover": "#98c5a5",
+
+      "--color-simbolo": "#e1f1e5",
+      "--color-simbolo-texto": "#668f72"
+    }
+  },
+
+  celeste: {
+    nombre: "Celeste pastel",
+    emoji: "🩵",
+
+    variables: {
+      "--color-fondo-1": "#f7fbff",
+      "--color-fondo-2": "#edf7fc",
+      "--color-titulo": "#4d7896",
+      "--color-texto": "#3d5361",
+      "--color-secundario": "#668da6",
+
+      "--color-año": "rgba(226, 242, 250, 0.9)",
+      "--color-semestre": "#ffffff",
+
+      "--color-disponible": "#dceff8",
+      "--color-disponible-texto": "#35627b",
+
+      "--color-aprobado": "#b9ddea",
+      "--color-aprobado-texto": "#294e60",
+
+      "--color-bloqueado": "#edf2f5",
+      "--color-bloqueado-texto": "#8b9ba3",
+
+      "--color-borde": "#d8e9f2",
+      "--color-menu": "#ffffff",
+      "--color-boton": "#edf7fb",
+      "--color-boton-hover": "#dceef6",
+
+      "--color-scroll": "#b5d5e3",
+      "--color-scroll-hover": "#96c3d5",
+
+      "--color-simbolo": "#e0f0f6",
+      "--color-simbolo-texto": "#668da6"
+    }
+  },
+
+  rosa: {
+    nombre: "Rosa pastel",
+    emoji: "🌸",
+
+    variables: {
+      "--color-fondo-1": "#fff8fb",
+      "--color-fondo-2": "#fdf0f6",
+      "--color-titulo": "#a45d7e",
+      "--color-texto": "#624652",
+      "--color-secundario": "#a36f87",
+
+      "--color-año": "rgba(250, 230, 240, 0.9)",
+      "--color-semestre": "#ffffff",
+
+      "--color-disponible": "#f8dfe9",
+      "--color-disponible-texto": "#81445e",
+
+      "--color-aprobado": "#e9bfd1",
+      "--color-aprobado-texto": "#673449",
+
+      "--color-bloqueado": "#f4edf0",
+      "--color-bloqueado-texto": "#9c8b92",
+
+      "--color-borde": "#efdce5",
+      "--color-menu": "#ffffff",
+      "--color-boton": "#faf0f4",
+      "--color-boton-hover": "#f3dfe8",
+
+      "--color-scroll": "#e0b9c9",
+      "--color-scroll-hover": "#d09caf",
+
+      "--color-simbolo": "#f6e1e9",
+      "--color-simbolo-texto": "#a36f87"
+    }
+  }
+};
+
+
+// =====================================================
+// TEMA ACTUAL
+// =====================================================
+
+let temaActual =
+  localStorage.getItem("temaMalla") || "lila";
+
+
+// =====================================================
+// APLICAR TEMA
+// =====================================================
+
+function aplicarTema(tema) {
+
+  if (!TEMAS[tema]) {
+    tema = "lila";
+  }
+
+  temaActual = tema;
+
+  const variables =
+    TEMAS[tema].variables;
+
+  Object.entries(variables).forEach(
+    ([variable, valor]) => {
+
+      document.documentElement.style.setProperty(
+        variable,
+        valor
+      );
+
+    }
+  );
+
+  document.body.setAttribute(
+    "data-tema",
+    tema
+  );
+
+  localStorage.setItem(
+    "temaMalla",
+    tema
+  );
+
+}
 
 
 // =====================================================
@@ -206,7 +416,7 @@ const semestres = [
       { id: "r53", nombre: "Planificación estratégica", prereq: [], estado: "bloqueado" },
       { id: "r54", nombre: "Emprendimiento y liderazgo en negocios", prereq: ["r50"], estado: "bloqueado" },
       { id: "r55", nombre: "Eficiencia energética y energías renovables", prereq: ["r44"], estado: "bloqueado" },
-      { id: "r56", nombre: "Proyecto título I", prereq: ["r48","r49","r50","r51","r52"], estado: "bloqueado" }
+      { id:  "r56", nombre: "Proyecto título I", prereq: ["r48","r49","r50","r51","r52"], estado: "bloqueado" }
     ]
   },
 
@@ -270,10 +480,17 @@ function guardarEstado() {
     JSON.stringify(semestres)
   );
 
-  localStorage.setItem(
-    "misNotasMalla",
-    document.getElementById("mis-notas")?.value || ""
-  );
+  const misNotas =
+    document.getElementById("mis-notas");
+
+  if (misNotas) {
+
+    localStorage.setItem(
+      "misNotasMalla",
+      misNotas.value
+    );
+
+  }
 
 }
 
@@ -376,15 +593,11 @@ function buscarRamo(id) {
 // PROMEDIO SEMESTRE
 // =====================================================
 
-function calcularPromedioSemestre(
-  semestre
-) {
+function calcularPromedioSemestre(semestre) {
 
   const notas =
     semestre.ramos
-      .map(
-        ramo => ramo.promedio
-      )
+      .map(ramo => ramo.promedio)
       .filter(
         nota =>
           typeof nota === "number" &&
@@ -411,9 +624,7 @@ function calcularPromedioSemestre(
 // PROMEDIO AÑO
 // =====================================================
 
-function calcularPromedioAño(
-  indiceAño
-) {
+function calcularPromedioAño(indiceAño) {
 
   const semestre1 =
     semestres[indiceAño * 2];
@@ -468,9 +679,7 @@ function calcularPromedioAño(
 // FORMATO PROMEDIO
 // =====================================================
 
-function mostrarPromedio(
-  promedio
-) {
+function mostrarPromedio(promedio) {
 
   if (promedio === null) {
     return "—";
@@ -632,10 +841,6 @@ function crearRamo(
     ramo.id;
 
 
-  // ---------------------------------
-  // CONTENIDO
-  // ---------------------------------
-
   const contenido =
     document.createElement("div");
 
@@ -656,10 +861,6 @@ function crearRamo(
     nombre
   );
 
-
-  // ---------------------------------
-  // SÍMBOLOS
-  // ---------------------------------
 
   const indicadores =
     document.createElement("div");
@@ -718,10 +919,6 @@ function crearRamo(
   );
 
 
-  // ---------------------------------
-  // PROMEDIO ACTUAL
-  // ---------------------------------
-
   if (
     ramo.promedio !== null &&
     ramo.promedio !== undefined
@@ -746,10 +943,6 @@ function crearRamo(
 
   }
 
-
-  // ---------------------------------
-  // PROMEDIO ANTERIOR
-  // ---------------------------------
 
   if (
     ramo.repetido &&
@@ -787,10 +980,6 @@ function crearRamo(
   );
 
 
-  // ---------------------------------
-  // BOTÓN ⋮
-  // ---------------------------------
-
   const botonMenu =
     document.createElement("button");
 
@@ -821,10 +1010,6 @@ function crearRamo(
     botonMenu
   );
 
-
-  // ---------------------------------
-  // CLIC NORMAL
-  // ---------------------------------
 
   if (
     ramo.estado !== "bloqueado"
@@ -900,10 +1085,6 @@ function abrirMenuRamo(
   );
 
 
-  // ---------------------------------
-  // PROMEDIO
-  // ---------------------------------
-
   const botonPromedio =
     document.createElement("button");
 
@@ -929,10 +1110,6 @@ function abrirMenuRamo(
     botonPromedio
   );
 
-
-  // ---------------------------------
-  // REPETIR
-  // ---------------------------------
 
   const botonRepetir =
     document.createElement("button");
@@ -961,10 +1138,6 @@ function abrirMenuRamo(
     botonRepetir
   );
 
-
-  // ---------------------------------
-  // QUITAR REPETICIÓN
-  // ---------------------------------
 
   if (ramo.repetido) {
 
@@ -996,10 +1169,6 @@ function abrirMenuRamo(
   }
 
 
-  // ---------------------------------
-  // COMENTARIO
-  // ---------------------------------
-
   const botonComentario =
     document.createElement("button");
 
@@ -1027,10 +1196,6 @@ function abrirMenuRamo(
     botonComentario
   );
 
-
-  // ---------------------------------
-  // HISTORIAL
-  // ---------------------------------
 
   if (
     ramo.historial &&
@@ -1062,10 +1227,6 @@ function abrirMenuRamo(
 
   }
 
-
-  // ---------------------------------
-  // ELIMINAR COMENTARIO
-  // ---------------------------------
 
   if (
     ramo.comentario &&
@@ -1355,9 +1516,6 @@ function repetirRamo(id) {
   if (!ramo) return;
 
 
-  // Si ya estaba repetido,
-  // simplemente editar el nuevo promedio.
-
   if (ramo.repetido) {
 
     renderMalla();
@@ -1373,10 +1531,6 @@ function repetirRamo(id) {
 
   }
 
-
-  // ---------------------------------
-  // GUARDAR PROMEDIO ANTERIOR
-  // ---------------------------------
 
   if (
     ramo.promedio !== null &&
@@ -1397,16 +1551,8 @@ function repetirRamo(id) {
   ramo.repetido =
     true;
 
-
-  // El ramo queda disponible
-  // para registrar el nuevo intento.
-
   ramo.estado =
     "disponible";
-
-
-  // El promedio actual se limpia
-  // para ingresar el nuevo.
 
   ramo.promedio =
     null;
@@ -1416,11 +1562,6 @@ function repetirRamo(id) {
 
   renderMalla();
 
-
-  // ---------------------------------
-  // ABRIR AUTOMÁTICAMENTE
-  // EL NUEVO PROMEDIO
-  // ---------------------------------
 
   setTimeout(
     () => {
@@ -1440,9 +1581,7 @@ function repetirRamo(id) {
 // QUITAR REPETICIÓN
 // =====================================================
 
-function quitarRepeticion(
-  id
-) {
+function quitarRepeticion(id) {
 
   const ramo =
     buscarRamo(id);
@@ -1459,9 +1598,6 @@ function quitarRepeticion(
     return;
   }
 
-
-  // Recuperar el último promedio
-  // anterior si existe.
 
   if (
     ramo.historial &&
@@ -1495,9 +1631,7 @@ function quitarRepeticion(
 // HISTORIAL
 // =====================================================
 
-function mostrarHistorial(
-  ramo
-) {
+function mostrarHistorial(ramo) {
 
   if (
     !ramo.historial ||
@@ -1537,9 +1671,7 @@ function mostrarHistorial(
 // COMENTARIO DEL RAMO
 // =====================================================
 
-function editarComentario(
-  id
-) {
+function editarComentario(id) {
 
   const ramo =
     buscarRamo(id);
@@ -1662,9 +1794,7 @@ function editarComentario(
 // APROBAR / DESMARCAR
 // =====================================================
 
-function aprobarRamo(
-  id
-) {
+function aprobarRamo(id) {
 
   const ramo =
     buscarRamo(id);
@@ -2217,14 +2347,6 @@ function enviarSugerencia() {
   }
 
 
-  /*
-    Por ahora se guarda localmente.
-
-    Más adelante podemos conectar este botón
-    con un formulario externo para que la
-    sugerencia llegue directamente a la creadora.
-  */
-
   const sugerencias =
     JSON.parse(
       localStorage.getItem(
@@ -2259,6 +2381,95 @@ function enviarSugerencia() {
 
 
   cerrarPaneles();
+
+}
+
+
+// =====================================================
+// TEMAS
+// =====================================================
+
+function abrirTemas() {
+
+  const opciones =
+    Object.entries(TEMAS)
+      .map(
+        ([clave, tema]) => `
+
+          <button
+            class="opcion-tema ${
+              clave === temaActual
+                ? "tema-seleccionado"
+                : ""
+            }"
+            data-tema="${clave}"
+            type="button"
+          >
+
+            <span class="tema-circulo tema-${clave}"></span>
+
+            <span class="tema-nombre">
+              ${tema.emoji}
+              ${tema.nombre}
+            </span>
+
+            ${
+              clave === temaActual
+                ? `<span class="tema-check">✓</span>`
+                : ""
+            }
+
+          </button>
+
+        `
+      )
+      .join("");
+
+
+  crearPanel(
+    "🎨 Tema",
+    `
+
+      <p>
+        Elige el estilo de colores que quieres
+        utilizar en tu malla.
+      </p>
+
+      <div class="lista-temas">
+
+        ${opciones}
+
+      </div>
+
+    `
+  );
+
+
+  document
+    .querySelectorAll(
+      ".opcion-tema"
+    )
+    .forEach(
+      boton => {
+
+        boton.addEventListener(
+          "click",
+          () => {
+
+            const nuevoTema =
+              boton.dataset.tema;
+
+            aplicarTema(
+              nuevoTema
+            );
+
+            abrirTemas();
+
+          }
+        );
+
+      }
+    );
 
 }
 
@@ -2342,6 +2553,16 @@ function crearMenuSuperior() {
     abrirVersion;
 
 
+  const botonTema =
+    document.createElement("button");
+
+  botonTema.textContent =
+    "🎨 Tema";
+
+  botonTema.onclick =
+    abrirTemas;
+
+
   menu.appendChild(
     botonComoFunciona
   );
@@ -2352,6 +2573,10 @@ function crearMenuSuperior() {
 
   menu.appendChild(
     botonSugerencias
+  );
+
+  menu.appendChild(
+    botonTema
   );
 
   menu.appendChild(
@@ -2386,6 +2611,10 @@ function crearMenuSuperior() {
 // =====================================================
 
 cargarEstado();
+
+aplicarTema(
+  temaActual
+);
 
 crearMenuSuperior();
 
