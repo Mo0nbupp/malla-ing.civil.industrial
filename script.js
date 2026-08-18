@@ -21,9 +21,20 @@ const supabaseClient =
 // INFORMACIÓN DE LA MALLA
 // =====================================================
 
-const VERSION_MALLA = "v1.6";
+const VERSION_MALLA = "v1.7";
 
 const HISTORIAL_VERSIONES = [
+  {
+    version: "v1.7",
+    titulo: "Sistema de sugerencias conectado",
+    cambios: [
+      "Envío de sugerencias desde la malla",
+      "Registro de sugerencias en una base de datos",
+      "Selección del ramo relacionado",
+      "Clasificación por tipo de sugerencia",
+      "Registro automático de la fecha de envío"
+    ]
+  },
   {
     version: "v1.6",
     titulo: "Sistema de temas",
