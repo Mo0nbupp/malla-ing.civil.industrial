@@ -716,7 +716,6 @@ function renderMalla() {
 
     año.className = "año";
 
-
     const titulo =
       document.createElement("h2");
 
@@ -724,7 +723,6 @@ function renderMalla() {
       `Año ${Math.floor(i / 2) + 1}`;
 
     año.appendChild(titulo);
-
 
     const promedioAño =
       document.createElement("div");
@@ -747,13 +745,11 @@ function renderMalla() {
       promedioAño
     );
 
-
     const contSemestres =
       document.createElement("div");
 
     contSemestres.className =
       "semestres";
-
 
     semestres
       .slice(i, i + 2)
@@ -765,7 +761,6 @@ function renderMalla() {
         divSem.className =
           "semestre";
 
-
         const h3 =
           document.createElement("h3");
 
@@ -773,7 +768,6 @@ function renderMalla() {
           `Semestre ${sem.numero}`;
 
         divSem.appendChild(h3);
-
 
         const promedioSemestre =
           document.createElement("div");
@@ -794,7 +788,6 @@ function renderMalla() {
           promedioSemestre
         );
 
-
         sem.ramos.forEach(
           ramo => {
 
@@ -806,13 +799,11 @@ function renderMalla() {
           }
         );
 
-
         contSemestres.appendChild(
           divSem
         );
 
       });
-
 
     año.appendChild(
       contSemestres
@@ -845,13 +836,11 @@ function crearRamo(
   divRamo.id =
     ramo.id;
 
-
   const contenido =
     document.createElement("div");
 
   contenido.className =
     "contenido-ramo";
-
 
   const nombre =
     document.createElement("div");
@@ -866,13 +855,11 @@ function crearRamo(
     nombre
   );
 
-
   const indicadores =
     document.createElement("div");
 
   indicadores.className =
     "indicadores-ramo";
-
 
   if (ramo.repetido) {
 
@@ -893,7 +880,6 @@ function crearRamo(
     );
 
   }
-
 
   if (
     ramo.comentario &&
@@ -918,11 +904,9 @@ function crearRamo(
 
   }
 
-
   contenido.appendChild(
     indicadores
   );
-
 
   if (
     ramo.promedio !== null &&
@@ -947,7 +931,6 @@ function crearRamo(
     );
 
   }
-
 
   if (
     ramo.repetido &&
@@ -979,11 +962,9 @@ function crearRamo(
 
   }
 
-
   divRamo.appendChild(
     contenido
   );
-
 
   const botonMenu =
     document.createElement("button");
@@ -1014,7 +995,6 @@ function crearRamo(
   divRamo.appendChild(
     botonMenu
   );
-
 
   if (
     ramo.estado !== "bloqueado"
@@ -1049,7 +1029,6 @@ function crearRamo(
 
   }
 
-
   contenedor.appendChild(
     divRamo
   );
@@ -1068,13 +1047,11 @@ function abrirMenuRamo(
 
   cerrarMenusRamos();
 
-
   const menu =
     document.createElement("div");
 
   menu.className =
     "menu-ramo";
-
 
   const titulo =
     document.createElement("div");
@@ -1088,7 +1065,6 @@ function abrirMenuRamo(
   menu.appendChild(
     titulo
   );
-
 
   const botonPromedio =
     document.createElement("button");
@@ -1114,7 +1090,6 @@ function abrirMenuRamo(
   menu.appendChild(
     botonPromedio
   );
-
 
   const botonRepetir =
     document.createElement("button");
@@ -1142,7 +1117,6 @@ function abrirMenuRamo(
   menu.appendChild(
     botonRepetir
   );
-
 
   if (ramo.repetido) {
 
@@ -1173,7 +1147,6 @@ function abrirMenuRamo(
 
   }
 
-
   const botonComentario =
     document.createElement("button");
 
@@ -1200,7 +1173,6 @@ function abrirMenuRamo(
   menu.appendChild(
     botonComentario
   );
-
 
   if (
     ramo.historial &&
@@ -1231,7 +1203,6 @@ function abrirMenuRamo(
     );
 
   }
-
 
   if (
     ramo.comentario &&
@@ -1266,7 +1237,6 @@ function abrirMenuRamo(
     );
 
   }
-
 
   divRamo.appendChild(
     menu
@@ -1324,12 +1294,10 @@ function editarPromedio(id) {
 
   if (!ramo) return;
 
-
   const divRamo =
     document.getElementById(id);
 
   if (!divRamo) return;
-
 
   if (
     divRamo.querySelector(
@@ -1338,7 +1306,6 @@ function editarPromedio(id) {
   ) {
     return;
   }
-
 
   const input =
     document.createElement("input");
@@ -1361,7 +1328,6 @@ function editarPromedio(id) {
   input.placeholder =
     "Ej: 5,6";
 
-
   if (
     ramo.promedio !== null &&
     ramo.promedio !== undefined
@@ -1371,7 +1337,6 @@ function editarPromedio(id) {
       ramo.promedio;
 
   }
-
 
   input.addEventListener(
     "click",
@@ -1393,7 +1358,6 @@ function editarPromedio(id) {
       evento.stopPropagation();
     }
   );
-
 
   input.addEventListener(
     "keydown",
@@ -1421,7 +1385,6 @@ function editarPromedio(id) {
     }
   );
 
-
   input.addEventListener(
     "blur",
     () => {
@@ -1433,7 +1396,6 @@ function editarPromedio(id) {
 
     }
   );
-
 
   divRamo.appendChild(
     input
@@ -1458,7 +1420,6 @@ function guardarPromedio(
 
   if (!ramo) return;
 
-
   if (
     valor.trim() === ""
   ) {
@@ -1474,12 +1435,10 @@ function guardarPromedio(
 
   }
 
-
   const numero =
     parseFloat(
       valor.replace(",", ".")
     );
-
 
   if (
     isNaN(numero) ||
@@ -1497,10 +1456,8 @@ function guardarPromedio(
 
   }
 
-
   ramo.promedio =
     numero;
-
 
   guardarEstado();
 
@@ -1520,7 +1477,6 @@ function repetirRamo(id) {
 
   if (!ramo) return;
 
-
   if (ramo.repetido) {
 
     renderMalla();
@@ -1535,7 +1491,6 @@ function repetirRamo(id) {
     return;
 
   }
-
 
   if (
     ramo.promedio !== null &&
@@ -1552,7 +1507,6 @@ function repetirRamo(id) {
 
   }
 
-
   ramo.repetido =
     true;
 
@@ -1562,11 +1516,9 @@ function repetirRamo(id) {
   ramo.promedio =
     null;
 
-
   guardarEstado();
 
   renderMalla();
-
 
   setTimeout(
     () => {
@@ -1593,7 +1545,6 @@ function quitarRepeticion(id) {
 
   if (!ramo) return;
 
-
   const confirmar =
     confirm(
       "¿Quieres quitar el registro de repetición de este ramo?"
@@ -1602,7 +1553,6 @@ function quitarRepeticion(id) {
   if (!confirmar) {
     return;
   }
-
 
   if (
     ramo.historial &&
@@ -1618,10 +1568,8 @@ function quitarRepeticion(id) {
 
   }
 
-
   ramo.repetido =
     false;
-
 
   guardarEstado();
 
@@ -1651,7 +1599,6 @@ function mostrarHistorial(ramo) {
 
   }
 
-
   const historialTexto =
     ramo.historial
       .map(
@@ -1663,7 +1610,6 @@ function mostrarHistorial(ramo) {
           }`
       )
       .join("\n");
-
 
   alert(
     `Historial de ${ramo.nombre}\n\n${historialTexto}`
@@ -1683,12 +1629,10 @@ function editarComentario(id) {
 
   if (!ramo) return;
 
-
   const divRamo =
     document.getElementById(id);
 
   if (!divRamo) return;
-
 
   const existente =
     divRamo.querySelector(
@@ -1699,13 +1643,11 @@ function editarComentario(id) {
     return;
   }
 
-
   const editor =
     document.createElement("div");
 
   editor.className =
     "editor-comentario";
-
 
   const textarea =
     document.createElement("textarea");
@@ -1716,20 +1658,17 @@ function editarComentario(id) {
   textarea.value =
     ramo.comentario || "";
 
-
   const botones =
     document.createElement("div");
 
   botones.className =
     "botones-comentario";
 
-
   const guardar =
     document.createElement("button");
 
   guardar.textContent =
     "Guardar";
-
 
   guardar.addEventListener(
     "click",
@@ -1747,13 +1686,11 @@ function editarComentario(id) {
     }
   );
 
-
   const cancelar =
     document.createElement("button");
 
   cancelar.textContent =
     "Cancelar";
-
 
   cancelar.addEventListener(
     "click",
@@ -1766,7 +1703,6 @@ function editarComentario(id) {
     }
   );
 
-
   botones.appendChild(
     guardar
   );
@@ -1774,7 +1710,6 @@ function editarComentario(id) {
   botones.appendChild(
     cancelar
   );
-
 
   editor.appendChild(
     textarea
@@ -1784,11 +1719,9 @@ function editarComentario(id) {
     botones
   );
 
-
   divRamo.appendChild(
     editor
   );
-
 
   textarea.focus();
 
@@ -1805,7 +1738,6 @@ function aprobarRamo(id) {
     buscarRamo(id);
 
   if (!ramo) return;
-
 
   if (
     ramo.estado ===
@@ -1827,13 +1759,11 @@ function aprobarRamo(id) {
 
   }
 
-
   actualizarBloqueos();
 
   guardarEstado();
 
   renderMalla();
-
 
   const ramoDiv =
     document.getElementById(id);
@@ -1879,7 +1809,6 @@ function actualizarBloqueos() {
             return;
           }
 
-
           const cumple =
             ramo.prereq.every(
               req =>
@@ -1893,7 +1822,6 @@ function actualizarBloqueos() {
                     )
                 )
             );
-
 
           ramo.estado =
             cumple
@@ -1920,13 +1848,11 @@ function crearPanel(
 
   cerrarPaneles();
 
-
   const panel =
     document.createElement("div");
 
   panel.className =
     "panel-informacion";
-
 
   panel.addEventListener(
     "click",
@@ -1942,7 +1868,6 @@ function crearPanel(
 
     }
   );
-
 
   panel.innerHTML = `
 
@@ -1963,7 +1888,6 @@ function crearPanel(
 
   `;
 
-
   panel
     .querySelector(
       ".cerrar-panel"
@@ -1972,7 +1896,6 @@ function crearPanel(
       "click",
       cerrarPaneles
     );
-
 
   document.body.appendChild(
     panel
@@ -2002,7 +1925,6 @@ function abrirComoFunciona() {
 
       </div>
 
-
       <div class="explicacion-item">
 
         <span class="ejemplo aprobado"></span>
@@ -2014,7 +1936,6 @@ function abrirComoFunciona() {
 
       </div>
 
-
       <div class="explicacion-item">
 
         <span class="ejemplo bloqueado"></span>
@@ -2025,7 +1946,6 @@ function abrirComoFunciona() {
         </div>
 
       </div>
-
 
       <div class="explicacion-item">
 
@@ -2040,7 +1960,6 @@ function abrirComoFunciona() {
 
       </div>
 
-
       <div class="explicacion-item">
 
         <span class="ejemplo simbolo">
@@ -2054,9 +1973,7 @@ function abrirComoFunciona() {
 
       </div>
 
-
       <hr>
-
 
       <h3>Interacciones</h3>
 
@@ -2091,7 +2008,6 @@ function abrirMisNotas() {
       "misNotasMalla"
     ) || "";
 
-
   crearPanel(
     "💭 Mis notas",
     `
@@ -2117,7 +2033,6 @@ function abrirMisNotas() {
 
     `
   );
-
 
   document
     .getElementById(
@@ -2183,7 +2098,6 @@ function abrirVersion() {
       )
       .join("");
 
-
   crearPanel(
     `📋 Historial de versiones`,
     `
@@ -2220,7 +2134,6 @@ function abrirSugerencias() {
       )
       .join("");
 
-
   crearPanel(
     "💌 Sugerencias",
     `
@@ -2229,7 +2142,6 @@ function abrirSugerencias() {
         ¿Encontraste un error o tienes una idea
         para mejorar la malla?
       </p>
-
 
       <label>
         Ramo relacionado
@@ -2248,7 +2160,6 @@ function abrirSugerencias() {
 
       </select>
 
-
       <label>
         Tipo de sugerencia
       </label>
@@ -2258,35 +2169,33 @@ function abrirSugerencias() {
         class="select-sugerencia"
       >
 
-        <option value="Error en un ramo">
+        <option>
           Error en un ramo
         </option>
 
-        <option value="Prerrequisito incorrecto">
+        <option>
           Prerrequisito incorrecto
         </option>
 
-        <option value="Idea de diseño">
+        <option>
           Idea de diseño
         </option>
 
-        <option value="Nueva función">
+        <option>
           Nueva función
         </option>
 
-        <option value="Otro">
+        <option>
           Otro
         </option>
 
       </select>
-
 
       <textarea
         id="texto-sugerencia"
         class="textarea-notas"
         placeholder="Escribe aquí tu sugerencia..."
       ></textarea>
-
 
       <button
         id="boton-sugerencia"
@@ -2296,14 +2205,12 @@ function abrirSugerencias() {
         Enviar sugerencia
       </button>
 
-
       <p class="texto-pequeno">
         Gracias por ayudar a mejorar la malla ♡
       </p>
 
     `
   );
-
 
   document
     .getElementById(
@@ -2323,14 +2230,10 @@ function abrirSugerencias() {
 
 async function enviarSugerencia() {
 
-  const selectRamo =
+  const ramo =
     document.getElementById(
       "sugerencia-ramo"
-    );
-
-
-  const ramo =
-    selectRamo?.value || null;
+    )?.value || "";
 
 
   const tipo =
@@ -2339,17 +2242,13 @@ async function enviarSugerencia() {
     )?.value || "Otro";
 
 
-  const texto =
+  const mensaje =
     document.getElementById(
       "texto-sugerencia"
     )?.value.trim();
 
 
-  // ---------------------------------------------
-  // VALIDAR
-  // ---------------------------------------------
-
-  if (!texto) {
+  if (!mensaje) {
 
     alert(
       "Escribe una sugerencia antes de enviarla 💜"
@@ -2359,10 +2258,6 @@ async function enviarSugerencia() {
 
   }
 
-
-  // ---------------------------------------------
-  // BOTÓN
-  // ---------------------------------------------
 
   const boton =
     document.getElementById(
@@ -2381,70 +2276,46 @@ async function enviarSugerencia() {
   }
 
 
-  // ---------------------------------------------
-  // OBTENER NOMBRE DEL RAMO
-  // ---------------------------------------------
+  try {
 
-  let nombreRamo =
-    "Sin ramo específico";
-
-
-  if (
-    selectRamo &&
-    selectRamo.selectedIndex > 0
-  ) {
-
-    nombreRamo =
-      selectRamo.options[
-        selectRamo.selectedIndex
-      ].textContent.trim();
-
-  }
+    const { data, error } =
+      await supabaseClient
+        .from("Sugerencias")
+        .insert([
+          {
+            mensaje: mensaje,
+            fecha: new Date().toISOString(),
+            ramo: ramo,
+            tipo: tipo
+          }
+        ]);
 
 
-  // ---------------------------------------------
-  // ENVIAR A SUPABASE
-  // ---------------------------------------------
+    if (error) {
 
-  const { data, error } =
-    await supabaseClient
-      .from("Sugerencias")
-      .insert({
+      console.error(
+        "Error al enviar sugerencia:",
+        error
+      );
 
-        mensaje: texto,
+      throw error;
 
-        fecha:
-          new Date().toISOString(),
-
-        ramo:
-          ramo,
-
-        tipo:
-          tipo
-
-      })
-      .select();
+    }
 
 
-  // ---------------------------------------------
-  // ERROR
-  // ---------------------------------------------
+    alert(
+      "¡Gracias por tu sugerencia! 💜"
+    );
 
-  if (error) {
+
+    cerrarPaneles();
+
+
+  } catch (error) {
 
     console.error(
       "Error al enviar sugerencia:",
       error
-    );
-
-    console.error(
-      "Detalles:",
-      {
-        mensaje: texto,
-        fecha: new Date().toISOString(),
-        ramo: ramo,
-        tipo: tipo
-      }
     );
 
 
@@ -2464,27 +2335,7 @@ async function enviarSugerencia() {
       "Revisa la consola para ver el error."
     );
 
-    return;
-
   }
-
-
-  // ---------------------------------------------
-  // ÉXITO
-  // ---------------------------------------------
-
-  console.log(
-    "Sugerencia enviada correctamente:",
-    data
-  );
-
-
-  alert(
-    "¡Gracias por tu sugerencia! 💜"
-  );
-
-
-  cerrarPaneles();
 
 }
 
@@ -2530,7 +2381,6 @@ function abrirTemas() {
       )
       .join("");
 
-
   crearPanel(
     "🎨 Tema",
     `
@@ -2548,7 +2398,6 @@ function abrirTemas() {
 
     `
   );
-
 
   document
     .querySelectorAll(
@@ -2610,13 +2459,11 @@ function crearMenuSuperior() {
     return;
   }
 
-
   const menu =
     document.createElement("div");
 
   menu.className =
     "menu-superior";
-
 
   const botonComoFunciona =
     document.createElement("button");
@@ -2627,7 +2474,6 @@ function crearMenuSuperior() {
   botonComoFunciona.onclick =
     abrirComoFunciona;
 
-
   const botonMisNotas =
     document.createElement("button");
 
@@ -2636,7 +2482,6 @@ function crearMenuSuperior() {
 
   botonMisNotas.onclick =
     abrirMisNotas;
-
 
   const botonSugerencias =
     document.createElement("button");
@@ -2647,7 +2492,6 @@ function crearMenuSuperior() {
   botonSugerencias.onclick =
     abrirSugerencias;
 
-
   const botonVersion =
     document.createElement("button");
 
@@ -2657,7 +2501,6 @@ function crearMenuSuperior() {
   botonVersion.onclick =
     abrirVersion;
 
-
   const botonTema =
     document.createElement("button");
 
@@ -2666,7 +2509,6 @@ function crearMenuSuperior() {
 
   botonTema.onclick =
     abrirTemas;
-
 
   menu.appendChild(
     botonComoFunciona
@@ -2688,10 +2530,8 @@ function crearMenuSuperior() {
     botonVersion
   );
 
-
   const titulo =
     document.querySelector("h1");
-
 
   if (titulo) {
 
@@ -2716,8 +2556,6 @@ function crearMenuSuperior() {
 // =====================================================
 
 cargarEstado();
-
-actualizarBloqueos();
 
 aplicarTema(
   temaActual
