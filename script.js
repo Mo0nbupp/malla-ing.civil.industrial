@@ -1,6 +1,23 @@
 const malla = document.getElementById("malla");
 
 // =====================================================
+// CONEXIÓN CON SUPABASE
+// =====================================================
+
+const SUPABASE_URL =
+  "https://qzyuymyhisysiyldcmpr.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_ZKx8sMgoIFEnyh0iPCoijQ_ar79Iwri";
+
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+// =====================================================
 // INFORMACIÓN DE LA MALLA
 // =====================================================
 
@@ -2315,10 +2332,10 @@ function abrirSugerencias() {
 
 
 // =====================================================
-// ENVIAR SUGERENCIA
+// ENVIAR SUGERENCIA → SUPABASE
 // =====================================================
 
-function enviarSugerencia() {
+async function enviarSugerencia() {
 
   const ramo =
     document.getElementById(
@@ -2349,32 +2366,62 @@ function enviarSugerencia() {
   }
 
 
-  const sugerencias =
-    JSON.parse(
-      localStorage.getItem(
-        "sugerenciasMalla"
-      ) || "[]"
+  const boton =
+    document.getElementById(
+      "boton-sugerencia"
     );
 
 
-  sugerencias.push({
+  if (boton) {
 
-    ramo,
-    tipo,
-    texto,
+    boton.disabled =
+      true;
 
-    fecha:
-      new Date().toLocaleString()
+    boton.textContent =
+      "Enviando...";
 
-  });
+  }
 
 
-  localStorage.setItem(
-    "sugerenciasMalla",
-    JSON.stringify(
-      sugerencias
-    )
-  );
+  const { error } =
+    await supabaseClient
+      .from("Sugerencias")
+      .insert({
+
+        ramo: ramo,
+        tipo: tipo,
+        texto: texto,
+        fecha: new Date().toISOString()
+
+      });
+
+
+  if (error) {
+
+    console.error(
+      "Error al enviar sugerencia:",
+      error
+    );
+
+
+    if (boton) {
+
+      boton.disabled =
+        false;
+
+      boton.textContent =
+        "Enviar sugerencia";
+
+    }
+
+
+    alert(
+      "No se pudo enviar la sugerencia 😭\n\nRevisa la consola para ver el error."
+    );
+
+    return;
+
+  }
 
 
   alert(
