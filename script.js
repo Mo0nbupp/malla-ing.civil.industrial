@@ -138,7 +138,6 @@ const TEMAS = {
     }
   },
 
-
   verde: {
     nombre: "Verde pastel",
 
@@ -174,7 +173,6 @@ const TEMAS = {
     }
   },
 
-
   celeste: {
     nombre: "Celeste pastel",
 
@@ -209,7 +207,6 @@ const TEMAS = {
       "--color-simbolo-texto": "#668da6"
     }
   },
-
 
   rosa: {
     nombre: "Rosa pastel",
@@ -302,7 +299,6 @@ function aplicarTema(tema) {
 
 const semestres = [
 
-  // --- Semestre 1 ---
   {
     numero: 1,
     ramos: [
@@ -314,7 +310,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 2 ---
   {
     numero: 2,
     ramos: [
@@ -326,7 +321,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 3 ---
   {
     numero: 3,
     ramos: [
@@ -339,7 +333,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 4 ---
   {
     numero: 4,
     ramos: [
@@ -352,7 +345,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 5 ---
   {
     numero: 5,
     ramos: [
@@ -365,7 +357,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 6 ---
   {
     numero: 6,
     ramos: [
@@ -378,7 +369,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 7 ---
   {
     numero: 7,
     ramos: [
@@ -402,7 +392,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 8 ---
   {
     numero: 8,
     ramos: [
@@ -415,7 +404,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 9 ---
   {
     numero: 9,
     ramos: [
@@ -427,7 +415,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 10 ---
   {
     numero: 10,
     ramos: [
@@ -438,7 +425,6 @@ const semestres = [
     ]
   },
 
-  // --- Semestre 11 ---
   {
     numero: 11,
     ramos: [
@@ -2272,23 +2258,23 @@ function abrirSugerencias() {
         class="select-sugerencia"
       >
 
-        <option>
+        <option value="Error en un ramo">
           Error en un ramo
         </option>
 
-        <option>
+        <option value="Prerrequisito incorrecto">
           Prerrequisito incorrecto
         </option>
 
-        <option>
+        <option value="Idea de diseño">
           Idea de diseño
         </option>
 
-        <option>
+        <option value="Nueva función">
           Nueva función
         </option>
 
-        <option>
+        <option value="Otro">
           Otro
         </option>
 
@@ -2337,10 +2323,14 @@ function abrirSugerencias() {
 
 async function enviarSugerencia() {
 
-  const ramo =
+  const selectRamo =
     document.getElementById(
       "sugerencia-ramo"
-    )?.value || "";
+    );
+
+
+  const ramo =
+    selectRamo?.value || null;
 
 
   const tipo =
@@ -2355,6 +2345,10 @@ async function enviarSugerencia() {
     )?.value.trim();
 
 
+  // ---------------------------------------------
+  // VALIDAR
+  // ---------------------------------------------
+
   if (!texto) {
 
     alert(
@@ -2365,6 +2359,10 @@ async function enviarSugerencia() {
 
   }
 
+
+  // ---------------------------------------------
+  // BOTÓN
+  // ---------------------------------------------
 
   const boton =
     document.getElementById(
@@ -2383,24 +2381,70 @@ async function enviarSugerencia() {
   }
 
 
-  const { error } =
+  // ---------------------------------------------
+  // OBTENER NOMBRE DEL RAMO
+  // ---------------------------------------------
+
+  let nombreRamo =
+    "Sin ramo específico";
+
+
+  if (
+    selectRamo &&
+    selectRamo.selectedIndex > 0
+  ) {
+
+    nombreRamo =
+      selectRamo.options[
+        selectRamo.selectedIndex
+      ].textContent.trim();
+
+  }
+
+
+  // ---------------------------------------------
+  // ENVIAR A SUPABASE
+  // ---------------------------------------------
+
+  const { data, error } =
     await supabaseClient
       .from("Sugerencias")
       .insert({
 
-        ramo: ramo,
-        tipo: tipo,
-        texto: texto,
-        fecha: new Date().toISOString()
+        mensaje: texto,
 
-      });
+        fecha:
+          new Date().toISOString(),
 
+        ramo:
+          ramo,
+
+        tipo:
+          tipo
+
+      })
+      .select();
+
+
+  // ---------------------------------------------
+  // ERROR
+  // ---------------------------------------------
 
   if (error) {
 
     console.error(
       "Error al enviar sugerencia:",
       error
+    );
+
+    console.error(
+      "Detalles:",
+      {
+        mensaje: texto,
+        fecha: new Date().toISOString(),
+        ramo: ramo,
+        tipo: tipo
+      }
     );
 
 
@@ -2416,12 +2460,23 @@ async function enviarSugerencia() {
 
 
     alert(
-      "No se pudo enviar la sugerencia 😭\n\nRevisa la consola para ver el error."
+      "No se pudo enviar la sugerencia 😭\n\n" +
+      "Revisa la consola para ver el error."
     );
 
     return;
 
   }
+
+
+  // ---------------------------------------------
+  // ÉXITO
+  // ---------------------------------------------
+
+  console.log(
+    "Sugerencia enviada correctamente:",
+    data
+  );
 
 
   alert(
@@ -2661,6 +2716,8 @@ function crearMenuSuperior() {
 // =====================================================
 
 cargarEstado();
+
+actualizarBloqueos();
 
 aplicarTema(
   temaActual
