@@ -1425,3 +1425,9 @@ p {
   }
 
 }
+
+.corazon-lineart {
+  font-size: 1.1em;
+  color: var(--color-titulo);
+  margin-left: 5px;
+}
