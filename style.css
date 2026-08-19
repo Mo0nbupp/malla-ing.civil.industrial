@@ -1154,6 +1154,157 @@ p {
   transform: translateY(-1px);
 }
 
+/* =========================
+   PANEL DE PROGRESO
+========================= */
+
+.panel-progreso {
+  width: min(900px, 92%);
+
+  margin: 8px auto 25px auto;
+
+  padding: 17px 20px;
+
+  background: var(--color-semestre);
+
+  border: 1px solid var(--color-borde);
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 4px 14px rgba(80, 60, 110, 0.07);
+
+  color: var(--color-texto);
+}
+
+
+/* =========================
+   TÍTULO DEL PROGRESO
+========================= */
+
+.progreso-titulo {
+  color: var(--color-titulo);
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  margin-bottom: 13px;
+
+  text-align: left;
+}
+
+
+/* =========================
+   DATOS DEL PROGRESO
+========================= */
+
+.progreso-datos {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 12px;
+}
+
+
+/* =========================
+   CADA DATO
+========================= */
+
+.progreso-item {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+  color: var(--color-secundario);
+
+  font-size: 11px;
+}
+
+.progreso-item strong {
+  color: var(--color-titulo);
+
+  font-size: 17px;
+}
+
+
+/* =========================
+   BARRA DE PROGRESO
+========================= */
+
+.barra-progreso-contenedor {
+  width: 100%;
+
+  height: 10px;
+
+  margin-top: 16px;
+
+  background: var(--color-bloqueado);
+
+  border-radius: 20px;
+
+  overflow: hidden;
+}
+
+.barra-progreso {
+  height: 100%;
+
+  background: var(--color-aprobado);
+
+  border-radius: 20px;
+
+  transition:
+    width 0.4s ease;
+}
+
+
+/* =========================
+   PORCENTAJE
+========================= */
+
+.progreso-porcentaje {
+  margin-top: 7px;
+
+  text-align: right;
+
+  color: var(--color-secundario);
+
+  font-size: 11px;
+}
+
+
+/* =========================
+   PROGRESO EN CELULAR
+========================= */
+
+@media (max-width: 700px) {
+
+  .panel-progreso {
+    width: 96%;
+
+    padding: 15px;
+  }
+
+  .progreso-datos {
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 10px;
+  }
+
+  .progreso-titulo {
+    font-size: 16px;
+  }
+
+  .progreso-item strong {
+    font-size: 15px;
+  }
+
+}
 
 /* =========================
    MENÚ SUPERIOR
