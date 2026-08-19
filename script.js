@@ -21,9 +21,22 @@ const supabaseClient =
 // INFORMACIÓN DE LA MALLA
 // =====================================================
 
-const VERSION_MALLA = "v1.7";
+const VERSION_MALLA = "v1.8";
 
 const HISTORIAL_VERSIONES = [
+  {
+    version: "v1.8",
+    titulo: "Panel de progreso y favicon",
+    cambios: [
+      "Nuevo panel de progreso personal",
+      "Contador de ramos aprobados",
+      "Contador de ramos pendientes",
+      "Registro de ramos repetidos",
+      "Cálculo del promedio general",
+      "Barra de progreso de la carrera",
+      "Nuevo favicon para la pagina"
+    ]
+  },
   {
     version: "v1.7",
     titulo: "Sistema de sugerencias conectado",
@@ -707,6 +720,196 @@ function mostrarPromedio(promedio) {
 
 }
 
+// =====================================================
+// PANEL DE PROGRESO
+// =====================================================
+
+function calcularProgreso() {
+
+  const todosLosRamos =
+    semestres.flatMap(
+      sem => sem.ramos
+    );
+
+  const total =
+    todosLosRamos.length;
+
+  const aprobados =
+    todosLosRamos.filter(
+      ramo =>
+        ramo.estado === "aprobado"
+    ).length;
+
+  const pendientes =
+    total - aprobados;
+
+  const repetidos =
+    todosLosRamos.filter(
+      ramo =>
+        ramo.repetido === true
+    ).length;
+
+  const promedios =
+    todosLosRamos
+      .map(
+        ramo => ramo.promedio
+      )
+      .filter(
+        nota =>
+          typeof nota === "number" &&
+          !isNaN(nota)
+      );
+
+  let promedioGeneral = null;
+
+  if (promedios.length > 0) {
+
+    promedioGeneral =
+      promedios.reduce(
+        (total, nota) =>
+          total + nota,
+        0
+      ) / promedios.length;
+
+  }
+
+  const porcentaje =
+    total > 0
+      ? Math.round(
+          (aprobados / total) * 100
+        )
+      : 0;
+
+  return {
+    total,
+    aprobados,
+    pendientes,
+    repetidos,
+    promedioGeneral,
+    porcentaje
+  };
+
+}
+
+
+// =====================================================
+// CREAR PANEL DE PROGRESO
+// =====================================================
+
+function crearPanelProgreso() {
+
+  const existente =
+    document.querySelector(
+      ".panel-progreso"
+    );
+
+  if (existente) {
+    existente.remove();
+  }
+
+  const progreso =
+    calcularProgreso();
+
+  const panel =
+    document.createElement("div");
+
+  panel.className =
+    "panel-progreso";
+
+  panel.innerHTML = `
+
+    <div class="progreso-titulo">
+      💜 Mi progreso
+    </div>
+
+    <div class="progreso-datos">
+
+      <div class="progreso-item">
+        <span>Ramos aprobados</span>
+        <strong>
+          ${progreso.aprobados} / ${progreso.total}
+        </strong>
+      </div>
+
+      <div class="progreso-item">
+        <span>Ramos pendientes</span>
+        <strong>
+          ${progreso.pendientes}
+        </strong>
+      </div>
+
+      <div class="progreso-item">
+        <span>Ramos repetidos</span>
+        <strong>
+          ${progreso.repetidos}
+        </strong>
+      </div>
+
+      <div class="progreso-item">
+        <span>Promedio general</span>
+        <strong>
+          ${
+            progreso.promedioGeneral !== null
+              ? progreso.promedioGeneral
+                  .toFixed(2)
+                  .replace(".", ",")
+              : "—"
+          }
+        </strong>
+      </div>
+
+    </div>
+
+    <div class="barra-progreso-contenedor">
+
+      <div
+        class="barra-progreso"
+        style="width: ${progreso.porcentaje}%"
+      ></div>
+
+    </div>
+
+    <div class="progreso-porcentaje">
+      ${progreso.porcentaje}% de la carrera completada
+    </div>
+
+  `;
+
+  const menu =
+    document.querySelector(
+      ".menu-superior"
+    );
+
+  if (menu) {
+
+    menu.insertAdjacentElement(
+      "afterend",
+      panel
+    );
+
+  } else {
+
+    const titulo =
+      document.querySelector("h1");
+
+    if (titulo) {
+
+      titulo.insertAdjacentElement(
+        "afterend",
+        panel
+      );
+
+    } else {
+
+      document.body.prepend(
+        panel
+      );
+
+    }
+
+  }
+
+}
 
 // =====================================================
 // RENDERIZAR MALLA
@@ -715,6 +918,8 @@ function mostrarPromedio(promedio) {
 function renderMalla() {
 
   malla.innerHTML = "";
+
+  crearPanelProgreso();
 
   for (
     let i = 0;
@@ -2573,5 +2778,7 @@ aplicarTema(
 );
 
 crearMenuSuperior();
+
+crearPanelProgreso();
 
 renderMalla();
