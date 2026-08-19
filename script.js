@@ -819,7 +819,7 @@ function crearPanelProgreso() {
   panel.innerHTML = `
 
     <div class="progreso-titulo">
-      💜 Mi progreso
+      Mi progreso <span class="corazon-lineart">♡</span>
     </div>
 
     <div class="progreso-datos">
