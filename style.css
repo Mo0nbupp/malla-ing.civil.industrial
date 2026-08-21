@@ -1,1433 +1,1639 @@
-/* =========================
-   CONFIGURACIÓN GENERAL
-========================= */
+/* =========================================================
+   CALCULADORA DE PROMEDIOS
+   DISEÑO PRINCIPAL
+========================================================= */
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+
+    --color-principal: #b79ced;
+    --color-principal-hover: #a887e5;
+
+    --color-fondo: #f8f6fc;
+    --color-superficie: #ffffff;
+
+    --color-texto: #3f3a48;
+    --color-texto-suave: #777080;
+
+    --color-borde: #e8e1f1;
+
+    --color-exito: #8bc7a3;
+    --color-advertencia: #e6c47a;
+    --color-peligro: #df8d9b;
+
+    --sombra-suave:
+        0 8px 25px rgba(80, 60, 100, 0.08);
+
+    --radio-grande: 18px;
+    --radio-mediano: 13px;
+
+    --transicion: 0.2s ease;
+}
+
+
+/* =========================================================
+   TEMAS
+========================================================= */
+
+body.tema-lila {
+
+    --color-principal: #b79ced;
+    --color-principal-hover: #a887e5;
+
+    --color-fondo: #f8f6fc;
+
+}
+
+
+body.tema-verde {
+
+    --color-principal: #9bc7a8;
+    --color-principal-hover: #82b993;
+
+    --color-fondo: #f5faf6;
+
+}
+
+
+body.tema-celeste {
+
+    --color-principal: #91c7df;
+    --color-principal-hover: #79b7d3;
+
+    --color-fondo: #f4f9fc;
+
+}
+
+
+body.tema-rosa {
+
+    --color-principal: #e5a9c0;
+    --color-principal-hover: #d993ae;
+
+    --color-fondo: #fcf6f8;
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
 
 * {
-  box-sizing: border-box;
+
+    box-sizing: border-box;
+
 }
+
+
+html {
+
+    scroll-behavior: smooth;
+
+}
+
 
 body {
-  font-family: Arial, sans-serif;
 
-  background: linear-gradient(
-    135deg,
-    var(--color-fondo-1),
-    var(--color-fondo-2)
-  );
+    margin: 0;
 
-  margin: 0;
-  padding: 30px;
+    min-height: 100vh;
 
-  color: var(--color-texto);
-}
-
-
-/* =========================
-   TÍTULO PRINCIPAL
-========================= */
-
-h1 {
-  text-align: center;
-  font-size: 36px;
-
-  color: var(--color-titulo);
-
-  margin: 0 0 6px 0;
-  font-weight: bold;
-}
-
-p {
-  text-align: center;
-  font-size: 15px;
-
-  color: var(--color-secundario);
-
-  margin-top: 0;
-  margin-bottom: 28px;
-  font-style: italic;
-}
-
-
-/* =========================
-   MALLA COMPLETA
-========================= */
-
-#malla {
-  display: flex;
-  gap: 25px;
-
-  overflow-x: auto;
-  overflow-y: visible;
-
-  padding: 10px 10px 25px 10px;
-
-  scroll-behavior: smooth;
-
-  position: relative;
-}
-
-
-/* =========================
-   BARRA DE SCROLL
-========================= */
-
-#malla::-webkit-scrollbar {
-  height: 9px;
-}
-
-#malla::-webkit-scrollbar-track {
-  background: var(--color-fondo-2);
-  border-radius: 20px;
-}
-
-#malla::-webkit-scrollbar-thumb {
-  background: var(--color-scroll);
-  border-radius: 20px;
-}
-
-#malla::-webkit-scrollbar-thumb:hover {
-  background: var(--color-scroll-hover);
-}
-
-
-/* =========================
-   AÑOS
-========================= */
-
-.año {
-  background: var(--color-año);
-
-  min-width: 310px;
-
-  padding: 20px;
-
-  border-radius: 22px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  box-shadow:
-    0 5px 18px rgba(90, 65, 130, 0.08);
-
-  border: 1px solid var(--color-borde);
-
-  flex-shrink: 0;
-
-  position: relative;
-
-  overflow: visible;
-}
-
-
-/* =========================
-   TÍTULO DEL AÑO
-========================= */
-
-.año > h2 {
-  margin: 0 0 4px 0;
-
-  color: var(--color-titulo);
-
-  font-size: 21px;
-
-  text-align: center;
-}
-
-
-/* =========================
-   PROMEDIO ANUAL
-========================= */
-
-.promedio-año {
-  font-size: 12px;
-
-  color: var(--color-secundario);
-
-  margin-bottom: 16px;
-
-  text-align: center;
-}
-
-.promedio-año strong {
-  font-size: 13px;
-
-  color: var(--color-titulo);
-}
-
-
-/* =========================
-   SEMESTRES
-========================= */
-
-.semestres {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 16px;
-
-  width: 100%;
-
-  overflow: visible;
-
-  position: relative;
-}
-
-
-/* =========================
-   TARJETA SEMESTRE
-========================= */
-
-.semestre {
-  background: var(--color-semestre);
-
-  padding: 15px;
-
-  border-radius: 18px;
-
-  box-shadow:
-    0 3px 12px rgba(80, 60, 110, 0.07);
-
-  width: 100%;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  border: 1px solid var(--color-borde);
-
-  position: relative;
-
-  overflow: visible;
-}
-
-
-/* =========================
-   TÍTULO SEMESTRE
-========================= */
-
-.semestre h3 {
-  text-align: center;
-
-  color: var(--color-titulo);
-
-  margin: 0 0 3px 0;
-
-  font-size: 17px;
-}
-
-
-/* =========================
-   PROMEDIO SEMESTRAL
-========================= */
-
-.promedio-semestre {
-  font-size: 12px;
-
-  color: var(--color-secundario);
-
-  margin-bottom: 8px;
-
-  text-align: center;
-}
-
-.promedio-semestre strong {
-  color: var(--color-titulo);
-
-  font-size: 13px;
-}
-
-
-/* =========================
-   RAMOS
-========================= */
-
-.ramo {
-  position: relative;
-
-  border-radius: 13px;
-
-  padding: 11px 12px;
-
-  margin-top: 8px;
-
-  font-size: 14px;
-
-  text-align: center;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
-
-  width: 92%;
-
-  box-sizing: border-box;
-
-  /*
-    IMPORTANTE:
-    Permite que el menú pueda
-    colocarse encima de otros ramos.
-  */
-  z-index: 1;
-}
-
-
-/* =========================
-   RAMO CON MENÚ ABIERTO
-========================= */
-
-.ramo:has(.menu-ramo) {
-  z-index: 99999;
-}
-
-
-/* =========================
-   EFECTO AL PASAR EL MOUSE
-========================= */
-
-.ramo:hover {
-  transform: translateY(-2px);
-
-  box-shadow:
-    0 4px 10px rgba(90, 65, 130, 0.12);
-}
-
-
-/* =========================
-   NOMBRE DEL RAMO
-========================= */
-
-.nombre-ramo {
-  width: 100%;
-
-  line-height: 1.25;
-}
-
-
-/* =========================
-   CONTENIDO DEL RAMO
-========================= */
-
-.contenido-ramo {
-  position: relative;
-
-  width: 100%;
-}
-
-
-/* =========================
-   NOTA DEL RAMO
-========================= */
-
-.nota-ramo {
-  font-size: 11px;
-
-  margin-top: 5px;
-
-  opacity: 0.8;
-
-  font-weight: normal;
-
-  text-decoration: none;
-}
-
-
-/* =========================
-   PROMEDIO ANTERIOR
-========================= */
-
-.promedio-anterior {
-  margin-top: 5px;
-
-  font-size: 10px;
-
-  color: var(--color-secundario);
-
-  font-style: italic;
-
-  opacity: 0.9;
-}
-
-
-/* =========================
-   HISTORIAL
-========================= */
-
-.historial-ramo {
-  margin-top: 4px;
-
-  font-size: 10px;
-
-  color: var(--color-secundario);
-
-  font-style: italic;
-}
-
-
-/* =========================
-   RAMOS DISPONIBLES
-========================= */
-
-.ramo.disponible {
-  background-color: var(--color-disponible);
-
-  color: var(--color-disponible-texto);
-}
-
-.ramo.disponible:hover {
-  background-color: var(--color-disponible);
-
-  filter: brightness(0.96);
-}
-
-
-/* =========================
-   RAMOS APROBADOS
-========================= */
-
-.ramo.aprobado {
-  background-color: var(--color-aprobado);
-
-  color: var(--color-aprobado-texto);
-
-  text-decoration: line-through;
-
-  font-weight: bold;
-}
-
-.ramo.aprobado .nota-ramo {
-  text-decoration: none;
-}
-
-.ramo.aprobado .historial-ramo {
-  text-decoration: none;
-}
-
-
-/* =========================
-   RAMOS BLOQUEADOS
-========================= */
-
-.ramo.bloqueado {
-  background-color: var(--color-bloqueado);
-
-  color: var(--color-bloqueado-texto);
-
-  cursor: not-allowed;
-
-  opacity: 0.65;
-
-  box-shadow: none;
-}
-
-
-/* =========================
-   BOTÓN DE LOS TRES PUNTITOS
-========================= */
-
-.boton-menu-ramo {
-  position: absolute;
-
-  top: 6px;
-
-  right: 6px;
-
-  width: 25px;
-
-  height: 25px;
-
-  padding: 0;
-
-  margin: 0;
-
-  border: none;
-
-  border-radius: 8px;
-
-  background: var(--color-titulo);
-
-  color: #ffffff;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  font-size: 15px;
-
-  line-height: 1;
-
-  cursor: pointer;
-
-  z-index: 20;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
-}
-
-.boton-menu-ramo:hover {
-  background: var(--color-secundario);
-
-  transform: scale(1.05);
-}
-
-.boton-menu-ramo:active {
-  transform: scale(0.95);
-}
-
-
-/* =========================
-   MINI MENÚ DEL RAMO
-========================= */
-
-.menu-ramo {
-  position: absolute;
-
-  top: calc(100% + 8px);
-
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  width: 190px;
-
-  padding: 10px;
-
-  background: var(--color-menu);
-
-  border: 1px solid var(--color-borde);
-
-  border-radius: 14px;
-
-  box-shadow:
-    0 10px 28px rgba(70, 50, 100, 0.20);
-
-  /*
-    MUY IMPORTANTE:
-    Hace que aparezca sobre
-    los demás elementos.
-  */
-  z-index: 999999;
-
-  overflow: visible;
-
-  animation: aparecerMenu 0.15s ease;
-}
-
-
-/* =========================
-   ANIMACIÓN DEL MINI MENÚ
-========================= */
-
-@keyframes aparecerMenu {
-
-  from {
-    opacity: 0;
-
-    transform:
-      translateX(-50%)
-      translateY(-5px);
-  }
-
-  to {
-    opacity: 1;
-
-    transform:
-      translateX(-50%)
-      translateY(0);
-  }
-
-}
-
-
-/* =========================
-   TÍTULO DEL MINI MENÚ
-========================= */
-
-.menu-ramo-titulo {
-  padding: 5px 7px 8px 7px;
-
-  margin-bottom: 5px;
-
-  color: var(--color-titulo);
-
-  font-size: 12px;
-
-  font-weight: bold;
-
-  text-align: center;
-
-  border-bottom: 1px solid var(--color-borde);
-}
-
-
-/* =========================
-   OPCIONES DEL MINI MENÚ
-========================= */
-
-.menu-ramo button {
-  display: block;
-
-  width: 100%;
-
-  padding: 8px 10px;
-
-  margin: 4px 0;
-
-  border: none;
-
-  border-radius: 9px;
-
-  background: var(--color-boton);
-
-  color: var(--color-secundario);
-
-  font-size: 12px;
-
-  cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    transform 0.15s ease;
-}
-
-.menu-ramo button:hover {
-  background: var(--color-boton-hover);
-
-  transform: translateX(2px);
-}
-
-.menu-ramo button:active {
-  transform: scale(0.98);
-}
-
-
-/* =========================
-   BOTÓN PARA QUITAR REPETICIÓN
-========================= */
-
-.menu-ramo .boton-eliminar-repetido {
-  background: var(--color-boton);
-
-  color: var(--color-secundario);
-}
-
-.menu-ramo .boton-eliminar-repetido:hover {
-  background: var(--color-boton-hover);
-}
+    background: var(--color-fondo);
 
+    color: var(--color-texto);
 
-/* =========================
-   INPUT PROMEDIO
-========================= */
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 
-.input-promedio {
-  width: 75px;
+    transition:
+        background var(--transicion),
+        color var(--transicion);
 
-  margin-top: 7px;
-
-  padding: 5px 7px;
-
-  border: 1px solid var(--color-secundario);
-
-  border-radius: 8px;
-
-  background: var(--color-semestre);
-
-  color: var(--color-texto);
-
-  font-size: 12px;
-
-  text-align: center;
-
-  outline: none;
-
-  box-sizing: border-box;
-}
-
-.input-promedio:focus {
-  border-color: var(--color-titulo);
-
-  box-shadow:
-    0 0 0 3px rgba(106, 79, 163, 0.12);
-}
-
-
-/* =========================
-   ANIMACIÓN PULSE
-========================= */
-
-@keyframes pulse {
-
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.06);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-
-}
-
-.ramo.pulse {
-  animation: pulse 0.4s ease;
-}
-
-
-/* =========================
-   MARCA DE RAMO REPETIDO
-========================= */
-
-/*
-   El símbolo queda separado
-   del nombre y aparece como
-   una pequeña marca.
-*/
-
-.simbolo-repetido {
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  margin-left: 6px;
-
-  width: 19px;
-
-  height: 19px;
-
-  border-radius: 50%;
-
-  background: var(--color-simbolo);
-
-  color: var(--color-simbolo-texto);
-
-  font-size: 11px;
-
-  font-weight: bold;
-
-  vertical-align: middle;
-
-  text-decoration: none;
-
-  line-height: 1;
-}
-
-
-/*
-   Si el JS utiliza la clase
-   .repetido directamente.
-*/
-
-.ramo.repetido::after {
-  content: none;
-}
-
-
-/* =========================
-   CAJITA DE INFORMACIÓN
-========================= */
-
-.leyenda {
-  max-width: 900px;
-
-  margin: 30px auto;
-
-  padding: 18px 20px;
-
-  background: var(--color-semestre);
-
-  border: 1px solid var(--color-borde);
-
-  border-radius: 18px;
-
-  box-shadow:
-    0 4px 14px rgba(80, 60, 110, 0.06);
-}
-
-.leyenda h3 {
-  margin-top: 0;
-
-  text-align: center;
-
-  color: var(--color-titulo);
-
-  font-size: 17px;
-}
-
-.leyenda-item {
-  display: flex;
-
-  align-items: center;
-
-  gap: 9px;
-
-  margin: 8px 0;
-
-  font-size: 12px;
-
-  color: var(--color-texto);
-}
-
-
-/* =========================
-   CÍRCULOS DE LA LEYENDA
-========================= */
-
-.leyenda-color {
-  width: 18px;
-
-  height: 18px;
-
-  border-radius: 6px;
-
-  flex-shrink: 0;
-}
-
-.leyenda-disponible {
-  background: var(--color-disponible);
-}
-
-.leyenda-aprobado {
-  background: var(--color-aprobado);
-}
-
-.leyenda-bloqueado {
-  background: var(--color-bloqueado);
-}
-
-.leyenda-repetido {
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  width: 18px;
-
-  height: 18px;
-
-  border-radius: 50%;
-
-  background: var(--color-simbolo);
-
-  color: var(--color-simbolo-texto);
-
-  font-size: 11px;
-}
-
-
-/* =========================
-   VERSIÓN
-========================= */
-
-.version {
-  position: fixed;
-
-  bottom: 10px;
-
-  left: 15px;
-
-  font-size: 11px;
-
-  color: var(--color-secundario);
-
-  opacity: 0.55;
-
-  pointer-events: none;
-}
-
-
-/* =========================
-   WATERMARK
-========================= */
-
-.watermark {
-  position: fixed;
-
-  bottom: 10px;
-
-  right: 15px;
-
-  font-size: 11px;
-
-  color: var(--color-secundario);
-
-  opacity: 0.5;
-
-  font-style: italic;
-
-  pointer-events: none;
-}
-
-
-/* =========================
-   PANELES DE INFORMACIÓN
-========================= */
-
-.panel-informacion {
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 1000000;
-
-  background: rgba(60, 45, 80, 0.28);
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  padding: 20px;
-
-  animation: aparecerPanel 0.18s ease;
-}
-
-
-/* =========================
-   CONTENIDO DEL PANEL
-========================= */
-
-.panel-contenido {
-  position: relative;
-
-  width: min(520px, 95vw);
-
-  max-height: 85vh;
-
-  overflow-y: auto;
-
-  padding: 25px;
-
-  background: var(--color-semestre);
-
-  border: 1px solid var(--color-borde);
-
-  border-radius: 20px;
-
-  box-shadow:
-    0 15px 45px rgba(65, 45, 90, 0.22);
-}
-
-.panel-contenido h2 {
-  margin-top: 0;
-
-  color: var(--color-titulo);
-
-  text-align: center;
-
-  font-size: 21px;
-}
-
-.panel-contenido p {
-  color: var(--color-texto);
-
-  font-size: 13px;
-
-  line-height: 1.5;
-
-  font-style: normal;
-}
-
-
-/* =========================
-   BOTÓN CERRAR PANEL
-========================= */
-
-.cerrar-panel {
-  position: absolute;
-
-  top: 10px;
-
-  right: 12px;
-
-  width: 30px;
-
-  height: 30px;
-
-  border: none;
-
-  border-radius: 9px;
-
-  background: var(--color-boton);
-
-  color: var(--color-secundario);
-
-  font-size: 20px;
-
-  cursor: pointer;
-}
-
-.cerrar-panel:hover {
-  background: var(--color-boton-hover);
-}
-
-
-/* =========================
-   ELEMENTOS DE EXPLICACIÓN
-========================= */
-
-.explicacion-item {
-  display: flex;
-
-  align-items: center;
-
-  gap: 12px;
-
-  margin: 12px 0;
-}
-
-.explicacion-item p {
-  margin: 3px 0 0 0;
-
-  text-align: left;
-
-  font-size: 12px;
-}
-
-.explicacion-item strong {
-  color: var(--color-titulo);
-
-  font-size: 13px;
-}
-
-
-/* =========================
-   EJEMPLOS DE COLORES
-========================= */
-
-.ejemplo {
-  width: 38px;
-
-  height: 30px;
-
-  flex-shrink: 0;
-
-  border-radius: 8px;
-}
-
-.ejemplo.disponible {
-  background: var(--color-disponible);
-}
-
-.ejemplo.aprobado {
-  background: var(--color-aprobado);
-}
-
-.ejemplo.bloqueado {
-  background: var(--color-bloqueado);
-}
-
-.ejemplo.simbolo {
-  width: 30px;
-
-  height: 30px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background: var(--color-simbolo);
-
-  color: var(--color-simbolo-texto);
-
-  font-size: 14px;
-}
-
-
-/* =========================
-   INSTRUCCIONES
-========================= */
-
-.instruccion {
-  text-align: left !important;
-
-  margin: 8px 0 !important;
-
-  font-style: normal !important;
-
-  font-size: 12px !important;
-
-  color: var(--color-texto) !important;
-}
-
-
-/* =========================
-   TEXTO PEQUEÑO
-========================= */
-
-.texto-pequeno {
-  font-size: 11px !important;
-
-  color: var(--color-secundario) !important;
-
-  opacity: 0.8;
-}
-
-
-/* =========================
-   SUGERENCIAS
-========================= */
-
-#texto-sugerencia {
-  width: 100%;
-
-  min-height: 130px;
-
-  resize: vertical;
-
-  padding: 12px;
-
-  border: 1px solid var(--color-borde);
-
-  border-radius: 12px;
-
-  background: var(--color-fondo-1);
-
-  color: var(--color-texto);
-
-  font-family: Arial, sans-serif;
-
-  font-size: 13px;
-
-  outline: none;
-}
-
-#texto-sugerencia:focus {
-  border-color: var(--color-secundario);
-
-  box-shadow:
-    0 0 0 3px rgba(169, 139, 210, 0.12);
-}
-
-
-/* =========================
-   BOTÓN ENVIAR SUGERENCIA
-========================= */
-
-.boton-enviar {
-  width: 100%;
-
-  margin-top: 12px;
-
-  padding: 10px;
-
-  border: none;
-
-  border-radius: 10px;
-
-  background: var(--color-titulo);
-
-  color: #ffffff;
-
-  font-size: 13px;
-
-  cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    transform 0.15s ease;
-}
-
-.boton-enviar:hover {
-  background: var(--color-secundario);
-
-  transform: translateY(-1px);
 }
 
-/* =========================
-   PANEL DE PROGRESO
-========================= */
 
-.panel-progreso {
-  width: min(900px, 92%);
+/* =========================================================
+   APP
+========================================================= */
 
-  margin: 8px auto 25px auto;
+.app {
 
-  padding: 17px 20px;
+    width: 100%;
 
-  background: var(--color-semestre);
+    min-height: 100vh;
 
-  border: 1px solid var(--color-borde);
-
-  border-radius: 18px;
-
-  box-shadow:
-    0 4px 14px rgba(80, 60, 110, 0.07);
-
-  color: var(--color-texto);
 }
 
 
-/* =========================
-   TÍTULO DEL PROGRESO
-========================= */
+/* =========================================================
+   PANTALLAS
+========================================================= */
 
-.progreso-titulo {
-  color: var(--color-titulo);
+.pantalla {
 
-  font-size: 18px;
+    display: none;
 
-  font-weight: bold;
+    width: 100%;
 
-  margin-bottom: 13px;
+    min-height: 100vh;
 
-  text-align: left;
 }
-
 
-/* =========================
-   DATOS DEL PROGRESO
-========================= */
 
-.progreso-datos {
-  display: grid;
+.pantalla.activa {
 
-  grid-template-columns:
-    repeat(4, 1fr);
+    display: block;
 
-  gap: 12px;
 }
 
 
-/* =========================
-   CADA DATO
-========================= */
+/* =========================================================
+   MENÚ PRINCIPAL
+========================================================= */
 
-.progreso-item {
-  display: flex;
+.menu-principal {
 
-  flex-direction: column;
+    position: sticky;
 
-  gap: 3px;
+    top: 0;
 
-  color: var(--color-secundario);
+    z-index: 1000;
 
-  font-size: 11px;
-}
-
-.progreso-item strong {
-  color: var(--color-titulo);
-
-  font-size: 17px;
-}
+    width: 100%;
 
+    background:
+        rgba(255, 255, 255, 0.94);
 
-/* =========================
-   BARRA DE PROGRESO
-========================= */
+    border-bottom:
+        1px solid var(--color-borde);
 
-.barra-progreso-contenedor {
-  width: 100%;
+    box-shadow:
+        0 4px 18px rgba(70, 50, 90, 0.06);
 
-  height: 10px;
+    backdrop-filter: blur(12px);
 
-  margin-top: 16px;
-
-  background: var(--color-bloqueado);
-
-  border-radius: 20px;
-
-  overflow: hidden;
 }
 
-.barra-progreso {
-  height: 100%;
 
-  background: var(--color-aprobado);
+.menu-contenido {
 
-  border-radius: 20px;
+    width: min(1150px, 92%);
 
-  transition:
-    width 0.4s ease;
-}
+    min-height: 70px;
 
+    margin: auto;
 
-/* =========================
-   PORCENTAJE
-========================= */
+    display: flex;
 
-.progreso-porcentaje {
-  margin-top: 7px;
+    align-items: center;
 
-  text-align: right;
+    justify-content: space-between;
 
-  color: var(--color-secundario);
+    gap: 25px;
 
-  font-size: 11px;
 }
-
 
-/* =========================
-   PROGRESO EN CELULAR
-========================= */
 
-@media (max-width: 700px) {
+/* LOGO */
 
-  .panel-progreso {
-    width: 96%;
+.menu-logo {
 
-    padding: 15px;
-  }
+    display: flex;
 
-  .progreso-datos {
-    grid-template-columns:
-      repeat(2, 1fr);
+    align-items: center;
 
     gap: 10px;
-  }
 
-  .progreso-titulo {
-    font-size: 16px;
-  }
+    color: var(--color-texto);
 
-  .progreso-item strong {
-    font-size: 15px;
-  }
+    text-decoration: none;
 
-}
+    font-weight: 700;
 
-/* =========================
-   MENÚ SUPERIOR
-========================= */
+    font-size: 18px;
 
-.menu-superior {
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  gap: 8px;
-
-  margin: 12px auto 25px auto;
-
-  flex-wrap: wrap;
-
-  position: relative;
-
-  z-index: 50;
-}
-
-.menu-superior button {
-  border: 1px solid var(--color-borde);
-
-  background: var(--color-boton);
-
-  color: var(--color-secundario);
-
-  padding: 8px 13px;
-
-  border-radius: 10px;
-
-  font-size: 12px;
-
-  cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    transform 0.15s ease;
-}
-
-.menu-superior button:hover {
-  background: var(--color-boton-hover);
-
-  transform: translateY(-1px);
-}
-
-.menu-superior button:active {
-  transform: scale(0.97);
-}
-
-
-/* =========================
-   ANIMACIÓN DE PANELES
-========================= */
-
-@keyframes aparecerPanel {
-
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+    white-space: nowrap;
 
 }
 
 
-/* =========================
-   RESPONSIVE
-========================= */
+.menu-logo-icono {
 
-@media (max-width: 700px) {
+    width: 38px;
 
-  body {
-    padding: 18px;
-  }
+    height: 38px;
 
-  h1 {
-    font-size: 29px;
-  }
+    border-radius: 11px;
 
-  #malla {
-    gap: 18px;
+    display: flex;
 
-    padding-left: 5px;
+    align-items: center;
 
-    padding-right: 5px;
-  }
+    justify-content: center;
 
-  .año {
-    min-width: 285px;
+    background: var(--color-principal);
 
-    padding: 16px;
-  }
+    color: white;
 
-  .menu-ramo {
-    width: 180px;
-  }
+    font-size: 18px;
 
-  .menu-superior {
+}
+
+
+/* LINKS */
+
+.menu-links {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 5px;
+
+}
+
+
+.menu-links button {
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--color-texto-suave);
+
+    padding: 10px 13px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background var(--transicion),
+        color var(--transicion),
+        transform var(--transicion);
+
+}
+
+
+.menu-links button:hover {
+
+    background:
+        color-mix(
+            in srgb,
+            var(--color-principal) 15%,
+            transparent
+        );
+
+    color: var(--color-texto);
+
+}
+
+
+.menu-links button.activo {
+
+    background:
+        color-mix(
+            in srgb,
+            var(--color-principal) 18%,
+            transparent
+        );
+
+    color: var(--color-texto);
+
+}
+
+
+/* BOTÓN DE TEMAS */
+
+.menu-temas {
+
+    position: relative;
+
+}
+
+
+.menu-temas > button {
+
+    display: flex;
+
+    align-items: center;
+
     gap: 6px;
-  }
 
-  .menu-superior button {
-    padding: 7px 10px;
+}
 
-    font-size: 11px;
-  }
 
-  .panel-contenido {
+/* =========================================================
+   ENCABEZADO PRINCIPAL
+========================================================= */
+
+.encabezado-principal {
+
+    width: min(1100px, 92%);
+
+    margin: 0 auto;
+
+    padding:
+        65px 0 35px;
+
+}
+
+
+.encabezado-principal h1 {
+
+    margin: 0 0 10px;
+
+    font-size: clamp(30px, 5vw, 44px);
+
+    letter-spacing: -1px;
+
+}
+
+
+.encabezado-principal p {
+
+    margin: 0;
+
+    color: var(--color-texto-suave);
+
+    font-size: 16px;
+
+}
+
+
+/* =========================================================
+   CONTENIDO
+========================================================= */
+
+.contenido {
+
+    width: min(1000px, 92%);
+
+    margin: auto;
+
+    padding:
+        40px 0 70px;
+
+}
+
+
+.contenido-centrado {
+
+    width: min(700px, 92%);
+
+    margin: auto;
+
+    padding:
+        55px 0 70px;
+
+}
+
+
+.contenido h1,
+.contenido-centrado h1 {
+
+    margin-top: 0;
+
+    margin-bottom: 12px;
+
+}
+
+
+.descripcion {
+
+    color: var(--color-texto-suave);
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   SECCIÓN RAMOS
+========================================================= */
+
+.seccion-ramos {
+
+    width: min(1100px, 92%);
+
+    margin: auto;
+
+    padding-bottom: 70px;
+
+}
+
+
+.titulo-seccion {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 22px;
+
+}
+
+
+.titulo-seccion h2 {
+
+    margin: 0;
+
+    font-size: 24px;
+
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+button {
+
+    font-family: inherit;
+
+}
+
+
+.boton-principal {
+
+    border: none;
+
+    background: var(--color-principal);
+
+    color: white;
+
+    padding: 12px 20px;
+
+    border-radius: 11px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background var(--transicion),
+        transform var(--transicion),
+        box-shadow var(--transicion);
+
+}
+
+
+.boton-principal:hover {
+
+    background: var(--color-principal-hover);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 14px
+        color-mix(
+            in srgb,
+            var(--color-principal) 25%,
+            transparent
+        );
+
+}
+
+
+.boton-secundario {
+
+    border: 1px solid var(--color-borde);
+
+    background: var(--color-superficie);
+
+    color: var(--color-texto);
+
+    padding: 11px 17px;
+
+    border-radius: 11px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background var(--transicion),
+        border-color var(--transicion),
+        transform var(--transicion);
+
+}
+
+
+.boton-secundario:hover {
+
+    border-color: var(--color-principal);
+
+    background:
+        color-mix(
+            in srgb,
+            var(--color-principal) 8%,
+            white
+        );
+
+    transform: translateY(-1px);
+
+}
+
+
+.boton-agregar {
+
+    border: none;
+
+    background: var(--color-principal);
+
+    color: white;
+
+    padding: 11px 17px;
+
+    border-radius: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background var(--transicion),
+        transform var(--transicion);
+
+}
+
+
+.boton-agregar:hover {
+
+    background: var(--color-principal-hover);
+
+    transform: translateY(-1px);
+
+}
+
+
+/* =========================================================
+   BARRA SUPERIOR
+========================================================= */
+
+.barra-superior {
+
+    width: min(1100px, 92%);
+
+    margin: auto;
+
+    padding-top: 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+}
+
+
+.barra-superior button {
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--color-texto-suave);
+
+    padding: 9px 0;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+}
+
+
+.barra-superior button:hover {
+
+    color: var(--color-texto);
+
+}
+
+
+/* =========================================================
+   TARJETAS
+========================================================= */
+
+.tarjeta {
+
+    background: var(--color-superficie);
+
+    border: 1px solid var(--color-borde);
+
+    border-radius: var(--radio-grande);
+
+    padding: 25px;
+
+    margin-bottom: 20px;
+
+    box-shadow: var(--sombra-suave);
+
+}
+
+
+.tarjeta h2 {
+
+    margin-top: 0;
+
+    margin-bottom: 20px;
+
+    font-size: 19px;
+
+}
+
+
+/* =========================================================
+   RAMOS
+========================================================= */
+
+#lista-ramos {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(250px, 1fr));
+
+    gap: 17px;
+
+}
+
+
+.ramo-card {
+
+    position: relative;
+
+    background: var(--color-superficie);
+
+    border: 1px solid var(--color-borde);
+
+    border-radius: var(--radio-grande);
+
+    padding: 22px;
+
+    min-height: 165px;
+
+    cursor: pointer;
+
+    box-shadow: var(--sombra-suave);
+
+    transition:
+        transform var(--transicion),
+        box-shadow var(--transicion),
+        border-color var(--transicion);
+
+}
+
+
+.ramo-card:hover {
+
+    transform: translateY(-3px);
+
+    border-color: var(--color-principal);
+
+    box-shadow:
+        0 12px 30px
+        rgba(80, 60, 100, 0.11);
+
+}
+
+
+.ramo-card h3 {
+
+    margin: 0 0 8px;
+
+    font-size: 18px;
+
+}
+
+
+.ramo-card p {
+
+    margin: 0;
+
+    color: var(--color-texto-suave);
+
+    font-size: 13px;
+
+    line-height: 1.4;
+
+    max-width: 180px;
+
+}
+
+
+.ramo-promedio {
+
+    position: absolute;
+
+    right: 20px;
+
+    bottom: 18px;
+
+    width: 55px;
+
+    height: 55px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--color-principal) 20%,
+            white
+        );
+
+    color: var(--color-texto);
+
+    font-weight: 800;
+
+    font-size: 15px;
+
+}
+
+
+/* =========================================================
+   SIN RAMOS
+========================================================= */
+
+.sin-ramos {
+
+    padding: 40px 25px;
+
+    text-align: center;
+
+    background: var(--color-superficie);
+
+    border:
+        1px dashed var(--color-borde);
+
+    border-radius: var(--radio-grande);
+
+}
+
+
+.sin-ramos p {
+
+    margin: 0 0 7px;
+
+    font-weight: 700;
+
+}
+
+
+.sin-ramos span {
+
+    color: var(--color-texto-suave);
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+
+label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+}
+
+
+input {
+
+    width: 100%;
+
+    padding: 12px 13px;
+
+    border:
+        1px solid var(--color-borde);
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: var(--color-texto);
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+        border-color var(--transicion),
+        box-shadow var(--transicion);
+
+}
+
+
+input:focus {
+
+    border-color: var(--color-principal);
+
+    box-shadow:
+        0 0 0 3px
+        color-mix(
+            in srgb,
+            var(--color-principal) 18%,
+            transparent
+        );
+
+}
+
+
+input:disabled {
+
+    background: #f2f0f4;
+
+    cursor: not-allowed;
+
+}
+
+
+.tarjeta input {
+
+    margin-bottom: 15px;
+
+}
+
+
+/* =========================================================
+   CAMPOS PORCENTAJE
+========================================================= */
+
+.campo-porcentaje {
+
+    margin-bottom: 20px;
+
+}
+
+
+.campo-con-unidad {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+}
+
+
+.campo-con-unidad input {
+
+    margin: 0;
+
+}
+
+
+.campo-con-unidad span {
+
+    font-weight: 700;
+
+    color: var(--color-texto-suave);
+
+}
+
+
+/* =========================================================
+   EVALUACIONES
+========================================================= */
+
+.bloque-evaluaciones {
+
+    margin-bottom: 25px;
+
+}
+
+
+.bloque-evaluaciones h2 {
+
+    margin-bottom: 15px;
+
+}
+
+
+.evaluacion-card {
+
+    background: var(--color-superficie);
+
+    border:
+        1px solid var(--color-borde);
+
+    border-radius: var(--radio-mediano);
+
+    padding: 18px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.evaluacion-card h3 {
+
+    margin: 0 0 12px;
+
+    font-size: 16px;
+
+}
+
+
+.evaluacion-info {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 20px;
+
+    color: var(--color-texto-suave);
+
+    font-size: 14px;
+
+}
+
+
+.evaluacion-info strong {
+
+    color: var(--color-texto);
+
+}
+
+
+.pendiente {
+
+    color: var(--color-advertencia) !important;
+
+}
+
+
+/* =========================================================
+   OPCIONES
+========================================================= */
+
+.opciones {
+
+    display: grid;
+
+    gap: 13px;
+
+    margin-top: 25px;
+
+}
+
+
+.opcion {
+
+    width: 100%;
+
+    padding: 17px 18px;
+
+    border:
+        1px solid var(--color-borde);
+
+    border-radius: 13px;
+
+    background: var(--color-superficie);
+
+    color: var(--color-texto);
+
+    text-align: left;
+
+    font-family: inherit;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        border-color var(--transicion),
+        background var(--transicion),
+        transform var(--transicion);
+
+}
+
+
+.opcion:hover {
+
+    border-color: var(--color-principal);
+
+    background:
+        color-mix(
+            in srgb,
+            var(--color-principal) 8%,
+            white
+        );
+
+    transform: translateY(-1px);
+
+}
+
+
+.opciones-radio {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 20px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.opciones-radio label {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 0;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+}
+
+
+.opciones-radio input {
+
+    width: auto;
+
+    margin: 0;
+
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.mensaje-validacion {
+
+    margin: 12px 0;
+
+    padding: 10px 13px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+
+}
+
+
+.mensaje-exito {
+
+    padding: 13px 15px;
+
+    border-radius: 10px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--color-exito) 17%,
+            white
+        );
+
+    color: #4d765d;
+
+}
+
+
+.mensaje-advertencia {
+
+    padding: 13px 15px;
+
+    border-radius: 10px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--color-advertencia) 18%,
+            white
+        );
+
+    color: #806a35;
+
+}
+
+
+.mensaje-peligro {
+
+    padding: 13px 15px;
+
+    border-radius: 10px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--color-peligro) 16%,
+            white
+        );
+
+    color: #8b4e59;
+
+}
+
+
+/* =========================================================
+   RESULTADO PRINCIPAL
+========================================================= */
+
+.resultado-principal {
+
+    text-align: center;
+
+    padding: 35px 25px;
+
+}
+
+
+.resultado-principal h2 {
+
+    margin-bottom: 10px;
+
+    color: var(--color-texto-suave);
+
+    font-size: 16px;
+
+}
+
+
+.promedio-grande {
+
+    font-size: 58px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    color: var(--color-principal);
+
+    margin: 12px 0;
+
+}
+
+
+#estado-ramo {
+
+    margin: 0;
+
+    color: var(--color-texto-suave);
+
+}
+
+
+/* =========================================================
+   EXAMEN
+========================================================= */
+
+.examen-configuracion {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.examen-configuracion > div {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.examen-configuracion label {
+
+    width: 100%;
+
+}
+
+
+.examen-configuracion input {
+
+    flex: 1;
+
+    margin: 0;
+
+}
+
+
+.examen-configuracion span {
+
+    color: var(--color-texto-suave);
+
+    font-weight: 700;
+
+}
+
+
+.resultado-examen {
+
+    margin-top: 18px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   ZONA PELIGRO
+========================================================= */
+
+.zona-peligro {
+
+    padding: 20px 0 50px;
+
+    text-align: center;
+
+}
+
+
+.boton-eliminar {
+
+    border: 1px solid
+        color-mix(
+            in srgb,
+            var(--color-peligro) 50%,
+            var(--color-borde)
+        );
+
+    background: transparent;
+
+    color: #a05461;
+
+    padding: 10px 17px;
+
+    border-radius: 10px;
+
+    font-family: inherit;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background var(--transicion),
+        color var(--transicion);
+
+}
+
+
+.boton-eliminar:hover {
+
+    background:
+        color-mix(
+            in srgb,
+            var(--color-peligro) 12%,
+            white
+        );
+
+}
+
+
+/* =========================================================
+   MODALES
+========================================================= */
+
+.modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 2000;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
     padding: 20px;
 
-    width: 94vw;
-  }
+    background:
+        rgba(40, 30, 50, 0.35);
+
+    backdrop-filter: blur(5px);
 
 }
 
-.corazon-lineart {
-  font-size: 1.1em;
-  color: var(--color-titulo);
-  margin-left: 5px;
+
+.modal.oculto {
+
+    display: none;
+
+}
+
+
+.modal-contenido {
+
+    width: min(520px, 100%);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: var(--color-superficie);
+
+    border-radius: 20px;
+
+    padding: 28px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(40, 30, 50, 0.2);
+
+}
+
+
+.modal-contenido h2 {
+
+    margin-top: 0;
+
+}
+
+
+.modal-contenido h3 {
+
+    font-size: 16px;
+
+}
+
+
+.modal-contenido p {
+
+    color: var(--color-texto-suave);
+
+    line-height: 1.5;
+
+}
+
+
+.checkbox {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 8px 0 18px;
+
+    font-weight: 500;
+
+}
+
+
+.checkbox input {
+
+    width: auto;
+
+    margin: 0;
+
+}
+
+
+.modal-botones {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 20px;
+
+}
+
+
+/* =========================================================
+   SUBNOTAS
+========================================================= */
+
+#seccion-subnotas {
+
+    margin-top: 20px;
+
+    padding-top: 15px;
+
+    border-top:
+        1px solid var(--color-borde);
+
+}
+
+
+/* =========================================================
+   OCULTO
+========================================================= */
+
+.oculto {
+
+    display: none !important;
+
+}
+
+
+/* =========================================================
+   WATERMARK
+========================================================= */
+
+.watermark {
+
+    position: fixed;
+
+    bottom: 10px;
+
+    right: 14px;
+
+    z-index: 900;
+
+    font-size: 10px;
+
+    color: var(--color-texto-suave);
+
+    opacity: 0.55;
+
+    pointer-events: none;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .menu-contenido {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        padding: 12px 0;
+
+        gap: 8px;
+
+    }
+
+
+    .menu-logo {
+
+        justify-content: center;
+
+    }
+
+
+    .menu-links {
+
+        justify-content: center;
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .menu-links button {
+
+        padding:
+            8px 10px;
+
+        font-size: 13px;
+
+    }
+
+
+    .encabezado-principal {
+
+        padding-top: 45px;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .titulo-seccion {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+
+    .titulo-seccion .boton-agregar {
+
+        width: 100%;
+
+    }
+
+
+    .contenido,
+    .contenido-centrado,
+    .seccion-ramos,
+    .encabezado-principal {
+
+        width: 92%;
+
+    }
+
+
+    .tarjeta {
+
+        padding: 20px;
+
+    }
+
+
+    .examen-configuracion {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .modal-contenido {
+
+        padding: 22px;
+
+    }
+
+
+    .modal-botones {
+
+        flex-direction: column;
+
+    }
+
+
+    .modal-botones button {
+
+        width: 100%;
+
+    }
+
+
+    .promedio-grande {
+
+        font-size: 50px;
+
+    }
+
 }
