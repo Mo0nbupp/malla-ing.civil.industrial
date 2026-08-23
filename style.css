@@ -1431,3 +1431,30 @@ p {
   color: var(--color-titulo);
   margin-left: 5px;
 }
+/* =====================================================
+   RAMO ENCONTRADO POR EL BUSCADOR
+   ===================================================== */
+
+.ramo-buscado {
+    animation: destacarRamo 1.8s ease;
+}
+
+@keyframes destacarRamo {
+
+    0% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.04);
+    }
+
+    50% {
+        transform: scale(1.04);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+}
