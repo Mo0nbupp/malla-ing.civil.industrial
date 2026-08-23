@@ -1549,3 +1549,73 @@ p {
     }
 
 }
+/* =====================================================
+   NAVEGACIÓN RÁPIDA POR AÑO
+   ===================================================== */
+
+.navegacion-años {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 12px auto 18px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.boton-año {
+
+    padding: 7px 13px;
+
+    border: 1px solid
+        var(--color-borde);
+
+    border-radius: 10px;
+
+    background:
+        var(--color-boton);
+
+    color:
+        var(--color-texto);
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        border-color 0.2s ease;
+
+}
+
+
+.boton-año:hover {
+
+    background:
+        var(--color-boton-hover);
+
+    border-color:
+        var(--color-secundario);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+.boton-año:active {
+
+    transform:
+        scale(0.96);
+
+}
