@@ -21,9 +21,23 @@ const supabaseClient =
 // INFORMACIÓN DE LA MALLA
 // =====================================================
 
-const VERSION_MALLA = "v1.8";
+const VERSION_MALLA = "v1.9";
 
 const HISTORIAL_VERSIONES = [
+    {
+    version: "v1.9",
+    titulo: "Búsqueda y navegación de la malla",
+    cambios: [
+      "Nuevo buscador de ramos",
+      "Búsqueda sin distinguir mayúsculas ni minúsculas",
+      "Búsqueda sin considerar tildes",
+      "Destacado visual de los ramos encontrados",
+      "Buscador adaptado al tema seleccionado",
+      "Navegación rápida entre años de la carrera",
+      "Información de prerrequisitos de cada ramo",
+      "Visualización de los ramos desbloqueados"
+    ]
+  },
   {
     version: "v1.8",
     titulo: "Panel de progreso y favicon",
