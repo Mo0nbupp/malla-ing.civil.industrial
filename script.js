@@ -2796,6 +2796,93 @@ function buscarRamoEnMalla() {
 }
 
 // =====================================================
+// NAVEGACIÓN RÁPIDA POR AÑO — v1.9
+// =====================================================
+
+function crearNavegacionAños() {
+
+  const existente =
+    document.querySelector(
+      ".navegacion-años"
+    );
+
+  if (existente) {
+    existente.remove();
+  }
+
+  const navegacion =
+    document.createElement("div");
+
+  navegacion.className =
+    "navegacion-años";
+
+
+  for (
+    let i = 0;
+    i < semestres.length;
+    i += 2
+  ) {
+
+    const numeroAño =
+      Math.floor(i / 2) + 1;
+
+    const boton =
+      document.createElement("button");
+
+    boton.type =
+      "button";
+
+    boton.className =
+      "boton-año";
+
+    boton.textContent =
+      `${numeroAño}° año`;
+
+
+    boton.addEventListener(
+      "click",
+      () => {
+
+        const año =
+          document.querySelectorAll(
+            ".año"
+          )[numeroAño - 1];
+
+        if (!año) return;
+
+        año.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+      }
+    );
+
+
+    navegacion.appendChild(
+      boton
+    );
+
+  }
+
+
+  const menu =
+    document.querySelector(
+      ".menu-superior"
+    );
+
+  if (menu) {
+
+    menu.insertAdjacentElement(
+      "afterend",
+      navegacion
+    );
+
+  }
+
+}
+
+// =====================================================
 // MENÚ SUPERIOR
 // =====================================================
 
@@ -2950,6 +3037,8 @@ aplicarTema(
 );
 
 crearMenuSuperior();
+
+crearNavegacionAños();
 
 crearPanelProgreso();
 
