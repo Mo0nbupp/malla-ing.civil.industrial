@@ -1251,6 +1251,117 @@ function crearRamo(
 
 }
 
+// =====================================================
+// INFORMACIÓN DE REQUISITOS
+// =====================================================
+
+function mostrarRequisitos(ramo) {
+
+  const requisitos =
+    ramo.prereq
+      .map(id => buscarRamo(id))
+      .filter(r => r !== null);
+
+  const desbloquea = [];
+
+  semestres.forEach(sem => {
+
+    sem.ramos.forEach(otroRamo => {
+
+      if (
+        otroRamo.prereq.includes(ramo.id)
+      ) {
+
+        desbloquea.push(
+          otroRamo
+        );
+
+      }
+
+    });
+
+  });
+
+
+  let contenido = `
+
+    <div class="requisitos-seccion">
+
+      <h3>📋 Prerrequisitos</h3>
+
+  `;
+
+
+  if (requisitos.length === 0) {
+
+    contenido += `
+      <p class="sin-requisitos">
+        Este ramo no tiene prerrequisitos.
+      </p>
+    `;
+
+  } else {
+
+    contenido += `
+      <ul>
+        ${requisitos
+          .map(
+            requisito =>
+              `<li>${requisito.nombre}</li>`
+          )
+          .join("")}
+      </ul>
+    `;
+
+  }
+
+
+  contenido += `
+
+    </div>
+
+    <div class="requisitos-seccion">
+
+      <h3>🔓 Desbloquea</h3>
+
+  `;
+
+
+  if (desbloquea.length === 0) {
+
+    contenido += `
+      <p class="sin-requisitos">
+        Este ramo no desbloquea otros ramos.
+      </p>
+    `;
+
+  } else {
+
+    contenido += `
+      <ul>
+        ${desbloquea
+          .map(
+            otroRamo =>
+              `<li>${otroRamo.nombre}</li>`
+          )
+          .join("")}
+      </ul>
+    `;
+
+  }
+
+
+  contenido += `
+    </div>
+  `;
+
+
+  crearPanel(
+    `🔗 ${ramo.nombre}`,
+    contenido
+  );
+
+}
 
 // =====================================================
 // MENÚ DEL RAMO
@@ -1307,6 +1418,31 @@ function abrirMenuRamo(
     botonPromedio
   );
 
+const botonRequisitos =
+  document.createElement("button");
+
+botonRequisitos.textContent =
+  "🔗 Ver requisitos";
+
+botonRequisitos.addEventListener(
+  "click",
+  evento => {
+
+    evento.stopPropagation();
+
+    cerrarMenusRamos();
+
+    mostrarRequisitos(
+      ramo
+    );
+
+  }
+);
+
+menu.appendChild(
+  botonRequisitos
+);
+  
   const botonRepetir =
     document.createElement("button");
 
