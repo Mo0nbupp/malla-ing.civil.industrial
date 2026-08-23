@@ -2867,11 +2867,25 @@ function crearNavegacionAños() {
 
 
   const menu =
-    document.querySelector(
-      ".menu-superior"
+  document.querySelector(
+    ".menu-superior"
+  );
+
+const progreso =
+  document.querySelector(
+    ".panel-progreso"
+  );
+
+if (menu) {
+
+  if (progreso) {
+
+    progreso.insertAdjacentElement(
+      "beforebegin",
+      navegacion
     );
 
-  if (menu) {
+  } else {
 
     menu.insertAdjacentElement(
       "afterend",
@@ -2879,6 +2893,8 @@ function crearNavegacionAños() {
     );
 
   }
+
+}
 
 }
 
