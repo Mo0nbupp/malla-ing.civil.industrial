@@ -1432,29 +1432,120 @@ p {
   margin-left: 5px;
 }
 /* =====================================================
-   RAMO ENCONTRADO POR EL BUSCADOR
+   BUSCADOR DE RAMOS
    ===================================================== */
 
-.ramo-buscado {
-    animation: destacarRamo 1.8s ease;
+.buscador-ramo {
+
+    width: 180px;
+
+    padding: 8px 12px;
+
+    border: 1px solid var(--color-borde);
+
+    border-radius: 12px;
+
+    background: var(--color-boton);
+
+    color: var(--color-texto);
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-@keyframes destacarRamo {
+
+.buscador-ramo::placeholder {
+
+    color: var(--color-secundario);
+
+    opacity: 0.8;
+
+}
+
+
+.buscador-ramo:focus {
+
+    border-color:
+        var(--color-secundario);
+
+    background:
+        var(--color-menu);
+
+    box-shadow:
+        0 0 0 3px
+        var(--color-boton-hover);
+
+}
+/* =====================================================
+   ESTRELLA DEL BUSCADOR
+   ===================================================== */
+
+.ramo {
+
+    position: relative;
+
+}
+
+
+.ramo-buscado::after {
+
+    content: "✦";
+
+    position: absolute;
+
+    top: -8px;
+
+    right: -8px;
+
+    font-size: 22px;
+
+    z-index: 20;
+
+    animation:
+        aparecerEstrella
+        0.4s ease;
+
+}
+
+
+@keyframes aparecerEstrella {
 
     0% {
-        transform: scale(1);
+
+        opacity: 0;
+
+        transform:
+            scale(0.3)
+            rotate(-30deg);
+
     }
 
-    25% {
-        transform: scale(1.04);
-    }
+    70% {
 
-    50% {
-        transform: scale(1.04);
+        opacity: 1;
+
+        transform:
+            scale(1.2)
+            rotate(10deg);
+
     }
 
     100% {
-        transform: scale(1);
+
+        opacity: 1;
+
+        transform:
+            scale(1)
+            rotate(0deg);
+
     }
 
 }
