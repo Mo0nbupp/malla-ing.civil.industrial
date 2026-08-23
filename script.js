@@ -2660,6 +2660,72 @@ function cerrarPaneles() {
 
 }
 
+// =====================================================
+// BUSCADOR DE RAMOS — v1.9
+// =====================================================
+
+function buscarRamoEnMalla() {
+
+  const buscador = document.getElementById("buscador-ramo");
+
+  if (!buscador) return;
+
+  const texto = buscador.value
+    .trim()
+    .toLowerCase();
+
+  if (!texto) return;
+
+  const todosLosRamos =
+    semestres.flatMap(
+      sem => sem.ramos
+    );
+
+  const encontrados =
+    todosLosRamos.filter(
+      ramo =>
+        ramo.nombre
+          .toLowerCase()
+          .includes(texto)
+    );
+
+  if (encontrados.length === 0) {
+
+    alert("No encontré ningún ramo con ese nombre 😭");
+
+    return;
+
+  }
+
+  const ramo =
+    encontrados[0];
+
+  const elemento =
+    document.getElementById(ramo.id);
+
+  if (!elemento) return;
+
+  elemento.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+  elemento.classList.add(
+    "ramo-buscado"
+  );
+
+  setTimeout(
+    () => {
+
+      elemento.classList.remove(
+        "ramo-buscado"
+      );
+
+    },
+    1800
+  );
+
+}
 
 // =====================================================
 // MENÚ SUPERIOR
@@ -2681,6 +2747,38 @@ function crearMenuSuperior() {
   menu.className =
     "menu-superior";
 
+const buscador =
+  document.createElement("input");
+
+buscador.type =
+  "text";
+
+buscador.id =
+  "buscador-ramo";
+
+buscador.className =
+  "buscador-ramo";
+
+buscador.placeholder =
+  "🔎 Buscar ramo...";
+
+buscador.addEventListener(
+  "keydown",
+  evento => {
+
+    if (evento.key === "Enter") {
+
+      buscarRamoEnMalla();
+
+    }
+
+  }
+);
+
+menu.appendChild(
+  buscador
+);
+  
   const botonComoFunciona =
     document.createElement("button");
 
