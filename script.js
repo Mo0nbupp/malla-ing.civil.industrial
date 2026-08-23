@@ -2664,65 +2664,133 @@ function cerrarPaneles() {
 // BUSCADOR DE RAMOS — v1.9
 // =====================================================
 
+function normalizarTexto(texto) {
+
+  return texto
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+}
+
+
 function buscarRamoEnMalla() {
 
-  const buscador = document.getElementById("buscador-ramo");
+  const buscador =
+    document.getElementById(
+      "buscador-ramo"
+    );
 
   if (!buscador) return;
 
-  const texto = buscador.value
-    .trim()
-    .toLowerCase();
+
+  const texto =
+    normalizarTexto(
+      buscador.value.trim()
+    );
+
 
   if (!texto) return;
+
 
   const todosLosRamos =
     semestres.flatMap(
       sem => sem.ramos
     );
 
+
   const encontrados =
     todosLosRamos.filter(
       ramo =>
-        ramo.nombre
-          .toLowerCase()
-          .includes(texto)
+        normalizarTexto(
+          ramo.nombre
+        ).includes(texto)
     );
+
+
+  // Quitar resultados anteriores
+
+  document
+    .querySelectorAll(
+      ".ramo-buscado"
+    )
+    .forEach(
+      elemento =>
+        elemento.classList.remove(
+          "ramo-buscado"
+        )
+    );
+
+
+  // Si no encuentra nada
 
   if (encontrados.length === 0) {
 
-    alert("No encontré ningún ramo con ese nombre 😭");
+    alert(
+      "No encontré ningún ramo con ese nombre 😭"
+    );
 
     return;
 
   }
 
-  const ramo =
-    encontrados[0];
 
-  const elemento =
-    document.getElementById(ramo.id);
+  // Marcar todos los resultados
 
-  if (!elemento) return;
+  encontrados.forEach(
+    ramo => {
 
-  elemento.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
+      const elemento =
+        document.getElementById(
+          ramo.id
+        );
 
-  elemento.classList.add(
-    "ramo-buscado"
+      if (!elemento) return;
+
+      elemento.classList.add(
+        "ramo-buscado"
+      );
+
+    }
   );
+
+
+  // Ir al primer resultado
+
+  const primerResultado =
+    document.getElementById(
+      encontrados[0].id
+    );
+
+
+  if (primerResultado) {
+
+    primerResultado.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+  }
+
+
+  // Quitar las estrellas después de 3,5 segundos
 
   setTimeout(
     () => {
 
-      elemento.classList.remove(
-        "ramo-buscado"
-      );
+      document
+        .querySelectorAll(
+          ".ramo-buscado"
+        )
+        .forEach(
+          elemento =>
+            elemento.classList.remove(
+              "ramo-buscado"
+            )
+        );
 
     },
-    1800
+    3500
   );
 
 }
@@ -2766,13 +2834,19 @@ buscador.addEventListener(
   "keydown",
   evento => {
 
-    if (evento.key === "Enter") {
+    if (
+      evento.key === "Enter"
+    ) {
 
       buscarRamoEnMalla();
 
     }
 
   }
+);
+
+menu.appendChild(
+  buscador
 );
 
 menu.appendChild(
